@@ -1,0 +1,154 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "installer-app";
+  src:url("fonts/installer-app.eot");
+  src:url("fonts/installer-app.eot?#iefix") format("embedded-opentype"),
+    url("fonts/installer-app.woff") format("woff"),
+    url("fonts/installer-app.ttf") format("truetype"),
+    url("fonts/installer-app.svg#installer-app") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "installer-app" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: "installer-app" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-header-apply:before {
+  content: "\61";
+}
+.icon-status-pin:before {
+  content: "\62";
+}
+.icon-header-arrow-back:before {
+  content: "\63";
+}
+.icon-other-email:before {
+  content: "\64";
+}
+.icon-other-delete-text-input:before {
+  content: "\65";
+}
+.icon-status-charger:before {
+  content: "\66";
+}
+.icon-status-gprs:before {
+  content: "\67";
+}
+.icon-status-gps:before {
+  content: "\68";
+}
+.icon-status-gsm:before {
+  content: "\69";
+}
+.icon-other-menu-content:before {
+  content: "\6a";
+}
+.icon-other-name:before {
+  content: "\6b";
+}
+.icon-header-history-command-screen:before {
+  content: "\6c";
+}
+.icon-header-delete:before {
+  content: "\6d";
+}
+.icon-header-menu:before {
+  content: "\6e";
+}
+.icon-other-password:before {
+  content: "\6f";
+}
+.icon-status-power:before {
+  content: "\70";
+}
+.icon-other-payment:before {
+  content: "\71";
+}
+.icon-header-notification:before {
+  content: "\72";
+}
+.icon-menu-home:before {
+  content: "\73";
+}
+.icon-other-search-input:before {
+  content: "\74";
+}
+.icon-other-service-details:before {
+  content: "\75";
+}
+.icon-menu-sign-out:before {
+  content: "\76";
+}
+.icon-menu-user-settings:before {
+  content: "\77";
+}
+.icon-other-add-photo-big:before {
+  content: "\79";
+}
+.icon-other-arrow-drop-dowm:before {
+  content: "\41";
+}
+.icon-status-alert:before {
+  content: "\7a";
+}
+.icon-other-asset-details:before {
+  content: "\42";
+}
+.icon-status-address:before {
+  content: "\43";
+}
+.icon-status-battery:before {
+  content: "\44";
+}
+.icon-other-delete-content:before {
+  content: "\45";
+}
+.icon-status-acc:before {
+  content: "\46";
+}
+.icon-other-mobile-phone:before {
+  content: "\47";
+}
+.icon-other-relay:before {
+  content: "\48";
+}
+.icon-other-phone:before {
+  content: "\49";
+}
+.icon-other-commands:before {
+  content: "\4a";
+}
+.icon-other-unit:before {
+  content: "\78";
+}
+.icon-direction:before {
+  content: "\4b";
+}
+.icon-replace-imei:before {
+  content: "\4c";
+}
