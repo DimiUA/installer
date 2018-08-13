@@ -123,7 +123,7 @@ function setupPush(){
                 data.title,           // title
                 'Ok'                  // buttonName
             );*/
-            alert(data.message, data.title, data.additionalData.param1);
+            alert(data.message + ' ' + data.title + ' ' + data.additionalData.param1);
        });
 
        /* if　(!localStorage.ACCOUNT){
