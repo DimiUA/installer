@@ -1074,3 +1074,48 @@ select{
 					margin: 18px 24px;
 				}
 		
+
+/* COMMAND HISTORY */
+
+.commandsHistoryList ul{
+	height: auto !important;
+}	
+	.commandsHistoryList .item-after{
+		color: #000;
+	}
+	.commandsHistoryList .item-text{
+		    max-height: initial;
+    		-webkit-line-clamp: initial;
+    		word-break: break-all;
+	}
+	
+	.list-block .item-content.with-divider-bottom .item-inner:after{
+		display: none;
+	}
+	.list-block .item-content.with-divider-bottom:after{
+		    content: '';
+		    position: absolute;
+		    left: 0;
+		    bottom: 0;
+		    right: auto;
+		    top: auto;
+		    height: 1px;
+		    width: 100%;
+		    background-color: rgba(0,0,0,.12);
+		    display: block;
+		    z-index: 15;
+		    -webkit-transform-origin: 50% 100%;
+		    transform-origin: 50% 100%;
+	}
+	.list-block .item-content.with-divider-bottom:last-child:after{
+		display: none;
+	}
+
+
+
+/* SIM INFO */
+
+.list-block-readonly-iputs .item-content .row > div{
+	overflow: hidden;
+    text-overflow: ellipsis;
+}

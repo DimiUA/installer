@@ -43,6 +43,8 @@ function getPlusInfo(){
 
 var inBrowser = 0;
 var notificationChecked = 0;
+var loginTimer = 0;
+var loginDone = 0;
 
 var maxClientIdCycle = 10; 
 var clientIdCycle = 1;
@@ -51,18 +53,19 @@ if( navigator.userAgent.match(/Windows/i) ){
     inBrowser = 1;
 }
 
-document.addEventListener( "plusready", onPlusReady, false ); 
+//document.addEventListener( "plusready", onPlusReady, false ); 
+document.addEventListener("deviceready", onPlusReady, false ); 
 
 function onPlusReady(){   
     
-    getPlusInfo();
+    //getPlusInfo();
 
-    if　(!localStorage.ACCOUNT){
+   /* if　(!localStorage.ACCOUNT){
         plus.push.clear();
-    } 
+    } */
 
     if (!inBrowser) {
-        if(getUserinfo().code) {
+        if(getUserinfo().MinorToken) {
             login();    
         }
         else {
@@ -70,60 +73,100 @@ function onPlusReady(){
         } 
     }
 
-    plus.key.addEventListener("backbutton", backFix, false);      
+    /*plus.key.addEventListener("backbutton", backFix, false);      
     document.addEventListener("background", onAppBackground, false);
     document.addEventListener("foreground", onAppForeground, false);    
-    document.addEventListener("resume", onAppReume, false);
-    document.addEventListener("pause", onAppPause, false);
+    
     document.addEventListener("newintent", onAppNewintent, false);  
 
     plus.push.addEventListener("receive", onPushRecieve, false );
-    plus.push.addEventListener("click", onPushClick, false );
+    plus.push.addEventListener("click", onPushClick, false );*/
+
+    document.addEventListener("backbutton", backFix, false); 
+    document.addEventListener("resume", onAppReume, false);
+    document.addEventListener("pause", onAppPause, false);
+
+    setupPush();
 }
 
-function onPushClick (msg){     // will work in iOS
-    //alert('onPushClick');
-    var all_msg = plus.push.getAllMessage();     
+function setupPush(){
+        var push = PushNotification.init({
+            "android": {
+                //"senderID": "264121929701"                             
+            },
+            "browser": {
+                pushServiceURL: 'http://push.api.phonegap.com/v1/push'
+            },            
+            "ios": {
+                "sound": true,
+                "vibration": true,
+                "badge": true
+            },
+            "windows": {}
+        });
+        console.log('after init');
 
-    if (all_msg === null || all_msg.length === 0 ) {
-        var message = {};        
-        all_msg = [];
-        
-       if(typeof(msg.payload)=='string'){
-            msg.payload = decodeURIComponent(msg.payload); 
-        } 
-        //alert(msg.payload);
+        push.on('registration', function(data) {
+            console.log('registration event: ' + data.registrationId);           
+            
+        });
+
+        push.on('error', function(e) {
+            console.log("push error = " + e.message);
+        });
+
+        push.on('notification', function(data) {
+            console.log('notification event');
+            /*navigator.notification.alert(
+                data.message,         // message
+                null,                 // callback
+                data.title,           // title
+                'Ok'                  // buttonName
+            );*/
+            alert(data.message, data.title, data.additionalData.param1);
+       });
+
+       /* if　(!localStorage.ACCOUNT){
+            push.clearAllNotifications();
+        }*/
+}
+
+function onPushClick (msg){     // will work in iOS and in // ANDROID go ONLY here
+    var all_msg = [];
+    var message = '';
+    //alert(msg.payload);
+    if (msg && msg.payload) {
         var parsedPayload = isJsonString(msg.payload);
-        //alert(parsedPayload);
-        if (parsedPayload ) {
-            message.payload = parsedPayload;
-        }else {
-            message.payload = msg.payload; 
-        }
-        if (message.payload.AssetName) {
-            message.payload.AssetName = message.payload.AssetName.replace(/\+/g, " ");
-        }
-        if (message.payload.name) {
-            message.payload.name = message.payload.name.replace(/\+/g, " ");
-        }
-        if (message.payload.title) {
-            message.payload.title = message.payload.title.replace(/\+/g, " ");
-        }
         
-        all_msg.push(message);       
+        if (parsedPayload) {
+            message = parsedPayload;
+        }else{
+            message = msg.payload;
+        }  
+        if(typeof(message)=='string'){
+            var testArr = message.split("payload");           
+            if (testArr && testArr[1]) {
+                message = testArr[1].slice(2).slice(0, -1);
+                message = isJsonString(message);
+            }            
+        } 
+        if (message) {
+            all_msg.push(message);
+        }
     }
+    if (all_msg.length > 0) {
+        var container = $$('body');
+        if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+        App.showProgressbar(container); 
 
-    if (all_msg) {
-        var popped = all_msg.pop();
-        all_msg = [];
-        all_msg.push(popped);
-        
-        //setNotificationList(all_msg); 
-
-        var loginTimer = setInterval(function() {
+        loginTimer = setInterval(function() {                
                 if (notificationChecked) {
                     clearInterval(loginTimer);
-                    processClickOnPushNotification(all_msg);
+                    setTimeout(function(){
+                        //alert('before processClickOnPushNotification');
+                         processClickOnPushNotification(all_msg); 
+                         App.hideProgressbar();               
+                    },1000); 
                 }
             }, 1000);   
     }
@@ -269,6 +312,7 @@ function webSockConnect(){
 var MapTrack = null;
 window.PosMarker = {};
 var virtualNotificationList = null;
+var virtualCommandsHistoryList = null;
 var App = new Framework7({
     swipePanel: 'left',   
     swipeBackPage: false,
@@ -302,6 +346,7 @@ var API_DOMIAN1 = "http://api.m2mglobaltech.com/Installer/V1/";
 var API_DOMIAN2 = "http://quiktrak.co/webapp/QuikProtect.Api2/";
 var API_DOMIAN3 = "http://api.m2mglobaltech.com/QuikTrak/V1/";
 var API_DOMIAN4 = "http://api.m2mglobaltech.com/QuikProtect/V1/Client/";
+var API_DOMIAN5 = "https://m2mdata.co/api/Service/";
 
 var API_URL = {};
 //API_URL.URL_GET_LOGIN = API_DOMIAN1 + "Client/Login";
@@ -323,15 +368,18 @@ API_URL.URL_SET_UNIMMOBILISE = API_DOMIAN1 + "Client/Unimobilise2";
 API_URL.URL_GET_LIVE_POSITION = API_DOMIAN1 + "Client/LivePostion";
 API_URL.URL_GET_VERIFY2 = API_DOMIAN1 + "Client/Verfiy2";
 API_URL.URL_SENT_NOTIFY = API_DOMIAN1 + "Client/SentNotify";
+API_URL.URL_EDIT_DEVICE = API_DOMIAN1 + "Client/EditAsset";
 
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN3 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
 API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN3 +"Device/Alarms?MinorToken={0}&deviceToken={1}";
 
 
-API_URL.URL_EDIT_DEVICE = API_DOMIAN1 + "Client/EditAsset";
-
 API_URL.URL_REPLACE_IMEI = "http://app.quikprotect.co/activation2/upgrade?DealerToken={0}&imeis={1}";
+
+API_URL.URL_GET_COMMAND_HISTORY = API_DOMIAN1 + "Client/GetCommandHisMessages";
+API_URL.URL_GET_SIM_INFO = API_DOMIAN5 + "GetSimInfo";
+API_URL.URL_GET_SIM_LIST = API_DOMIAN5 + "GetDeviceList";
 
 
 //http://api.m2mglobaltech.com/Installer/V1/Client/GetAssetList
@@ -343,6 +391,7 @@ API_URL.URL_REPLACE_IMEI = "http://app.quikprotect.co/activation2/upgrade?Dealer
 //http://api.m2mglobaltech.com/Installer/V1/Client/StartPush
 //http://api.m2mglobaltech.com/Installer/V1/Client/EndPush
 //http://api.m2mglobaltech.com/Installer/V1/Client/GetAssetCommandList
+//http://api.m2mglobaltech.com/Installer/V1/Client/GetCommandHisMessages
 
 //http://api.m2mglobaltech.com/Installer/V1/Client/Immobilise
 //http://api.m2mglobaltech.com/Installer/V1/Client/Unimobilise
@@ -557,6 +606,15 @@ $$('body').on('click', '.searchClear', function () {
     $$('.searchClear').hide();
 });
 
+$$('body').on('click', '.navbar_title, .navbar_title_index', function(){
+    var all_msg = [];
+    var popped = '{"title":"IGNITION ON WARNING","type":32768,"imei":"0863014530724922","name":"МАН АА0360КН","lat":48.653384,"lng":12.4702,"speed":0,"direct":0,"time":"2018-08-08T13:21:09"}';
+    //var popped = '{"Lat":"-33.970022","Lng":"151.127198","Valid":"A","Speed":"0","Direction":"0","Acc":"OFF","Battery":"13.06","GSM":"23","GPS":"9","Ignition":"77834","Mileage":"447679","alarm":"location","PositionTime":"2018-08-08T13:09:46","Imei":"0352544074331597","Imsi":"234500003188471","AssetName":"Sydney Swift","CreateDateTime":"2018-08-08T13:09:46"}';
+    all_msg.push(popped);
+    //
+    processClickOnPushNotification(all_msg); 
+});
+
 $$('body').on('click', '#showToken', function () {
    	if(window.plus) {
         window.uuid = plus.device.uuid;
@@ -629,6 +687,24 @@ $$('body').on('click', '.menuDevice', function () {
                         '</div>'+
                     '</div>';
 
+    var commandsHistory =  '<div class="action_button_wrapper">'+
+                        '<div class="action_button_block action_button_media">'+
+                            '<i class="f7-icons icon-header-history-command-screen color-blue "></i>'+
+                        '</div>'+
+                        '<div class="action_button_block action_button_text">'+
+                            LANGUAGE.ASSET_COMMANDS_HISTORY_MSG00 +
+                        '</div>'+
+                    '</div>';
+
+    var simInfo =  '<div class="action_button_wrapper">'+
+                        '<div class="action_button_block action_button_media">'+
+                            '<i class="f7-icons icon-other-info color-blue "></i>'+
+                        '</div>'+
+                        '<div class="action_button_block action_button_text">'+
+                            LANGUAGE.ASSET_SIM_INFO_MSG00 +
+                        '</div>'+
+                    '</div>';
+
     var settings =  '<div class="action_button_wrapper">'+
                         '<div class="action_button_block action_button_media">'+
                             '<i class="f7-icons icon-other-service-details color-blue "></i>'+
@@ -672,6 +748,21 @@ $$('body').on('click', '.menuDevice', function () {
             text: commands,  
             onClick: function () {
                 loadPageCommands();
+            },          
+        },
+        {
+            text: commandsHistory,  
+            onClick: function () {
+                loadCommandHistoryPage({
+                    IMSI: TargetAsset.IMSI,
+                    LastDay: 2,
+                });
+            },          
+        },
+        {
+            text: simInfo,  
+            onClick: function () {
+                loadSimInfo();
             },          
         },
         {
@@ -1055,14 +1146,82 @@ App.onPageInit('notification', function(page){
             }
             console.log(props);
 
-                
-
-            
-
         }            
     });
 
 });
+
+App.onPageInit('asset.commands.history', function(page){
+
+    if (virtualCommandsHistoryList) {
+        virtualCommandsHistoryList.destroy();
+    }
+
+    var commandsHystoryList = $$(page.container).find('.commandsHistoryList');
+
+    virtualCommandsHistoryList = App.virtualList(commandsHystoryList, { 
+        items: [],
+        height: function (item) {
+            var height = 99;
+            if (item.Direct == 1) {
+                height = 79;
+            }
+            return height; //display the image with 50px height
+        },
+        renderItem: function (index, item) {
+            var ret = '';
+            
+            var datetime = moment.utc(item.Datetime).toDate();
+            datetime = moment(datetime).format(window.COM_TIMEFORMAT);
+
+            
+            if (item.Text) {
+                item.Text = item.Text.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+            }        
+
+            if(item.Direct == 1){
+            ret +=  '<li class="item-content with-divider-bottom" >';
+            }else{
+            ret +=  '<li class="item-content" >';
+            }
+            ret +=      '<div class="item-inner">';
+            ret +=          '<div class="item-title-row">';
+            ret +=              '<div class="item-title">';
+            if(item.Direct == 1){
+                ret +=              '<i class="f7-icons icon-other-sent-message"></i>';
+            }else{
+                ret +=              '<i class="f7-icons icon-other-received-message"></i>';
+            }
+            ret +=              '</div>';
+            ret +=              '<div class="item-after">' + datetime + '</div>';
+            ret +=          '</div>';           
+            ret +=          '<div class="item-text">' + item.Text + '</div>';            
+            ret +=      '</div>';
+            ret +=  '</li>';
+            return  ret;
+        }
+    });    
+
+    var selectLastDay = $$('select[name="LastDaySelect"]');   
+    selectLastDay.val(selectLastDay.data("set"));
+
+    var IMSI = $$(page.container).find('[name="IMSI"]').val();
+    var LastDay = $$(page.container).find('[name="LastDay"]').val();
+
+    if (IMSI && LastDay) {
+        requestCommandHistory({IMSI: IMSI, LastDay: LastDay});
+    }
+
+    $$('.getNewHystory').on('click', function(){
+        
+    });
+
+    selectLastDay.on('change', function(){
+        requestCommandHistory({IMSI: IMSI, LastDay: this.value});
+    });
+});
+
+
 
 App.onPageInit('asset.commands', function(page){
     
@@ -1135,7 +1294,17 @@ App.onPageInit('asset.commands', function(page){
         });*/
     });
 
+    $$('.getCommandHistory').on('click', function(){
+    	
+    	loadCommandHistoryPage({
+            IMSI: TargetAsset.IMSI,
+            LastDay: 2,
+        });
+    });
+
 });
+
+
 
 App.onPageInit('asset.settings', function(page){
     var sendSetting = $$(page.container).find('.sendSetting');
@@ -1500,6 +1669,7 @@ function login(){
 	                updateUserData(result.Data);
 	                updateUserCrefits(result.Data.credit);
 	                notificationChecked = 1;
+                    //loginDone = 1;
 	               
 	                webSockConnect();  
 	                     
@@ -1906,6 +2076,7 @@ function loadPagePosition(data){
     TargetAsset.Name = data.AssetName;
     TargetAsset.IMSI = data.Imsi;
     
+    checkMapExisting();        
     mainView.router.load({
         url:'resources/templates/asset.position.html',
         context: data,
@@ -1917,7 +2088,12 @@ function loadPagePosition(data){
 
 
 
-
+function checkMapExisting(){
+    if ($$('#map')) {
+        $$('#map').remove();
+        MapTrack = null;
+    }   
+}
 
 
 function loadPageStatus(data){
@@ -1971,6 +2147,65 @@ function loadPageClientDetails(data){
     }
         
 }   
+
+function loadCommandHistoryPage(params){
+    mainView.router.load({
+        url:'resources/templates/asset.commands.history.html',
+        context:{
+            LastDay: params && params.LastDay ? params.LastDay : 2,
+            IMSI: params && params.IMSI ? params.IMSI : TargetAsset.IMSI,
+        }
+    }); 
+}
+
+function loadSimInfo(){
+    var data = {
+        MajorToken: getUserinfo().code,
+        DeviceId: TargetAsset.IMSI,
+    };
+    App.showPreloader();
+    JSON.requestPost(API_URL.URL_GET_SIM_INFO,data,function(result){
+            console.log(result);
+            if(result.MajorCode == '000') { 
+                getAdditionalSimInfo(result.Data);                              
+            }else{                
+                App.alert(LANGUAGE.PROMPT_MSG013);
+                App.hidePreloader();
+            }
+           
+        },
+        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+    );  
+}
+
+function getAdditionalSimInfo(params){
+    var data = {
+        MajorToken: getUserinfo().code,
+        DeviceId: TargetAsset.IMSI,
+        Rows: 10,
+    };
+    /*App.showPreloader();*/
+    JSON.requestPost(API_URL.URL_GET_SIM_LIST,data,function(result){
+            console.log(result);
+            if(result.MajorCode == '000') { 
+                loadSimInfoPage(Object.assign(params, result.Data[0]));                              
+            }else{                
+                //App.alert(LANGUAGE.PROMPT_MSG013);
+                loadSimInfoPage(params);
+            }
+            App.hidePreloader();
+        },
+        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+    );
+}
+
+function loadSimInfoPage(params){
+    /*params.Imei = TargetAsset.IMEI;*/
+    mainView.router.load({
+        url:'resources/templates/asset.sim.info.html',
+        context: params
+    });       
+}
 
 function showVerificationStatus(){
 	setTimeout(function() {		
@@ -2278,6 +2513,45 @@ function requestUnimmobilise(){
 	}
 }
 
+function requestCommandHistory(params){
+    if (params && params.IMSI && params.LastDay) {
+        var data = {
+            IMSI: params.IMSI,   
+            LastDay: params.LastDay,
+        };   
+        console.log(data);
+        
+        var container = $$('body');
+        if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+        App.showProgressbar(container); 
+        JSON.requestPost(API_URL.URL_GET_COMMAND_HISTORY,data,function(result){
+                console.log(result);
+                if(result.MajorCode == '000') { 
+                    if (result.Data && result.Data.length > 0 && virtualCommandsHistoryList) {                       
+                        //if ( virtualCommandsHistoryList.items.length > 0) {
+                            virtualCommandsHistoryList.replaceAllItems(result.Data);
+                        /*}else{
+                            virtualCommandsHistoryList.appendItems(result.Data);
+                        }    */                    
+                    }else{
+                        App.addNotification({
+                            hold: 3000,
+                            message: LANGUAGE.ASSET_COMMANDS_HISTORY_MSG01
+                        });
+                        if (virtualCommandsHistoryList) {
+                            virtualCommandsHistoryList.deleteAllItems();
+                        }
+                    }                    
+                }else{                
+                    App.alert(LANGUAGE.PROMPT_MSG013);
+                }
+                App.hideProgressbar();
+            },
+            function(){ App.hideProgressbar(); App.alert(LANGUAGE.COM_MSG02); }
+        );                
+    }
+}
+
 function getNewNotifications(){         
     var userInfo = getUserinfo();    
     var MinorToken = !userInfo ? '': userInfo.userCode;
@@ -2505,7 +2779,7 @@ function setNotificationList(list){
     localStorage.setItem("COM.QUIKTRAK.LIVE.NOTIFICATIONLIST.INSTALLER", JSON.stringify(pushList));
 }
 
-function processClickOnPushNotification(msgJ){
+/*function processClickOnPushNotification(msgJ){
     if (Array.isArray(msgJ)) {
         var msg = null;
         if (msgJ[0].payload) {
@@ -2528,6 +2802,78 @@ function processClickOnPushNotification(msgJ){
                 mainView.router.refreshPage();
             }                
         }  
+    }          
+}*/
+         
+
+function processClickOnPushNotification(msgJ){    
+    if (Array.isArray(msgJ)) {      
+        var msg = null;
+        msg = isJsonString(msgJ[0]);        
+
+        if (!msg) {                  
+            msg = msgJ[0];     
+        }
+        
+        if (msg) {
+            var localTime = '';
+            if (typeof(msg.alarm) == 'string' && msg.alarm.toLowerCase() == "status") {
+                msg.StatusTime = moment().format(window.COM_TIMEFORMAT);                       
+            }else if (msg.PositionTime) {
+                localTime = moment.utc(msg.PositionTime).toDate();
+                msg.PositionTime = moment(localTime).format(window.COM_TIMEFORMAT);                          
+            }else if (msg.positionTime) {
+                localTime = moment.utc(msg.positionTime).toDate();
+                msg.positionTime = moment(localTime).format(window.COM_TIMEFORMAT);                        
+            }else if(msg.time){
+                localTime = moment.utc(msg.time).toDate();
+                msg.time = moment(localTime).format(window.COM_TIMEFORMAT); 
+            }else{
+                msg.time = moment().format(window.COM_TIMEFORMAT);   
+            }
+
+            if (msg.type) {
+                msg.alarm = msg.type;
+            }   
+            if (msg.lat) {
+                msg.Lat = msg.lat;
+            }   
+            if (msg.lng) {
+                msg.Lng = msg.lng;
+            }   
+            if (msg.speed) {
+                msg.Speed = msg.speed;
+            }   
+            if (msg.direct) {
+                msg.Direction = msg.direct;
+            }   
+            if (msg.imei) {
+                msg.Imei = msg.imei;
+            }   
+            if (msg.name) {
+                msg.AssetName = msg.name;
+            } 
+            if (msg.time) {
+                msg.PositionTime = msg.time;
+            }   
+            if (msg.CreateDateTime) {
+                localTime = moment.utc(msg.CreateDateTime).toDate();
+                msg.CreateDateTime = moment(localTime).format(window.COM_TIMEFORMAT);
+            } 
+            
+            //var activePage = mainView.activePage;
+            //if ( typeof(activePage) == 'undefined' || (activePage && activePage.name != "notification")) { 
+                if(typeof(msg.alarm) == 'string' && msg.alarm.toLowerCase() == "status" ){
+                    loadPageStatus(msg);                 
+                }else if (parseFloat(msg.Lat) && parseFloat(msg.Lng)) { 
+                    loadPagePosition(msg);
+                }else{
+                    App.alert(LANGUAGE.PROMPT_MSG023);
+                }
+            //}else{                
+            //    mainView.router.refreshPage();
+            //}  
+        }
     }          
 }
 

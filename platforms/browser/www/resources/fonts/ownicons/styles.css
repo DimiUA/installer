@@ -71,9 +71,6 @@
 .icon-other-name:before {
   content: "\6b";
 }
-.icon-header-history-command-screen:before {
-  content: "\6c";
-}
 .icon-header-delete:before {
   content: "\6d";
 }
@@ -140,15 +137,42 @@
 .icon-other-phone:before {
   content: "\49";
 }
-.icon-other-commands:before {
-  content: "\4a";
-}
 .icon-other-unit:before {
   content: "\78";
 }
 .icon-direction:before {
   content: "\4b";
 }
+.icon-other-sent-message:before {
+  content: "\4d";
+}
+.icon-other-received-message:before {
+  content: "\4e";
+}
+.icon-other-info:before {
+  content: "\6c";
+}
 .icon-replace-imei:before {
+  content: "\4a";
+}
+.icon-header-history-command-screen:before {
   content: "\4c";
+}
+.icon-other-commands:before {
+  content: "\4f";
+}
+.icon-sim-info-csp:before {
+  content: "\50";
+}
+.icon-sim-info-customer:before {
+  content: "\51";
+}
+.icon-sim-info-date:before {
+  content: "\52";
+}
+.icon-sim-info-sms:before {
+  content: "\53";
+}
+.icon-sim-info-state:before {
+  content: "\54";
 }

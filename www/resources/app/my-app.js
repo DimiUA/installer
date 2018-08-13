@@ -58,7 +58,7 @@ document.addEventListener("deviceready", onPlusReady, false );
 
 function onPlusReady(){   
     
-    getPlusInfo();
+    //getPlusInfo();
 
    /* if　(!localStorage.ACCOUNT){
         plus.push.clear();
@@ -117,13 +117,13 @@ function setupPush(){
 
         push.on('notification', function(data) {
             console.log('notification event');
-            navigator.notification.alert(
+            /*navigator.notification.alert(
                 data.message,         // message
                 null,                 // callback
                 data.title,           // title
                 'Ok'                  // buttonName
-            );
-            alert(data.message + ' ' + data.title);
+            );*/
+            alert(data.message, data.title, data.additionalData.param1);
        });
 
        /* if　(!localStorage.ACCOUNT){
