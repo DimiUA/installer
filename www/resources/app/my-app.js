@@ -92,11 +92,7 @@ function onPlusReady(){
 function setupPush(){
         var push = PushNotification.init({
             "android": {
-                //"senderID": "264121929701"
-                //asdasdas
-                //asdasdsd
-                //asdasd
-                //asdasdas               
+                //"senderID": "264121929701"                             
             },
             "browser": {
                 pushServiceURL: 'http://push.api.phonegap.com/v1/push'
@@ -127,11 +123,12 @@ function setupPush(){
                 data.title,           // title
                 'Ok'                  // buttonName
             );
+            alert(data.message + ' ' + data.title);
        });
 
-        if　(!localStorage.ACCOUNT){
+       /* if　(!localStorage.ACCOUNT){
             push.clearAllNotifications();
-        }
+        }*/
 }
 
 function onPushClick (msg){     // will work in iOS and in // ANDROID go ONLY here
