@@ -108,7 +108,7 @@ function setupPush(){
 
         push.on('registration', function(data) {
             console.log('registration event: ' + data.registrationId);           
-            
+            alert(data.registrationId);
         });
 
         push.on('error', function(e) {
