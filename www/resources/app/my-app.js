@@ -18,29 +18,6 @@ function guid() {
 //userCode = minorToken 
 //code = majorToken 
 
-function getPlusInfo(){
-    if(window.plus) {
-        window.uuid = plus.device.uuid;
-        var info = plus.push.getClientInfo();
-        localStorage.PUSH_MOBILE_TOKEN = info.token;
-        localStorage.PUSH_APPID_ID = info.appid;
-        localStorage.PUSH_APP_KEY = info.appkey;
-        localStorage.PUSH_DEVICE_TOKEN = info.clientid;
-        localStorage.DEVICE_TYPE = plus.os.name? plus.os.name : "web";
-    }else{
-        var uid = guid();
-            if(!localStorage.PUSH_MOBILE_TOKEN)
-            localStorage.PUSH_MOBILE_TOKEN = uid;
-            if(!localStorage.PUSH_APP_KEY)
-            localStorage.PUSH_APP_KEY = uid;
-            if(!localStorage.PUSH_DEVICE_TOKEN)
-            localStorage.PUSH_DEVICE_TOKEN = uid;
-            //localStorage.PUSH_DEVICE_TOKEN = "75ba1639-92ae-0c4c-d423-4fad1e48a49d"
-        localStorage.PUSH_APPID_ID = 'webapp';
-        localStorage.DEVICE_TYPE = "web";        
-    }
-}
-
 var inBrowser = 0;
 var notificationChecked = 0;
 var loginTimer = 0;
@@ -112,7 +89,8 @@ function setupPush(){
         });
 
         push.on('error', function(e) {
-            console.log("push error = " + e.message);
+            //console.log("push error = " + e.message);
+            alert("push error = " + e.message);
         });
 
         push.on('notification', function(data) {
@@ -123,7 +101,7 @@ function setupPush(){
                 data.title,           // title
                 'Ok'                  // buttonName
             );*/
-            alert(data.message + ' ' + data.title + ' ' + data.additionalData.param1);
+            alert( JSON.stringify(data) );
        });
 
        /* if　(!localStorage.ACCOUNT){
