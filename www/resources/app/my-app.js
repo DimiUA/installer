@@ -46,13 +46,13 @@ var notificationChecked = 0;
 var loginTimer = 0;
 var loginDone = 0;
 
-var maxClientIdCycle = 10; 
-var clientIdCycle = 1;
+/*var maxClientIdCycle = 10; 
+var clientIdCycle = 1;*/
 
 if( navigator.userAgent.match(/Windows/i) ){    
     inBrowser = 1;
 }
-
+console.log(navigator.userAgent);
 //document.addEventListener( "plusready", onPlusReady, false ); 
 document.addEventListener("deviceready", onPlusReady, false ); 
 
@@ -108,8 +108,9 @@ function setupPush(){
 
         push.on('registration', function(data) {
             console.log('registration event: ' + data.registrationId);  
-            alert( JSON.stringify(data) );         
-            //App.alert(data.registrationId);
+            //alert( JSON.stringify(data) );         
+            App.alert(data.registrationId);
+            localStorage.PUSH_REGISTRATION_ID = data.registrationId;
         });
 
         push.on('error', function(e) {
@@ -1667,9 +1668,11 @@ function login(){
     hideKeyboard();
     
         App.showPreloader(); 
-        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '123' : localStorage.PUSH_MOBILE_TOKEN;
-        var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
-        var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
+        //var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '123' : localStorage.PUSH_MOBILE_TOKEN;
+        var mobileToken = !PUSH_REGISTRATION_ID ? '123' : PUSH_REGISTRATION_ID;
+        var appKey = !localStorage.PUSH_APP_KEY? '123' : localStorage.PUSH_APP_KEY;
+        //var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
+        var deviceToken = !PUSH_REGISTRATION_ID ? '123' : PUSH_REGISTRATION_ID;
         var deviceType = !localStorage.DEVICE_TYPE? 'web' : localStorage.DEVICE_TYPE;
         var account = $$("input[name='account']");
         var password = $$("input[name='password']"); 
