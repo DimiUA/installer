@@ -54,9 +54,11 @@ if( navigator.userAgent.match(/Windows/i) ){
 }
 
 //document.addEventListener( "plusready", onPlusReady, false ); 
-document.addEventListener("deviceready", onPlusReady, false ); 
+document.addEventListener("deviceready", onDeviceReady, false ); 
 
-function onPlusReady(){   
+function onDeviceReady(){   
+
+    alert(JSON.stringify(device));
 
     //localStorage.DEVICE_TYPE = device.platform;    
 
