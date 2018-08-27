@@ -120,7 +120,7 @@ function setupPush(){
         push.on('registration', function(data) {
             console.log('registration event: ' + data.registrationId);  
             //alert( JSON.stringify(data) );         
-            App.alert(data.registrationId);
+            //App.alert(data.registrationId);
             localStorage.PUSH_REGISTRATION_ID = data.registrationId;
         });
 
