@@ -57,7 +57,10 @@ console.log(navigator.userAgent);
 document.addEventListener("deviceready", onPlusReady, false ); 
 
 function onPlusReady(){   
+
+    localStorage.DEVICE_TYPE = device.platform;
     
+    App.alert(localStorage.DEVICE_TYPE);
     //getPlusInfo();
 
    /* if　(!localStorage.ACCOUNT){
