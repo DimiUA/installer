@@ -168,5 +168,13 @@
         "variables": {
             "SENDER_ID": "106187216531"
         }
+    },
+    "cordova-plugin-buildinfo": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-buildinfo@2.0.2"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

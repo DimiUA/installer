@@ -58,7 +58,7 @@ document.addEventListener("deviceready", onDeviceReady, false );
 
 function onDeviceReady(){   
 
-    //alert(JSON.stringify(device));
+    alert(JSON.stringify(BuildInfo));
 
     localStorage.DEVICE_TYPE = device.platform;    
 
