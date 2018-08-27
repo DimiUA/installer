@@ -52,15 +52,14 @@ var clientIdCycle = 1;*/
 if( navigator.userAgent.match(/Windows/i) ){    
     inBrowser = 1;
 }
-console.log(navigator.userAgent);
+
 //document.addEventListener( "plusready", onPlusReady, false ); 
 document.addEventListener("deviceready", onPlusReady, false ); 
 
 function onPlusReady(){   
 
-    localStorage.DEVICE_TYPE = device.platform;
-    
-    App.alert(localStorage.DEVICE_TYPE);
+    localStorage.DEVICE_TYPE = device.platform;    
+
     //getPlusInfo();
 
    /* if　(!localStorage.ACCOUNT){
