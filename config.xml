@@ -41,6 +41,7 @@
      <resource-file src="google-services.json" target="google-services.json" />
    </platform>
     <!-- <plugin name="cordova-plugin-console" source="npm" spec="1.0.7" /> -->
+    <plugin name="cordova-plugin-device" source="npm" spec="2.0.2" />
     <plugin name="cordova-plugin-dialogs" source="npm" spec="1.2.1" />
     <plugin name="cordova-plugin-whitelist" source="npm" spec="1.2.1" />
     <plugin name="cordova-plugin-splashscreen" source="npm" spec="5.0.2" />
