@@ -18,58 +18,24 @@ function guid() {
 //userCode = minorToken 
 //code = majorToken 
 
-function getPlusInfo(){
-    if(window.device) {
-       /* window.uuid = plus.device.uuid;
-        var info = plus.push.getClientInfo();
-        localStorage.PUSH_MOBILE_TOKEN = info.token;
-        localStorage.PUSH_APPID_ID = info.appid;
-        localStorage.PUSH_APP_KEY = info.appkey;
-        localStorage.PUSH_DEVICE_TOKEN = info.clientid;
-        localStorage.DEVICE_TYPE = plus.os.name? plus.os.name : "web";*/         
-        localStorage.PUSH_MOBILE_TOKEN = BuildInfo.packageName;
-        localStorage.PUSH_APP_KEY = BuildInfo.packageName;
-        localStorage.PUSH_APPID_ID = BuildInfo.packageName; 
-        localStorage.DEVICE_TYPE = device.platform;   
-    }else{
-        var uid = guid();
-            if(!localStorage.PUSH_MOBILE_TOKEN)
-            localStorage.PUSH_MOBILE_TOKEN = uid;
-            if(!localStorage.PUSH_APP_KEY)
-            localStorage.PUSH_APP_KEY = uid;
-            if(!localStorage.PUSH_DEVICE_TOKEN)
-            localStorage.PUSH_DEVICE_TOKEN = uid;
-            //localStorage.PUSH_DEVICE_TOKEN = "75ba1639-92ae-0c4c-d423-4fad1e48a49d"
-        localStorage.PUSH_APPID_ID = 'webapp';
-        localStorage.DEVICE_TYPE = "web";        
-    }
-}
-
 var inBrowser = 0;
 var notificationChecked = 0;
 var loginTimer = 0;
 var loginDone = 0;
 
-/*var maxClientIdCycle = 10; 
-var clientIdCycle = 1;*/
+var maxClientIdCycle = 10; 
+var clientIdCycle = 1;
 
 if( navigator.userAgent.match(/Windows/i) ){    
     inBrowser = 1;
 }
 
 //document.addEventListener( "plusready", onPlusReady, false ); 
-document.addEventListener("deviceready", onDeviceReady, false ); 
+document.addEventListener("deviceready", onPlusReady, false ); 
 
-function onDeviceReady(){   
-
-    //alert(JSON.stringify(BuildInfo));
-
-   /* localStorage.DEVICE_TYPE = device.platform;    
-    localStorage.PUSH_APPID_ID = BuildInfo.packageName;  
-    localStorage.PUSH_MOBILE_TOKEN = BuildInfo.packageName;
-    localStorage.PUSH_APP_KEY = BuildInfo.packageName;*/
-
-    getPlusInfo();
+function onPlusReady(){   
+    
+    //getPlusInfo();
 
    /* if　(!localStorage.ACCOUNT){
         plus.push.clear();
@@ -119,9 +85,8 @@ function setupPush(){
 
         push.on('registration', function(data) {
             console.log('registration event: ' + data.registrationId);  
-            //alert( JSON.stringify(data) );         
-            App.alert(data.registrationId);
-            localStorage.PUSH_REGISTRATION_ID = data.registrationId;
+            alert( JSON.stringify(data) );         
+            //App.alert(data.registrationId);
         });
 
         push.on('error', function(e) {
@@ -396,14 +361,12 @@ API_URL.URL_EDIT_ACCOUNT = API_DOMIAN3 + "User/Edit?MajorToken={0}&MinorToken={1
 API_URL.URL_RESET_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
 API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN3 +"Device/Alarms?MinorToken={0}&deviceToken={1}";
 
-API_URL.URL_ACTIVATION = "http://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}&DealerName={3}";
+
 API_URL.URL_REPLACE_IMEI = "http://app.quikprotect.co/activation2/upgrade?DealerToken={0}&imeis={1}";
 
 API_URL.URL_GET_COMMAND_HISTORY = API_DOMIAN1 + "Client/GetCommandHisMessages";
 API_URL.URL_GET_SIM_INFO = API_DOMIAN5 + "GetSimInfo";
 API_URL.URL_GET_SIM_LIST = API_DOMIAN5 + "GetDeviceList";
-
-
 
 
 //http://api.m2mglobaltech.com/Installer/V1/Client/GetAssetList
@@ -465,7 +428,7 @@ var virtualAssetList = App.virtualList('.assetList', {
     items: [
     ],
     height: function (item) {        
-        return 139; //display the image with 50px height
+        return 118; //display the image with 50px height
     },
     // Display the each item using Template7 template parameter
     renderItem: function (index, item) {
@@ -476,7 +439,7 @@ var virtualAssetList = App.virtualList('.assetList', {
         }*/
 
         var ret = '';       
-        ret +=  '<li class="item-content" data-imei="'+item.IMEI+'" data-imsi="'+item.IMSI+'" data-name="'+item.Name+'" data-id="'+item.Id+'" data-type="'+item.ProductName+'" data-notifications="'+item.NotificationState+'" data-customer="'+item.Customer+'" >';
+        ret +=  '<li class="item-content" data-imei="'+item.IMEI+'" data-imsi="'+item.IMSI+'" data-name="'+item.Name+'" data-id="'+item.Id+'" data-type="'+item.ProductName+'" data-notifications="'+item.NotificationState+'" >';
         ret +=      '<div class="item-inner">';
         ret +=          '<div class="item-title-row">';
         ret +=              '<div class="item-title color-blue">IMEI: '+item.IMEI+'</div>';
@@ -484,7 +447,6 @@ var virtualAssetList = App.virtualList('.assetList', {
         ret +=          '</div>';
         ret +=          '<div class="item-subtitle">IMSI: '+item.IMSI+'</div>';
         ret +=          '<div class="item-subtitle">'+LANGUAGE.HOME_MSG06+': '+item.ProductName+'</div>';
-        ret +=          '<div class="item-subtitle">'+LANGUAGE.HOME_MSG10+': '+item.Customer+'</div>';
         ret +=          '<div class="item-subtitle">'+item.Name+'</div>';
         ret +=      '</div>';
         ret +=  '</li>';
@@ -562,20 +524,18 @@ $$('body').on('click', 'a.external', function(event) {
 $$('body').on('click', '.search_tabbar .tab-link', function () {
     
     var href = $$(this).attr('href');
-    var searchInput = $$('.formSearchDevice input[name="searchInput"]');
+    var searchInput = $$('.formSearchDevice input[type="search"]');
 
     switch(href){
         case '#tab-imei':
-            searchInput.data('searchby','IMEI').attr('type', 'number');
+            searchInput.data('searchby','IMEI');
             break;
         case '#tab-imsi':
-            searchInput.data('searchby','IMSI').attr('type', 'number');
+            searchInput.data('searchby','IMSI');
             break;
 
         default:
-        console.log('here');
-        searchInput.data('searchby','Name').attr('type', 'search');
-        break;
+        searchInput.data('searchby','Name');
     }
    
 });
@@ -600,14 +560,14 @@ $$(document).on('click', '.user_settigns_tabbar a.tab-link', function(e){
     return false;
 });
 
-$$('.formSearchDevice input[name="searchInput"]').focus(function(){     
+$$('.formSearchDevice input[type="search"]').focus(function(){     
     if (this.value.length > 0) {
         $$('.searchDevice').show();
         $$('.searchClear').hide();
     }
 });
 
-$$('.formSearchDevice input[name="searchInput"]').blur(function(){   
+$$('.formSearchDevice input[type="search"]').blur(function(){   
     if (this.value.length > 0) {
         setTimeout(function(){
             $$('.searchDevice').hide();
@@ -626,24 +586,24 @@ $$('body').on('click', '.searchDevice', function () {
     submitSearchForm();
 });
 $$('body').on('click', '.searchClear', function () {    
-    var input = $$(this).siblings('input[name="searchInput"]');
+    var input = $$(this).siblings('input[type="search"]');
     input.val('');
     input.focus();
     $$('.searchDevice').show();
     $$('.searchClear').hide();
 });
 
-/*$$('body').on('click', '.navbar_title, .navbar_title_index', function(){
+$$('body').on('click', '.navbar_title, .navbar_title_index', function(){
     var all_msg = [];
     var popped = '{"title":"IGNITION ON WARNING","type":32768,"imei":"0863014530724922","name":"МАН АА0360КН","lat":48.653384,"lng":12.4702,"speed":0,"direct":0,"time":"2018-08-08T13:21:09"}';
     //var popped = '{"Lat":"-33.970022","Lng":"151.127198","Valid":"A","Speed":"0","Direction":"0","Acc":"OFF","Battery":"13.06","GSM":"23","GPS":"9","Ignition":"77834","Mileage":"447679","alarm":"location","PositionTime":"2018-08-08T13:09:46","Imei":"0352544074331597","Imsi":"234500003188471","AssetName":"Sydney Swift","CreateDateTime":"2018-08-08T13:09:46"}';
     all_msg.push(popped);
-    
+    //
     processClickOnPushNotification(all_msg); 
-});*/
+});
 
 $$('body').on('click', '#showToken', function () {
-    if(window.plus) {
+   	if(window.plus) {
         window.uuid = plus.device.uuid;
         var info = plus.push.getClientInfo();
         localStorage.PUSH_MOBILE_TOKEN = info.token;
@@ -653,7 +613,7 @@ $$('body').on('click', '#showToken', function () {
         localStorage.DEVICE_TYPE = plus.os.name? plus.os.name : "web";
        
     }else{
-        var uid = guid();
+    	var uid = guid();
             if(!localStorage.PUSH_MOBILE_TOKEN)
             localStorage.PUSH_MOBILE_TOKEN = uid;
             if(!localStorage.PUSH_APP_KEY)
@@ -668,7 +628,7 @@ $$('body').on('click', '#showToken', function () {
         alert(msg);
 });
 
-    
+	
 $$(document).on('click', '.backToIndex', function(e){    
     mainView.router.back({
         pageName: 'index', 
@@ -689,20 +649,15 @@ $$(document).on('change', '.leaflet-control-layers-selector[type="radio"]', func
     }
 });
 
-$$('body').on('click', '.assetList .item-inner', function () {
+$$('body').on('click', '.menuDevice', function () {
     var parrent = $$(this).closest('.item-content');    
-    //var caption = parrent.data('imei');   
-
-    var userPermissions = Protocol.Helper.getPermissions(getUserinfo().Permissions);
-    //var userPermissions = Protocol.Helper.getPermissions(1);
-    //console.log(userPermissions);
+    //var caption = parrent.data('imei');    
     
     TargetAsset.IMEI = !parrent.data('imei')? '' : parrent.data('imei');   
     TargetAsset.IMSI = !parrent.data('imsi')? '' : parrent.data('imsi'); 
     TargetAsset.Name = !parrent.data('name')? '' : parrent.data('name');
     TargetAsset.Id = !parrent.data('id')? '' : parrent.data('id');
-    TargetAsset.Type = !parrent.data('type')? '' : parrent.data('type');
-    TargetAsset.Customer = !parrent.data('customer')? '' : parrent.data('customer');   
+    TargetAsset.Type = !parrent.data('type')? '' : parrent.data('type');   
 
     var notificationsCheck = '';    
     if (parrent.data('notifications') == 1) {        
@@ -755,15 +710,6 @@ $$('body').on('click', '.assetList .item-inner', function () {
                         '</div>'+
                     '</div>'; 
 
-    var activation =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-other-activation color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.HOME_MSG09 +
-                        '</div>'+
-                    '</div>'; 
-
     
     var notification =  '<div class="action_button_wrapper">'+                            
                             '<div class="action_button_block action_button_media">'+
@@ -786,12 +732,6 @@ $$('body').on('click', '.assetList .item-inner', function () {
         },
         
         {
-            text: settings,
-            onClick: function () {
-                loadPageSettings();
-            },  
-        },      
-        {
             text: commands,  
             onClick: function () {
                 loadPageCommands();
@@ -802,7 +742,7 @@ $$('body').on('click', '.assetList .item-inner', function () {
             onClick: function () {
                 loadCommandHistoryPage({
                     IMSI: TargetAsset.IMSI,
-                    LastDay: 7,
+                    LastDay: 2,
                 });
             },          
         },
@@ -811,21 +751,13 @@ $$('body').on('click', '.assetList .item-inner', function () {
             onClick: function () {
                 loadSimInfo();
             },          
-        },   
-    ];
-
-    if (userPermissions && userPermissions.ActLive || userPermissions.ActProtect) {
-        buttons.push(
-            {
-                text: activation,
-                onClick: function () {
-                    showActivationModal(userPermissions);
-                },  
-            }
-        );
-    }
-
-    buttons.push(
+        },
+        {
+            text: settings,
+            onClick: function () {
+                loadPageSettings();
+            },  
+        },  
         {
             text: upgrade,
             onClick: function () {
@@ -837,13 +769,14 @@ $$('body').on('click', '.assetList .item-inner', function () {
             onClick: function () {
                 changeAssetNotificationState(parrent);
             },  
-        }
-    );
-
+        },
+        /*{
+            text: cancel,
+            color: 'red'
+        },*/
+    ];
     App.actions(buttons);
 });
-
-
 
 $$('body').on('click', '.showBlockControll', function () {
     var block = $$(this).next('div');
@@ -1283,64 +1216,64 @@ App.onPageInit('asset.commands', function(page){
     var commandListLi = $$(page.container).find('.commandList .item-content');
 
     $$(commandListLi).on('click', function () {
-        var type = $$(this).data('commandtype');
+    	var type = $$(this).data('commandtype');
 
-        var buttonsPos = [                  
-            {
-                text: LANGUAGE.ASSET_COMMANDS_MSG06,  
-                onClick: function () {
-                    requestPositionProtect();
-                },          
-            },
-            {
-                text: LANGUAGE.ASSET_COMMANDS_MSG07,
-                onClick: function () {
-                    requestPositionLive();
-                },  
-            },
-            {
-                text: LANGUAGE.COM_MSG04,
-                color: 'red',
-                onClick: function () {
-                    //App.alert('Cancel clicked');
-                }
-            },
-        ];
-        
-        var msg = '';
+    	var buttonsPos = [			        
+			{
+			    text: LANGUAGE.ASSET_COMMANDS_MSG06,  
+			    onClick: function () {
+			        requestPositionProtect();
+			    },          
+			},
+			{
+			    text: LANGUAGE.ASSET_COMMANDS_MSG07,
+			    onClick: function () {
+			        requestPositionLive();
+			    },  
+			},
+			{
+		        text: LANGUAGE.COM_MSG04,
+		        color: 'red',
+		        onClick: function () {
+		            //App.alert('Cancel clicked');
+		        }
+		    },
+		];
+		
+		var msg = '';
 
-        switch(type){
-            case '1':               
-                requestStatus();
-                break;
+    	switch(type){
+    		case '1':    			
+    			requestStatus();
+    			break;
 
-            case '2':               
-                App.actions(buttonsPos);
-                break;
+    		case '2':    			
+			    App.actions(buttonsPos);
+    			break;
 
-            case '3':               
-                //App.actions(buttonsVer);
+    		case '3':    			
+			    //App.actions(buttonsVer);
                 requestVerify();
-                break;
+    			break;
 
-            case '4':    
-                msg = LANGUAGE.PROMPT_MSG020 +' '+ LANGUAGE.ASSET_COMMANDS_MSG08 + '?';
-                App.confirm(msg, TargetAsset.Name, function () {        
+    		case '4':    
+    			msg = LANGUAGE.PROMPT_MSG020 +' '+ LANGUAGE.ASSET_COMMANDS_MSG08 + '?';
+    			App.confirm(msg, TargetAsset.Name, function () {        
                     requestImmobilise();
-                }); 
-                break;
+                });	
+    			break;
 
-            case '5':   
-                msg = LANGUAGE.PROMPT_MSG020 +' '+ LANGUAGE.ASSET_COMMANDS_MSG09 + '?';
-                App.confirm(msg, TargetAsset.Name, function () {        
+    		case '5':   
+    			msg = LANGUAGE.PROMPT_MSG020 +' '+ LANGUAGE.ASSET_COMMANDS_MSG09 + '?';
+    			App.confirm(msg, TargetAsset.Name, function () {        
                     requestUnimmobilise();
-                });  
-                break;
+                });	 
+    			break;
 
 
-            default:
+    		default:
 
-        }
+    	}
 
         /*App.addNotification({
             hold: 3000,
@@ -1349,10 +1282,10 @@ App.onPageInit('asset.commands', function(page){
     });
 
     $$('.getCommandHistory').on('click', function(){
-        
-        loadCommandHistoryPage({
+    	
+    	loadCommandHistoryPage({
             IMSI: TargetAsset.IMSI,
-            LastDay: 7,
+            LastDay: 2,
         });
     });
 
@@ -1585,11 +1518,11 @@ App.onPageInit('asset.status', function(page){
 });
 
 App.onPageInit('asset.verification', function(page){
-    var container =  $$(page.container).find('.page-content');
+	var container =  $$(page.container).find('.page-content');
     $$(container).on('click', '.verifyAgain', function() {
 
-        checkVerificationStatus();
-    });
+		checkVerificationStatus();
+	});
 });
 
 
@@ -1636,11 +1569,11 @@ function clearUserInfo(){
     if ($$('.page_index .page-content').hasClass('first_login')) {
 
     }else{
-        $$('.page_index .page-content').addClass('first_login');
+    	$$('.page_index .page-content').addClass('first_login');
     }
 
     if (virtualAssetList) {
-        virtualAssetList.deleteAllItems();
+    	virtualAssetList.deleteAllItems();
     }
     
     localStorage.clear(); 
@@ -1656,7 +1589,7 @@ function clearUserInfo(){
     if(mobileToken){      
         //JSON.request(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });   
         var data = {
-            "MobileToken": mobileToken,
+        	"MobileToken": mobileToken,
         };
         JSON.requestPost(API_URL.URL_GET_LOGOUT, data,function(result){
               console.log(result);
@@ -1675,55 +1608,68 @@ function logout(){
 
 function login(){    
 
-    getPlusInfo();
+    //getPlusInfo();
     hideKeyboard();
-    
-        App.showPreloader(); 
-        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '123' : localStorage.PUSH_MOBILE_TOKEN;
-        //var mobileToken = '123';
-        var appKey = !localStorage.PUSH_APP_KEY? '123' : localStorage.PUSH_APP_KEY;
-        //var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
-        var deviceToken = !localStorage.PUSH_REGISTRATION_ID ? '123' : localStorage.PUSH_REGISTRATION_ID;
-        var deviceType = !localStorage.DEVICE_TYPE? 'web' : localStorage.DEVICE_TYPE;
-        var account = $$("input[name='account']");
-        var password = $$("input[name='password']"); 
-        
-        var data = {
-            "LoginName":!account.val()? localStorage.ACCOUNT: account.val(),
-            "Password":encodeURIComponent(!password.val()? localStorage.PASSWORD: password.val()),
-            "AppKey": appKey,
-            "MobileToken": mobileToken,
-            "DeviceToken": deviceToken,
-            "DeviceType": deviceType,
-        };
-        alert(JSON.stringify(data));
-        JSON.requestPost(API_URL.URL_GET_LOGIN, data,function(result){
-                console.log(result);
-                if(result.MajorCode == '000') {
-                    if(!!account.val()) {
-                        localStorage.ACCOUNT = account.val();
-                        localStorage.PASSWORD = password.val();
-                    }
-                    account.val(null);
-                    password.val(null);
-                    setUserinfo(result.Data);
-                    updateUserData(result.Data);
-                    updateUserCrefits(result.Data.credit);
-                    notificationChecked = 1;
+
+    /*if (clientIdCycle == 1){
+    	App.showPreloader(); 
+    }    
+    if (!localStorage.PUSH_DEVICE_TOKEN) {
+        if (clientIdCycle < maxClientIdCycle) {
+            setTimeout(function(){
+                clientIdCycle = clientIdCycle + 1;
+                login();                
+            },500);            
+        }else{
+            var uid = guid();
+            localStorage.PUSH_DEVICE_TOKEN = uid;
+            login();
+        }                     
+    }else{*/
+    	App.showPreloader(); 
+    	var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '123' : localStorage.PUSH_MOBILE_TOKEN;
+	    var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
+	    var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
+	    var deviceType = !localStorage.DEVICE_TYPE? 'web' : localStorage.DEVICE_TYPE;
+	    var account = $$("input[name='account']");
+	    var password = $$("input[name='password']"); 
+	    
+	    var data = {
+	        "LoginName":!account.val()? localStorage.ACCOUNT: account.val(),
+	        "Password":encodeURIComponent(!password.val()? localStorage.PASSWORD: password.val()),
+	        "AppKey": appKey,
+	        "MobileToken": mobileToken,
+	        "DeviceToken": encodeURIComponent(deviceToken),
+	        "DeviceType": deviceType,
+	    };
+	    
+	    JSON.requestPost(API_URL.URL_GET_LOGIN, data,function(result){
+	            console.log(result);
+	            if(result.MajorCode == '000') {
+	                if(!!account.val()) {
+	                    localStorage.ACCOUNT = account.val();
+	                    localStorage.PASSWORD = password.val();
+	                }
+	                account.val(null);
+	                password.val(null);
+	                setUserinfo(result.Data);
+	                updateUserData(result.Data);
+	                updateUserCrefits(result.Data.credit);
+	                notificationChecked = 1;
                     //loginDone = 1;
-                   
-                    webSockConnect();  
-                         
-                    App.closeModal();                
-                }else{                
-                    App.alert(LANGUAGE.LOGIN_MSG01);
-                }
-                App.hidePreloader();
-            },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
-        );     
-    
-        
+	               
+	                webSockConnect();  
+	                     
+	                App.closeModal();                
+	            }else{                
+	                App.alert(LANGUAGE.LOGIN_MSG01);
+	            }
+	            App.hidePreloader();
+	        },
+	        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+	    );     
+    //}
+	    
    
 }
 
@@ -1958,7 +1904,8 @@ function loadPageCommands(){
     });     
 }
 
-function loadPageUpgrade(){    
+function loadPageUpgrade(){
+    
     var dealerToken = getUserinfo().code;
     var href = API_URL.URL_REPLACE_IMEI.format(dealerToken,TargetAsset.IMEI); 
     
@@ -1968,59 +1915,6 @@ function loadPageUpgrade(){
         window.open(href,'_blank');
     }
 }
-
-function showActivationModal(permissions){
-    App.modal({
-        title: '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>',
-        text: LANGUAGE.PROMPT_MSG025,
-        //verticalButtons: true,
-        buttons: [
-            {
-                text: LANGUAGE.COM_MSG32, // protect
-                onClick: function() {
-                    if (permissions && permissions.ActProtect) {
-                        loadPageActivation('0000000000000'); // protect plam
-                    }else{
-                        showNoActPermissionModal(LANGUAGE.COM_MSG32);
-                    }
-                }
-            },
-            {
-                text: LANGUAGE.COM_MSG33,  // live
-                onClick: function() {
-                    if (permissions && permissions.ActLive) {
-                        loadPageActivation('1C783FA4TRAK'); //annual live track plan
-                    }else{
-                        showNoActPermissionModal(LANGUAGE.COM_MSG33);
-                    }
-                }
-            },
-           /* {
-
-                text: '<span class="color-red">' + LANGUAGE.COM_MSG04 + '</span>',  // live
-                onClick: function() {
-                    
-                }
-            },     */         
-        ]
-    });
-}
-
-function showNoActPermissionModal(plan){
-    App.alert(LANGUAGE.PROMPT_MSG026 + ' ' + plan, '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>');
-}
-
-function loadPageActivation(planCode){   
-    var userInfo = getUserinfo();
-    var href = API_URL.URL_ACTIVATION.format( TargetAsset.IMEI, planCode, userInfo.code, encodeURIComponent(userInfo.customerName) ); 
-    //"http://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}"
-    if (window.plus) {
-        plus.runtime.openURL(href);            
-    } else {
-        window.open(href,'_blank');
-    }
-}
-
 
 function loadPageSettings(){
     var today = new Date();
@@ -2047,15 +1941,10 @@ function loadPageSettings(){
                 mainView.router.load({
                     url:'resources/templates/asset.settings.html',
                     context:{
-                        /*IMEI: '<span>'+LANGUAGE.HOME_MSG00+'</span>: '+TargetAsset.IMEI,
+                        IMEI: '<span>'+LANGUAGE.HOME_MSG00+'</span>: '+TargetAsset.IMEI,
                         IMSI: '<span>'+LANGUAGE.HOME_MSG01+'</span>: '+TargetAsset.IMSI,
                         Type: '<span>'+LANGUAGE.HOME_MSG06+'</span>: '+TargetAsset.Type,
-                        Provider: '<span>'+LANGUAGE.ASSET_SETTINGS_MSG06+'</span>: '+getUserinfo().customerName,*/
-                        IMEI: TargetAsset.IMEI,
-                        IMSI: TargetAsset.IMSI,
-                        Type: TargetAsset.Type,
-                        Provider: getUserinfo().customerName,
-                        Customer: TargetAsset.Customer,
+                        Provider: '<span>'+LANGUAGE.ASSET_SETTINGS_MSG06+'</span>: '+getUserinfo().customerName,
                         AssetName: TargetAsset.Name,
                         Date: todayStr,
                         Describe7: asset.Describe7,
@@ -2091,7 +1980,7 @@ function loadPageVerification(data){
             }            
             data.Date = moment(localTime).format(window.COM_TIMEFORMAT);
         }
-        mainView.router.load({
+    	mainView.router.load({
             url:'resources/templates/asset.verification.html',
             context:{
                 IMEI: data.IMEI,
@@ -2103,9 +1992,9 @@ function loadPageVerification(data){
                 Account: data.Account, 
                 Date: data.Date,
                 LoginName: data.LoginName,
-                FirstName: data.FirstName,
-                LastName: data.LastName,
-                PhoneNumber: data.PhoneNumber,
+				FirstName: data.FirstName,
+				LastName: data.LastName,
+				PhoneNumber: data.PhoneNumber,
             }
         }); 
         showVerificationStatus();     
@@ -2306,17 +2195,17 @@ function loadSimInfoPage(params){
 }
 
 function showVerificationStatus(){
-    setTimeout(function() {     
-        /*NOT VERIFIED*/    
-        /*var result =  '<div class="result result2">' +
-                            '<div class="content-block content_block_notes">' +
-                                '<span class="color-danger">' + LANGUAGE.ASSET_VIRIFICATION_MSG06 +'</span><br>' +
-                                LANGUAGE.PROMPT_MSG021 +
-                            '</div>' +                      
-                            '<div class="content-block">' +
-                                '<a href="#" class="button button-big button-fill color-green verifyAgain">' + LANGUAGE.ASSET_VIRIFICATION_MSG11 + '</a>' +
-                            '</div>' +
-                        '</div>';*/
+	setTimeout(function() {		
+        /*NOT VERIFIED*/	
+		/*var result = 	'<div class="result result2">' +
+				            '<div class="content-block content_block_notes">' +
+				                '<span class="color-danger">' + LANGUAGE.ASSET_VIRIFICATION_MSG06 +'</span><br>' +
+				                LANGUAGE.PROMPT_MSG021 +
+				            '</div>' +			            
+				            '<div class="content-block">' +
+				                '<a href="#" class="button button-big button-fill color-green verifyAgain">' + LANGUAGE.ASSET_VIRIFICATION_MSG11 + '</a>' +
+				            '</div>' +
+				        '</div>';*/
 
         /*VERIFIED*/
         var result =    '<div class="result result1">' +
@@ -2325,17 +2214,17 @@ function showVerificationStatus(){
                                 '<div class="verify_text verified">' + LANGUAGE.ASSET_VIRIFICATION_MSG05 + '</div>' +
                             '</div>' +
                         '</div>';
-        
-        if ($$('.result').length !== 0) {
-            $$('.result').remove();         
-        }   
+		
+		if ($$('.result').length !== 0) {
+			$$('.result').remove();			
+		}	
 
-        App.showPreloader();
-        setTimeout(function() { 
-            $$(result).insertAfter('.verificationList');
-            App.hidePreloader();
-        }, 1000);
-    }, 500);
+		App.showPreloader();
+		setTimeout(function() {	
+			$$(result).insertAfter('.verificationList');
+			App.hidePreloader();
+		}, 1000);
+	}, 500);
 }
 
 function showMap(){    
@@ -2360,13 +2249,13 @@ function addressFromLatLng(latlng) {
 
 
 function requestStatus(){
-    if (TargetAsset.IMEI) {
+	if (TargetAsset.IMEI) {
         var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
         var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
         var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
         var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
 
-        var data = {
+		var data = {
             'IMEI': TargetAsset.IMEI,   
             'MinorToken': getUserinfo().userCode,
             "MobileToken": mobileToken,
@@ -2396,12 +2285,12 @@ function requestStatus(){
             },
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         ); 
-    }
+	}
 }
 
 function requestPositionProtect(){
-    if (TargetAsset.IMEI) {
-        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+	if (TargetAsset.IMEI) {
+		var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
         var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
         var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
         var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
@@ -2437,12 +2326,12 @@ function requestPositionProtect(){
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         );    
        
-    }
+	}
 }
 
 function requestPositionLive(){
-    if (TargetAsset.IMEI) {
-        var data = {
+	if (TargetAsset.IMEI) {
+		var data = {
             'IMEI': TargetAsset.IMEI, 
             'MinorToken': getUserinfo().userCode,               
         };        
@@ -2476,7 +2365,7 @@ function requestPositionLive(){
             },
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         );     
-    }
+	}
 }
 
 
@@ -2530,8 +2419,8 @@ function requestVerify(){
 }
 
 function requestImmobilise(){
-    if (TargetAsset.IMEI) {
-        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+	if (TargetAsset.IMEI) {
+		var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
         var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
         var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
         var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
@@ -2567,12 +2456,12 @@ function requestImmobilise(){
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         );    
        
-    }
+	}
 }
 
 function requestUnimmobilise(){
-    if (TargetAsset.IMEI) {
-        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+	if (TargetAsset.IMEI) {
+		var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
         var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
         var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
         var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
@@ -2608,7 +2497,7 @@ function requestUnimmobilise(){
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         );    
        
-    }
+	}
 }
 
 function requestCommandHistory(params){
