@@ -1684,7 +1684,7 @@ function login(){
             "Password":encodeURIComponent(!password.val()? localStorage.PASSWORD: password.val()),
             "AppKey": appKey,
             "MobileToken": mobileToken,
-            "DeviceToken": encodeURIComponent(deviceToken),
+            "DeviceToken": deviceToken,
             "DeviceType": deviceType,
         };
         
