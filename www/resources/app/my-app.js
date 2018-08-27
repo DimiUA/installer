@@ -58,7 +58,7 @@ document.addEventListener("deviceready", onPlusReady, false );
 
 function onPlusReady(){   
 
-    localStorage.DEVICE_TYPE = device.platform;    
+    //localStorage.DEVICE_TYPE = device.platform;    
 
     //getPlusInfo();
 
