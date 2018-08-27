@@ -1696,7 +1696,7 @@ function login(){
             "DeviceToken": deviceToken,
             "DeviceType": deviceType,
         };
-        alert(JSON.stringify(data));
+       // alert(JSON.stringify(data));
         JSON.requestPost(API_URL.URL_GET_LOGIN, data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
