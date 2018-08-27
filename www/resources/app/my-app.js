@@ -1671,7 +1671,7 @@ function login(){
     
         App.showPreloader(); 
         //var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '123' : localStorage.PUSH_MOBILE_TOKEN;
-        var mobileToken = !localStorage.PUSH_REGISTRATION_ID ? '123' : localStorage.PUSH_REGISTRATION_ID;
+        var mobileToken = '123';
         var appKey = !localStorage.PUSH_APP_KEY? '123' : localStorage.PUSH_APP_KEY;
         //var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
         var deviceToken = !localStorage.PUSH_REGISTRATION_ID ? '123' : localStorage.PUSH_REGISTRATION_ID;
