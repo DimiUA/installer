@@ -1,19 +1,19 @@
 @charset "UTF-8";
 
 @font-face {
-  font-family: "untitled-font-3";
-  src:url("untitled-font-3.eot");
-  src:url("untitled-font-3.eot?#iefix") format("embedded-opentype"),
-    url("untitled-font-3.woff") format("woff"),
-    url("untitled-font-3.ttf") format("truetype"),
-    url("untitled-font-3.svg#untitled-font-3") format("svg");
+  font-family: "installer-app";
+  src:url("fonts/installer-app.eot");
+  src:url("fonts/installer-app.eot?#iefix") format("embedded-opentype"),
+    url("fonts/installer-app.woff") format("woff"),
+    url("fonts/installer-app.ttf") format("truetype"),
+    url("fonts/installer-app.svg#installer-app") format("svg");
   font-weight: normal;
   font-style: normal;
 
 }
 
 [data-icon]:before {
-  font-family: "untitled-font-3" !important;
+  font-family: "installer-app" !important;
   content: attr(data-icon);
   font-style: normal !important;
   font-weight: normal !important;
@@ -27,7 +27,7 @@
 
 [class^="icon-"]:before,
 [class*=" icon-"]:before {
-  font-family: "untitled-font-3" !important;
+  font-family: "installer-app" !important;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;
@@ -70,9 +70,6 @@
 }
 .icon-other-name:before {
   content: "\6b";
-}
-.icon-header-history-command-screen:before {
-  content: "\6c";
 }
 .icon-header-delete:before {
   content: "\6d";
@@ -140,12 +137,42 @@
 .icon-other-phone:before {
   content: "\49";
 }
-.icon-other-commands:before {
-  content: "\4a";
-}
 .icon-other-unit:before {
   content: "\78";
 }
 .icon-direction:before {
   content: "\4b";
+}
+.icon-other-sent-message:before {
+  content: "\4d";
+}
+.icon-other-received-message:before {
+  content: "\4e";
+}
+.icon-other-info:before {
+  content: "\6c";
+}
+.icon-replace-imei:before {
+  content: "\4a";
+}
+.icon-header-history-command-screen:before {
+  content: "\4c";
+}
+.icon-other-commands:before {
+  content: "\4f";
+}
+.icon-sim-info-csp:before {
+  content: "\50";
+}
+.icon-sim-info-customer:before {
+  content: "\51";
+}
+.icon-sim-info-date:before {
+  content: "\52";
+}
+.icon-sim-info-sms:before {
+  content: "\53";
+}
+.icon-sim-info-state:before {
+  content: "\54";
 }

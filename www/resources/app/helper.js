@@ -23,6 +23,10 @@ Protocol = {
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
         })
     ],
+    PermissionsEnum: {
+        "ActLive" : 1,
+        "ActProtect": 8,
+    },
     PositionTypes: {
         "NONE": 0,
         "GPS": 1,
@@ -223,6 +227,23 @@ Protocol = {
                     break;
                 default: ret = LANGUAGE.COM_MSG30;
             }
+            return ret;
+        },
+        getPermissions: function(permissionCode){
+            var ret = {};   
+
+            if (permissionCode) {                
+                permissionCode = parseInt(permissionCode);
+            }
+            $.each(Protocol.PermissionsEnum, function(index, value) {                    
+                if ((permissionCode & value) > 0) {                        
+                    ret[index] = true;
+                }else{                       
+                    ret[index] = false;
+                }                  
+            });
+            
+
             return ret;
         },
         getAddressByGeocoder: function(latlng,replyFunc){
