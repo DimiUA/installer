@@ -76,7 +76,7 @@ function onDeviceReady(){
     } */
 
     if (!inBrowser) {
-        if(getUserinfo().MinorToken) {
+        if(localStorage.ACCOUNT && localStorage.PASSWORD) {
             login();    
         }
         else {
@@ -497,7 +497,7 @@ var virtualAssetList = App.virtualList('.assetList', {
 
 
 if (inBrowser) {
-    if(getUserinfo().code) {
+    if(localStorage.ACCOUNT && localStorage.PASSWORD) {
         login();    
     }
     else {
