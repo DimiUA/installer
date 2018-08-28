@@ -1,3 +1,5 @@
+
+
 $hub = null;
 window.NULL = null;
 window.COM_TIMEFORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -883,7 +885,7 @@ App.onPageInit('user.profile', function (page) {
         ); 
 
         App.showPreloader();
-        JSON.request(url, function(result){ 
+        JSONrequest(url, function(result){ 
                 console.log(result);                  
                 if (result.MajorCode == '000') {                    
                     
@@ -925,7 +927,7 @@ App.onPageInit('user.password', function (page) {
                     ); 
                 console.log(url);
                 App.showPreloader();
-                JSON.request(url, function(result){ 
+                JSONrequest(url, function(result){ 
                         console.log(result);                  
                         if (result.MajorCode == '000') { 
                             App.alert(LANGUAGE.PROMPT_MSG003, function(){
@@ -1465,7 +1467,7 @@ App.onPageInit('asset.settings', function(page){
         }
         console.log(data);
         App.showPreloader();
-        JSON.requestPost(API_URL.URL_EDIT_DEVICE,data,function(result){
+        JSONrequestPost(API_URL.URL_EDIT_DEVICE,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
                                       
@@ -1500,7 +1502,7 @@ App.onPageInit('client.details', function (page) {
         };
 
         
-        JSON.requestPost(API_URL.URL_SENT_NOTIFY,data,function(result){
+        JSONrequestPost(API_URL.URL_SENT_NOTIFY,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
                     
@@ -1654,11 +1656,11 @@ function clearUserInfo(){
     }
     
     if(mobileToken){      
-        //JSON.request(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });   
+        //JSONrequest(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });   
         var data = {
             "MobileToken": mobileToken,
         };
-        JSON.requestPost(API_URL.URL_GET_LOGOUT, data,function(result){
+        JSONrequestPost(API_URL.URL_GET_LOGOUT, data,function(result){
               console.log(result);
         });
     }   
@@ -1697,7 +1699,7 @@ function login(){
             "DeviceType": deviceType,
         };
        // alert(JSON.stringify(data));
-        JSON.requestPost(API_URL.URL_GET_LOGIN, data,function(result){
+        JSONrequestPost(API_URL.URL_GET_LOGIN, data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
                     if(!!account.val()) {
@@ -1742,7 +1744,7 @@ function getCreditBalance(vsMsg){
     if (vsMsg) {
         App.showPreloader();
     }
-    JSON.requestPost(API_URL.URL_GET_CREDIT,data,function(result){
+    JSONrequestPost(API_URL.URL_GET_CREDIT,data,function(result){
             console.log(result);
             if(result.MajorCode == '000') { 
                 updateUserCrefits(result.Data.Credit);
@@ -1904,7 +1906,7 @@ function submitSearchForm() {
     
 
         App.showPreloader();
-        JSON.requestPost(API_URL.URL_GET_ASSET_LIST,data,function(result){
+        JSONrequestPost(API_URL.URL_GET_ASSET_LIST,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
                     $$('.page-content').removeClass('first_login');                   
@@ -2037,7 +2039,7 @@ function loadPageSettings(){
     };
 
     App.showPreloader();
-    JSON.requestPost(API_URL.URL_GET_DEVICE_DETAIL,data,function(result){
+    JSONrequestPost(API_URL.URL_GET_DEVICE_DETAIL,data,function(result){
             console.log(result);
             if(result.MajorCode == '000') { 
                 var asset = getAssetParametersName(result.Data);
@@ -2262,7 +2264,7 @@ function loadSimInfo(){
         DeviceId: TargetAsset.IMSI,
     };
     App.showPreloader();
-    JSON.requestPost(API_URL.URL_GET_SIM_INFO,data,function(result){
+    JSONrequestPost(API_URL.URL_GET_SIM_INFO,data,function(result){
             console.log(result);
             if(result.MajorCode == '000') { 
                 getAdditionalSimInfo(result.Data);                              
@@ -2283,7 +2285,7 @@ function getAdditionalSimInfo(params){
         Rows: 10,
     };
     /*App.showPreloader();*/
-    JSON.requestPost(API_URL.URL_GET_SIM_LIST,data,function(result){
+    JSONrequestPost(API_URL.URL_GET_SIM_LIST,data,function(result){
             console.log(result);
             if(result.MajorCode == '000') { 
                 loadSimInfoPage(Object.assign(params, result.Data[0]));                              
@@ -2376,7 +2378,7 @@ function requestStatus(){
         };        
         
         App.showPreloader();
-        JSON.requestPost(API_URL.URL_GET_STATUS,data,function(result){
+        JSONrequestPost(API_URL.URL_GET_STATUS,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
                     turnNotificationOn();
@@ -2416,7 +2418,7 @@ function requestPositionProtect(){
         };              
         
         App.showPreloader();
-        JSON.requestPost(API_URL.URL_GET_PROTECT_POSITION,data,function(result){
+        JSONrequestPost(API_URL.URL_GET_PROTECT_POSITION,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
                     turnNotificationOn();
@@ -2448,7 +2450,7 @@ function requestPositionLive(){
         };        
         
         App.showPreloader();
-        JSON.requestPost(API_URL.URL_GET_LIVE_POSITION,data,function(result){
+        JSONrequestPost(API_URL.URL_GET_LIVE_POSITION,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
                     var props = result.Data;
@@ -2489,7 +2491,7 @@ function requestVerify(){
         };        
         
         App.showPreloader();
-        JSON.requestPost(API_URL.URL_GET_VERIFY2,data,function(result){
+        JSONrequestPost(API_URL.URL_GET_VERIFY2,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
                     
@@ -2546,7 +2548,7 @@ function requestImmobilise(){
         };             
         
         App.showPreloader();
-        JSON.requestPost(API_URL.URL_SET_IMMOBILISE,data,function(result){
+        JSONrequestPost(API_URL.URL_SET_IMMOBILISE,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
                     turnNotificationOn();
@@ -2587,7 +2589,7 @@ function requestUnimmobilise(){
         };               
         
         App.showPreloader();
-        JSON.requestPost(API_URL.URL_SET_UNIMMOBILISE,data,function(result){
+        JSONrequestPost(API_URL.URL_SET_UNIMMOBILISE,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
                     turnNotificationOn();
@@ -2622,7 +2624,7 @@ function requestCommandHistory(params){
         var container = $$('body');
         if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
         App.showProgressbar(container); 
-        JSON.requestPost(API_URL.URL_GET_COMMAND_HISTORY,data,function(result){
+        JSONrequestPost(API_URL.URL_GET_COMMAND_HISTORY,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
                     if (result.Data && result.Data.length > 0 && virtualCommandsHistoryList) {                       
@@ -2663,7 +2665,7 @@ function getNewNotifications(){
         var url = API_URL.URL_GET_NEW_NOTIFICATIONS.format(MinorToken,encodeURIComponent(deviceToken)); 
         notificationChecked = 0;
 
-        JSON.request(url, function(result){
+        JSONrequest(url, function(result){
                 App.hideProgressbar();            
                 notificationChecked = 1;
                 if(window.plus) {
@@ -2737,7 +2739,7 @@ function changeAssetNotificationState(device,obj){
         message = LANGUAGE.PROMPT_MSG019 + ' IMEI: '+TargetAsset.IMEI;        
     }
 
-    JSON.requestPost(API_URL.URL_CHANGE_NOTIFICATION_STATUS, data,function(result){
+    JSONrequestPost(API_URL.URL_CHANGE_NOTIFICATION_STATUS, data,function(result){
             console.log(result);
             if(result.MajorCode == '000') {     
                 if (device) {
