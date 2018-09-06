@@ -56,12 +56,12 @@ document.addEventListener("deviceready", onDeviceReady, false );
 
 function onDeviceReady(){   
 
-    //alert(JSON.stringify(BuildInfo));
+    if (window.MobileAccessibility) {
+        window.MobileAccessibility.usePreferredTextZoom(false);    
+    }
 
-   /* localStorage.DEVICE_TYPE = device.platform;    
-    localStorage.PUSH_APPID_ID = BuildInfo.packageName;  
-    localStorage.PUSH_MOBILE_TOKEN = BuildInfo.packageName;
-    localStorage.PUSH_APP_KEY = BuildInfo.packageName;*/
+    setupPush();
+
 
     getPlusInfo();
 
@@ -91,7 +91,7 @@ function onDeviceReady(){
     document.addEventListener("resume", onAppReume, false);
     document.addEventListener("pause", onAppPause, false);
 
-    setupPush();
+   
 }
 
 function setupPush(){
