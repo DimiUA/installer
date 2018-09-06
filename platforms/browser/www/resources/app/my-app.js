@@ -3026,7 +3026,7 @@ function showMsgNotification(arrMsgJ){
             message: message,
             button: {
                 text: LANGUAGE.COM_MSG16,
-                close: false,         
+                close: true,         
             },
             onClick: function () { 
                 processClickOnPushNotification([msg]);
@@ -3039,6 +3039,8 @@ function showMsgNotification(arrMsgJ){
         mainView.router.loadPage('resources/templates/notification.html');       
     }    */
 }
+
+
 
 function processMessage(msg){
     App.closeNotification('.notifications');
