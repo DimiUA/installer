@@ -3029,7 +3029,7 @@ function showMsgNotification(arrMsgJ){
                 close: false,         
             },
             onClick: function () { 
-                processClickOnPushNotification(arrMsgJ);
+                processClickOnPushNotification([msg]);
             },                          
         }); 
         
