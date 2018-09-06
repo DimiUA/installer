@@ -1,5 +1,3 @@
-
-
 $hub = null;
 window.NULL = null;
 window.COM_TIMEFORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -21,20 +19,15 @@ function guid() {
 //code = majorToken 
 
 function getPlusInfo(){
-    if(window.device) {
-       /* window.uuid = plus.device.uuid;
-        var info = plus.push.getClientInfo();
-        localStorage.PUSH_MOBILE_TOKEN = info.token;
-        localStorage.PUSH_APPID_ID = info.appid;
-        localStorage.PUSH_APP_KEY = info.appkey;
-        localStorage.PUSH_DEVICE_TOKEN = info.clientid;
-        localStorage.DEVICE_TYPE = plus.os.name? plus.os.name : "web";*/         
-        localStorage.PUSH_MOBILE_TOKEN = BuildInfo.packageName;
+    var uid = guid();
+    if(window.device) {                        
+        if(!localStorage.PUSH_MOBILE_TOKEN){
+        localStorage.PUSH_MOBILE_TOKEN = uid;
+        }       
         localStorage.PUSH_APP_KEY = BuildInfo.packageName;
         localStorage.PUSH_APPID_ID = BuildInfo.packageName; 
         localStorage.DEVICE_TYPE = device.platform;   
-    }else{
-        var uid = guid();
+    }else{        
             if(!localStorage.PUSH_MOBILE_TOKEN)
             localStorage.PUSH_MOBILE_TOKEN = uid;
             if(!localStorage.PUSH_APP_KEY)
@@ -48,9 +41,9 @@ function getPlusInfo(){
 }
 
 var inBrowser = 0;
-var notificationChecked = 0;
+//localStorage.notificationChecked = 0;
 var loginTimer = 0;
-var loginDone = 0;
+localStorage.loginDone = 0;
 
 /*var maxClientIdCycle = 10; 
 var clientIdCycle = 1;*/
@@ -59,17 +52,16 @@ if( navigator.userAgent.match(/Windows/i) ){
     inBrowser = 1;
 }
 
-//document.addEventListener( "plusready", onPlusReady, false ); 
 document.addEventListener("deviceready", onDeviceReady, false ); 
 
 function onDeviceReady(){   
 
-    //alert(JSON.stringify(BuildInfo));
+    if (window.MobileAccessibility) {
+        window.MobileAccessibility.usePreferredTextZoom(false);    
+    }
 
-   /* localStorage.DEVICE_TYPE = device.platform;    
-    localStorage.PUSH_APPID_ID = BuildInfo.packageName;  
-    localStorage.PUSH_MOBILE_TOKEN = BuildInfo.packageName;
-    localStorage.PUSH_APP_KEY = BuildInfo.packageName;*/
+    setupPush();
+
 
     getPlusInfo();
 
@@ -79,7 +71,7 @@ function onDeviceReady(){
 
     if (!inBrowser) {
         if(localStorage.ACCOUNT && localStorage.PASSWORD) {
-            login();    
+            preLogin();     
         }
         else {
             logout();
@@ -99,7 +91,7 @@ function onDeviceReady(){
     document.addEventListener("resume", onAppReume, false);
     document.addEventListener("pause", onAppPause, false);
 
-    setupPush();
+   
 }
 
 function setupPush(){
@@ -122,8 +114,16 @@ function setupPush(){
         push.on('registration', function(data) {
             console.log('registration event: ' + data.registrationId);  
             //alert( JSON.stringify(data) );         
-            //App.alert(data.registrationId);
-            localStorage.PUSH_REGISTRATION_ID = data.registrationId;
+
+            //localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
+           
+            var oldRegId = localStorage.PUSH_DEVICE_TOKEN;
+            if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {               
+                // Save new registration ID
+                localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
+                // Post registrationId to your app server as the value has changed
+                refreshToken(data.registrationId);
+            }
         });
 
         push.on('error', function(e) {
@@ -131,117 +131,37 @@ function setupPush(){
             alert("push error = " + e.message);
         });
 
-        push.on('notification', function(data) {
-            console.log('notification event');
-            /*navigator.notification.alert(
-                data.message,         // message
-                null,                 // callback
-                data.title,           // title
-                'Ok'                  // buttonName
-            );*/
-            alert( JSON.stringify(data) );
+        push.on('notification', function(data) {            
+            //alert( JSON.stringify(data) );
 
             //if user using app and push notification comes
-            if (data.additionalData.foreground) {
-               // if application open, show popup
+            if (data && data.additionalData && data.additionalData.foreground) {
+               // if application open, show popup               
+               showMsgNotification([data.additionalData]);
             }
-            else{
+            else if (data && data.additionalData && data.additionalData.payload){
                //if user NOT using app and push notification comes
+                var container = $$('body');
+                if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+                App.showProgressbar(container); 
+               
+                loginTimer = setInterval(function() {
+                    //alert(loginDone);
+                    if (localStorage.loginDone) {
+                        clearInterval(loginTimer);
+                        setTimeout(function(){
+                            //alert('before processClickOnPushNotification');
+                            processClickOnPushNotification([data.additionalData.payload]);
+                            App.hideProgressbar(container);               
+                        },1000); 
+                    }
+                }, 1000); 
             }
-       });
+        });
 
-       /* if　(!localStorage.ACCOUNT){
+        if　(!localStorage.ACCOUNT){
             push.clearAllNotifications();
-        }*/
-}
-
-function onPushClick (msg){     // will work in iOS and in // ANDROID go ONLY here
-    var all_msg = [];
-    var message = '';
-    //alert(msg.payload);
-    if (msg && msg.payload) {
-        var parsedPayload = isJsonString(msg.payload);
-        
-        if (parsedPayload) {
-            message = parsedPayload;
-        }else{
-            message = msg.payload;
-        }  
-        if(typeof(message)=='string'){
-            var testArr = message.split("payload");           
-            if (testArr && testArr[1]) {
-                message = testArr[1].slice(2).slice(0, -1);
-                message = isJsonString(message);
-            }            
-        } 
-        if (message) {
-            all_msg.push(message);
         }
-    }
-    if (all_msg.length > 0) {
-        var container = $$('body');
-        if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
-        App.showProgressbar(container); 
-
-        loginTimer = setInterval(function() {                
-                if (notificationChecked) {
-                    clearInterval(loginTimer);
-                    setTimeout(function(){
-                        //alert('before processClickOnPushNotification');
-                         processClickOnPushNotification(all_msg); 
-                         App.hideProgressbar();               
-                    },1000); 
-                }
-            }, 1000);   
-    }
-
-}
-
-function onPushRecieve( msg ){      //will work in android    and iOS - if in foreground    
-    var osName = plus.os.name.toLowerCase();  
-      
-    switch ( osName ) {
-        case "android":
-            var all_msg = plus.push.getAllMessage();
-            if (all_msg === null || all_msg.length === 0) {
-                var message = {};
-                all_msg = [];
-                message.payload = msg.payload;                     
-                all_msg.push(message);
-            }
-            if (all_msg) {
-                var popped = all_msg.pop();
-                all_msg = [];                
-                all_msg.push(popped);
-                
-                //setNotificationList(all_msg); 
-
-                var loginTimer = setInterval(function() {
-                        if (notificationChecked) {
-                            clearInterval(loginTimer);                                    
-                            processClickOnPushNotification(all_msg);
-                        }
-                    }, 1000); 
-            }
-        break;
-
-        case "ios":
-            //if (appPaused) {
-                if (!isJsonString(msg)) {                
-                    if (msg.aps) {
-                        var payload = JSON.stringify(msg.payload); 
-                        if (localPushLastPayload != payload) {
-                            localPushLastPayload = payload;
-                            plus.push.createMessage(msg.content, payload, {cover:false} );
-                        } 
-                    }                    
-                }
-            //}      
-        break;
-        default:
-        // other
-        break;
-    }       
 }
 
 function onAppPause(){ 
@@ -249,36 +169,24 @@ function onAppPause(){
         $hub.stop();
     }
 } 
-function onAppReume(){ 
-    getNewNotifications(); 
+function onAppResume(){ 
+    
+    if (localStorage.ACCOUNT && localStorage.PASSWORD) {        
+        getNewNotifications(); 
+    }
+   
     if ($hub) {
         $hub.start();
     } 
 }  
-function onAppBackground() {
-    if ($hub) {
-        $hub.stop();
-    }
-}
-function onAppForeground() {
-    getNewNotifications();  
-    if ($hub) {
-        $hub.start();
-    }      
-}
-function onAppNewintent() {
-    getNewNotifications();
-    if ($hub) {
-        $hub.start();
-    }        
-}
+
+ 
 
 function backFix(event){
     var page=App.getCurrentView().activePage;        
-    if(page.name=="index"){           
-        var ws=plus.webview.currentWebview();
+    if(page.name=="index"){ 
         App.confirm(LANGUAGE.PROMPT_MSG015, function () {        
-            ws.close();
+            navigator.app.exitApp();
         });
     }else{
         mainView.router.back();
@@ -314,7 +222,7 @@ function webSockConnect(){
                 }                
                 getNewNotifications();
                 
-                var activePage = mainView.activePage;
+                /*var activePage = mainView.activePage;
     
                 if ( typeof(activePage) == 'undefined' || (activePage && activePage.name != "notification")) {   
                
@@ -323,7 +231,7 @@ function webSockConnect(){
                     
                 }else if(deviceType == "web"){
                     showNotification(all_msg);
-                }
+                }*/
             }
                 
         }
@@ -405,6 +313,7 @@ API_URL.URL_GET_COMMAND_HISTORY = API_DOMIAN1 + "Client/GetCommandHisMessages";
 API_URL.URL_GET_SIM_INFO = API_DOMIAN5 + "GetSimInfo";
 API_URL.URL_GET_SIM_LIST = API_DOMIAN5 + "GetDeviceList";
 
+API_URL.URL_REFRESH_TOKEN = API_DOMIAN1 + "User/RefreshToken";
 
 
 
@@ -500,7 +409,7 @@ var virtualAssetList = App.virtualList('.assetList', {
 
 if (inBrowser) {
     if(localStorage.ACCOUNT && localStorage.PASSWORD) {
-        login();    
+        preLogin();     
     }
     else {
         logout();
@@ -510,7 +419,7 @@ if (inBrowser) {
 
 $$('.login-form').on('submit', function (e) {    
     e.preventDefault();     
-    login();
+    preLogin(); 
     return false;
 });
 $$('body').on('change keyup input click', '.only_numbers', function(){
@@ -551,8 +460,9 @@ $$('body').on('click', 'a.external', function(event) {
     event.preventDefault();
     var href = this.getAttribute('href');
     if (href) {
-        if (window.plus) {
-            plus.runtime.openURL(href);            
+        if (typeof navigator !== "undefined" && navigator.app) {
+            //plus.runtime.openURL(href);            
+            navigator.app.loadUrl(href, {openExternal: true}); 
         } else {
             window.open(href,'_blank');
         }
@@ -1620,7 +1530,7 @@ function clearUserInfo(){
     
     var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
     //var appId = !localStorage.PUSH_APPID_ID? '' : localStorage.PUSH_APPID_ID;
-    //var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '' : localStorage.PUSH_DEVICE_TOKEN;
+    var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '' : localStorage.PUSH_DEVICE_TOKEN;
     var userName = !localStorage.ACCOUNT? '' : localStorage.ACCOUNT;
     //var userInfo = getUserinfo();
     //var MinorToken = userInfo.MinorToken;      
@@ -1654,16 +1564,23 @@ function clearUserInfo(){
     if (pushList) {
         localStorage.setItem("COM.QUIKTRAK.LIVE.NOTIFICATIONLIST.INSTALLER", JSON.stringify(pushList));
     }
+    if (deviceToken) {
+        localStorage.PUSH_DEVICE_TOKEN = deviceToken; 
+    }    
+    if (mobileToken) {
+        localStorage.PUSH_MOBILE_TOKEN = mobileToken;
+    }
+    localStorage.loginDone = 0;
     
-    if(mobileToken){      
         //JSONrequest(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });   
         var data = {
             "MobileToken": mobileToken,
+            "DeviceToken": deviceToken,
         };
         JSONrequestPost(API_URL.URL_GET_LOGOUT, data,function(result){
               console.log(result);
         });
-    }   
+      
     $$("input[name='account']").val(userName);    
 
 }
@@ -1675,24 +1592,54 @@ function logout(){
     App.loginScreen();   
 }
 
+function preLogin(){
+    hideKeyboard();
+    //getPlusInfo();
+    App.showPreloader();
+    if  (localStorage.PUSH_DEVICE_TOKEN){             
+        login();
+    }else{              
+        loginInterval = setInterval( reGetPushDetails, 500);                
+    }
+}
+
+function reGetPushDetails(){
+    
+    //getPlusInfo();
+    if  (pushConfigRetry <= pushConfigRetryMax){
+        pushConfigRetry++;
+        if  (localStorage.PUSH_DEVICE_TOKEN){                 
+            clearInterval(loginInterval);
+            login();
+        }               
+    }else{       
+        clearInterval(loginInterval);     
+        pushConfigRetry = 0;   
+        login();
+        /*setTimeout(function(){
+           App.alert(LANGUAGE.PROMPT_MSG052);
+        },2000);*/
+    }           
+}
+
 function login(){    
 
     getPlusInfo();
-    hideKeyboard();
+    //hideKeyboard();
     
-        App.showPreloader(); 
+        //App.showPreloader(); 
         var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '123' : localStorage.PUSH_MOBILE_TOKEN;
         //var mobileToken = '123';
         var appKey = !localStorage.PUSH_APP_KEY? '123' : localStorage.PUSH_APP_KEY;
         //var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
-        var deviceToken = !localStorage.PUSH_REGISTRATION_ID ? '123' : localStorage.PUSH_REGISTRATION_ID;
+        var deviceToken = !localStorage.PUSH_DEVICE_TOKEN ? '123' : localStorage.PUSH_DEVICE_TOKEN;
         var deviceType = !localStorage.DEVICE_TYPE? 'web' : localStorage.DEVICE_TYPE;
         var account = $$("input[name='account']");
         var password = $$("input[name='password']"); 
         
         var data = {
             "LoginName":!account.val()? localStorage.ACCOUNT: account.val(),
-            "Password":encodeURIComponent(!password.val()? localStorage.PASSWORD: password.val()),
+            "Password":!password.val()? localStorage.PASSWORD: password.val(),
             "AppKey": appKey,
             "MobileToken": mobileToken,
             "DeviceToken": deviceToken,
@@ -1711,8 +1658,8 @@ function login(){
                     setUserinfo(result.Data);
                     updateUserData(result.Data);
                     updateUserCrefits(result.Data.credit);
-                    notificationChecked = 1;
-                    //loginDone = 1;
+                    //localStorage.notificationChecked = 1;
+                    localStorage.loginDone = 1;
                    
                     webSockConnect();  
                          
@@ -1729,6 +1676,33 @@ function login(){
    
 }
 
+function refreshToken(newDeviceToken){
+    console.log('refreshToken() called');
+    var userInfo = getUserinfo();
+
+    if (localStorage.PUSH_MOBILE_TOKEN && userInfo.code && userInfo.userCode && newDeviceToken) {
+        var data = {
+            MajorToken: userInfo.code,
+            MinorToken: userInfo.userCode,
+            MobileToken: localStorage.PUSH_MOBILE_TOKEN,
+            DeviceToken: newDeviceToken,             
+        };
+      
+        //console.log(urlLogin);                             
+        JSON1.requestPost(API_URL.URL_REFRESH_TOKEN, data, function(result){                
+                if(result.MajorCode == '000') {
+                                    
+                }else{                
+                   
+                }                
+            },
+            function(){ console.log('error during refresh token');  }
+        ); 
+    }else{
+        console.log('not loggined');
+    }
+        
+}
 
 function hideKeyboard() {
     document.activeElement.blur();
@@ -1964,11 +1938,12 @@ function loadPageUpgrade(){
     var dealerToken = getUserinfo().code;
     var href = API_URL.URL_REPLACE_IMEI.format(dealerToken,TargetAsset.IMEI); 
     
-    if (window.plus) {
-        plus.runtime.openURL(href);            
-    } else {
-        window.open(href,'_blank');
-    }
+    if (typeof navigator !== "undefined" && navigator.app) {
+            //plus.runtime.openURL(href);            
+            navigator.app.loadUrl(href, {openExternal: true}); 
+        } else {
+            window.open(href,'_blank');
+        }
 }
 
 function showActivationModal(permissions){
@@ -2016,11 +1991,12 @@ function loadPageActivation(planCode){
     var userInfo = getUserinfo();
     var href = API_URL.URL_ACTIVATION.format( TargetAsset.IMEI, planCode, userInfo.code, encodeURIComponent(userInfo.customerName) ); 
     //"http://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}"
-    if (window.plus) {
-        plus.runtime.openURL(href);            
-    } else {
-        window.open(href,'_blank');
-    }
+    if (typeof navigator !== "undefined" && navigator.app) {
+            //plus.runtime.openURL(href);            
+            navigator.app.loadUrl(href, {openExternal: true}); 
+        } else {
+            window.open(href,'_blank');
+        }
 }
 
 
@@ -2663,11 +2639,11 @@ function getNewNotifications(){
         App.showProgressbar(container); 
 
         var url = API_URL.URL_GET_NEW_NOTIFICATIONS.format(MinorToken,encodeURIComponent(deviceToken)); 
-        notificationChecked = 0;
+        //localStorage.notificationChecked = 0;
 
         JSONrequest(url, function(result){
                 App.hideProgressbar();            
-                notificationChecked = 1;
+                //localStorage.notificationChecked = 1;
                 if(window.plus) {
                     plus.push.clear();
                 }
@@ -2692,7 +2668,7 @@ function getNewNotifications(){
             },
             function(){
                 App.hideProgressbar();
-                notificationChecked = 1;            
+                //localStorage.notificationChecked = 1;            
             }
         ); 
     }        
