@@ -3016,12 +3016,12 @@ function showMsgNotification(arrMsgJ){
     }
     
 
-    if (msg && msg.alarm && msg.AssetName) {
-        var message = msg.AssetName;
+    if (msg && msg.title || msg && msg.AssetName) {
+        var message = '';
         if (msg.title) {
-        	message += '</br>'+msg.title;
+        	message += msg.name + '</br>' + msg.title;
         }else{
-        	message += '</br>'+msg.alarm;
+        	message += msg.AssetName + '</br>' + msg.alarm;
         }           
         App.addNotification({
             hold: 5000,
@@ -3031,8 +3031,7 @@ function showMsgNotification(arrMsgJ){
                 text: LANGUAGE.COM_MSG16,
                 close: false,         
             },
-            onClick: function () { 
-            	console.log('here');
+            onClick: function () {             	
                 processClickOnPushNotification([msg]);
             },                          
         }); 
