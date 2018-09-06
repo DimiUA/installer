@@ -289,13 +289,9 @@ API_URL.URL_GET_CREDIT = API_DOMIAN1 + "Client/GetCredit";
 API_URL.URL_GET_DEVICE_DETAIL = API_DOMIAN1 + "Client/GetAssetDetail";
 API_URL.URL_CHANGE_NOTIFICATION_STATUS = API_DOMIAN1 + "Client/Notification";
 
-//API_URL.URL_GET_PROTECT_POSITION = API_DOMIAN1 + "Client/ProtectPostion";
 API_URL.URL_GET_PROTECT_POSITION = API_DOMIAN1 + "Client/ProtectPostion2";
-//API_URL.URL_GET_STATUS = API_DOMIAN1 + "Client/Status";
 API_URL.URL_GET_STATUS = API_DOMIAN1 + "Client/Status2";
-//API_URL.URL_SET_IMMOBILISE = API_DOMIAN1 + "Client/Immobilise";
 API_URL.URL_SET_IMMOBILISE = API_DOMIAN1 + "Client/Immobilise2";
-//API_URL.URL_SET_UNIMMOBILISE = API_DOMIAN1 + "Client/Unimobilise";
 API_URL.URL_SET_UNIMMOBILISE = API_DOMIAN1 + "Client/Unimobilise2";
 API_URL.URL_GET_LIVE_POSITION = API_DOMIAN1 + "Client/LivePostion";
 API_URL.URL_GET_VERIFY2 = API_DOMIAN1 + "Client/Verfiy2";
@@ -2704,7 +2700,7 @@ function changeAssetNotificationState(device,obj){
         "Type": deviceType,  
     };     
         
-    App.alert(JSON.stringify(data));
+   // App.alert(JSON.stringify(data));
 
     var message = '';
     if (currentState == 1) {         
