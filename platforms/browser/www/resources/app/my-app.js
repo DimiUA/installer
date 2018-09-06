@@ -3015,7 +3015,12 @@ function showMsgNotification(arrMsgJ){
     
 
     if (msg && msg.alarm && msg.AssetName) {
-        var message = msg.AssetName+'</br>'+msg.alarm;        
+        var message = msg.AssetName;
+        if (msg.title) {
+        	message += '</br>'+msg.title;
+        }else{
+        	message += '</br>'+msg.alarm;
+        }           
         App.addNotification({
             hold: 5000,
             message: message,
@@ -3024,15 +3029,15 @@ function showMsgNotification(arrMsgJ){
                 close: false,         
             },
             onClick: function () { 
-                processMessage(msg);
+                processClickOnPushNotification(arrMsgJ);
             },                          
         }); 
         
-    }else if (msg && msg.time && msg.name && msg.title) {
+    }/*else if (msg && msg.time && msg.name && msg.title) {
         $$('.notification_button').removeClass('new_not');  
                     
         mainView.router.loadPage('resources/templates/notification.html');       
-    }    
+    }    */
 }
 
 function processMessage(msg){
