@@ -2704,7 +2704,7 @@ function changeAssetNotificationState(device,obj){
         "Type": deviceType,  
     };     
         
-        
+    App.alert(JSON.stringify(data));
 
     var message = '';
     if (currentState == 1) {         
