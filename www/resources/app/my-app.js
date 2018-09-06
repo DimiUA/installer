@@ -541,14 +541,16 @@ $$('body').on('click', '.searchClear', function () {
     $$('.searchClear').hide();
 });
 
-/*$$('body').on('click', '.navbar_title, .navbar_title_index', function(){
+$$('body').on('click', '.navbar_title, .navbar_title_index', function(){
     var all_msg = [];
-    var popped = '{"title":"IGNITION ON WARNING","type":32768,"imei":"0863014530724922","name":"МАН АА0360КН","lat":48.653384,"lng":12.4702,"speed":0,"direct":0,"time":"2018-08-08T13:21:09"}';
+    var popped = '{"title":"IGNITION ON WARNING","type":32768,"imei":"0863014530724883","name":"AA5638PT Merc2008 Дешевий","lat":50.439684,"lng":30.3883,"speed":0,"direct":0,"time":"2018-09-06 16:09:43","alarm":32768,"Lat":50.439684,"Lng":30.3883,"Imei":"0863014530724883","AssetName":"AA5638PT Merc2008 Дешевий","PositionTime":"2018-09-06 16:09:43"}';
     //var popped = '{"Lat":"-33.970022","Lng":"151.127198","Valid":"A","Speed":"0","Direction":"0","Acc":"OFF","Battery":"13.06","GSM":"23","GPS":"9","Ignition":"77834","Mileage":"447679","alarm":"location","PositionTime":"2018-08-08T13:09:46","Imei":"0352544074331597","Imsi":"234500003188471","AssetName":"Sydney Swift","CreateDateTime":"2018-08-08T13:09:46"}';
     all_msg.push(popped);
     
-    processClickOnPushNotification(all_msg); 
-});*/
+    //processClickOnPushNotification(all_msg); 
+    //console.log('click');
+    showMsgNotification(all_msg);
+});
 
 $$('body').on('click', '#showToken', function () {
     if(window.plus) {
@@ -3024,11 +3026,13 @@ function showMsgNotification(arrMsgJ){
         App.addNotification({
             hold: 5000,
             message: message,
+            closeOnClick: true,
             button: {
                 text: LANGUAGE.COM_MSG16,
-                close: true,         
+                close: false,         
             },
             onClick: function () { 
+            	console.log('here');
                 processClickOnPushNotification([msg]);
             },                          
         }); 
