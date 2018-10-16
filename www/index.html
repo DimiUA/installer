@@ -13,11 +13,11 @@
     <!-- Cropper Camer -->
     <link rel="stylesheet" href="resources/plugins/cropper/css/cropper.min.css" type="text/css" charset="utf-8"/>
     <!-- Path to Framework7 Library CSS, Material Theme -->
-    <link rel="stylesheet" href="resources/libraries/framework7/css/framework7.material.min.css">
+    <link rel="stylesheet" href="resources/libraries/framework7/css/framework7.ios.min.css">
     <!-- Path to Framework7 color related styles, Material Theme -->
-    <link rel="stylesheet" href="resources/libraries/framework7/css/framework7.material.colors.min.css">
+    <link rel="stylesheet" href="resources/libraries/framework7/css/framework7.ios.colors.min.css">
     <!-- Icons -->
-    <link rel="stylesheet" href="resources/fonts/framework7-icons.css">    
+    <link rel="stylesheet" href="resources/fonts/framework7-icons.css">
     <link rel="stylesheet" href="resources/fonts/ownicons/styles.css">
    
 
@@ -29,6 +29,11 @@
 
   </head>
   <body class="theme-blue theme-dealer" >
+    
+    <div class="statusbar-overlay"></div>
+
+    <!-- First, we need to add Panel's overlay that will overlays app while panel is opened -->
+    <div class="panel-overlay"></div>
 
     <script id="template_Login_Screen" type="text/template7">
       <div class="login-screen " >  
@@ -36,40 +41,38 @@
           <div class="page no-navbar no-toolbar no-swipeback login_page" data-page="login-screen">           
             <div class="page-content login-screen-content pr-16 pl-16">
                 <form action="" class="login-form">
-                    <div class="content-block no-padding">
-                        <div class="logo"><img src="resources/images/logo.png" /></div>
-                    </div>
-                    <div class="list-block login_list">
-                        <ul>
-                          <li>
-                            <div class="item-content">          
-                              <div class="item-inner">
-                                <div class="item-input">                          
-                                  <input type="text" placeholder="{{@global.LANGUAGE.LOGIN_MSG02}}" id="account" name="account" value="" /> <!-- testa -->
-                                </div>
-                              </div>
+                  <div class="content-block no-padding">
+                    <div class="logo"><img src="resources/images/logo.png" /></div>
+                  </div>
+                  <div class="list-block login_list">
+                    <ul>
+                      <li>
+                        <div class="item-content">          
+                          <div class="item-inner">
+                            <div class="item-input">                          
+                              <input type="text" placeholder="{{@global.LANGUAGE.LOGIN_MSG02}}" id="account" name="account" value="" /> <!-- testa -->
                             </div>
-                          </li>
-                          <li>
-                            <div class="item-content">          
-                              <div class="item-inner">
-                                <div class="item-input">                          
-                                  <input type="password" placeholder="{{@global.LANGUAGE.LOGIN_MSG03}}" id="password" name="password" value="" /> <!-- 111111 -->
-                                </div>
-                              </div>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="item-content">          
+                          <div class="item-inner">
+                            <div class="item-input">                          
+                              <input type="password" placeholder="{{@global.LANGUAGE.LOGIN_MSG03}}" id="password" name="password" value="" /> <!-- 111111 -->
+                              <i class="f7-icons icon-other-password-eye color-gray toggle-password"></i>
                             </div>
-                          </li> 
-                          <!-- <li class="forget_pwd_wrapper">       
-                                     <a href="resources/templates/forgotPwd.html" class="color-white forgetPwd ">{{@global.LANGUAGE.LOGIN_MSG05}}</a>          
-                                   </li>     -->         
-                        </ul>
-                    </div>          
-                    <div class="content-block pl-16">
-                        <button type="submit" class="button button-big login-submit button-fill btn_login" style="" id="btnLogin">{{@global.LANGUAGE.LOGIN_MSG04}}</button>
-                    </div>
-                    <!-- <div class="content-block pl-16">
-                        <button type="button" class="button button-big button-fill" style="" id="showToken">Show Token</button>
-                    </div> -->
+                          </div>
+                        </div>
+                      </li> 
+                      <!-- <li class="forget_pwd_wrapper">       
+                                 <a href="resources/templates/forgotPwd.html" class="color-white forgetPwd ">{{@global.LANGUAGE.LOGIN_MSG05}}</a>          
+                               </li>     -->         
+                    </ul>
+                  </div>          
+                  <div class="content-block pl-16">
+                    <button type="submit" class="button button-big login-submit button-fill btn_login" style=""  id="btnLogin">{{@global.LANGUAGE.LOGIN_MSG04}}</button>
+                  </div>
                 </form>
             </div>
           </div>
@@ -77,13 +80,12 @@
       </div>
     </script>
     
-    <!-- First, we need to add Panel's overlay that will overlays app while panel is opened -->
-    <div class="panel-overlay"></div>
+   
  
     <!-- Left panel -->
     <script id="template_Popover_Menu" type="text/template7">
       <!-- Left panel -->
-        <div class="panel panel-left panel-reveal">
+        <div class="panel panel-left panel-cover">
             <div class="menu_wrapper">
                 <div class="menu_header bg-dealer">
               <!-- <img class="vertical-center" src="resources/images/logo.png" alt=""> -->
@@ -108,22 +110,22 @@
                                     <div class="item-title">{{@global.LANGUAGE.MENU_MSG00}}</div>
                                 </div>
                             </li> 
-                            <li class="item-content list-panel-all close-panel " data-page="user.profile">
+                            <li class="item-content list-panel-all close-panel " data-page="user.profile"  id="menuSettings">
                                 <div class="item-media">
                                     <i class="f7-icons icon-menu-user-settings"></i>
                                 </div>
                                 <div class="item-inner">
                                     <div class="item-title">{{@global.LANGUAGE.MENU_MSG01}}</div>
                                 </div>
-                            </li> 
-                            <li class="item-content list-panel-all close-panel " data-page="user.recharge.credit">
-                                <div class="item-media">
-                                    <i class="f7-icons icon-other-payment"></i>
-                                </div>
-                                <div class="item-inner">
-                                    <div class="item-title">{{@global.LANGUAGE.MENU_MSG03}}</div>
-                                </div>
-                            </li>             
+                            </li>
+                             <!-- <li class="item-content list-panel-all close-panel " data-page="user.recharge.credit">
+                                             <div class="item-media">
+                                                 <i class="f7-icons icon-other-payment"></i>
+                                             </div>
+                                             <div class="item-inner">
+                                                 <div class="item-title">{{@global.LANGUAGE.MENU_MSG03}}</div>
+                                             </div>
+                                         </li> -->             
                             <li class="item-content list-panel-all close-panel" data-page="login"> 
                                 <div class="item-media">
                                     <i class="f7-icons icon-menu-sign-out"></i>
@@ -135,11 +137,10 @@
                         </ul>
                     </div>
                 </div>
-                <div class="menu_remainings">
+                <!-- <div class="menu_remainings">
                     {{@global.LANGUAGE.COM_MSG17}}: <span class="remaining_counter">---</span> {{@global.LANGUAGE.COM_MSG18}}
-                </div>
+                </div> -->
             </div>
-        
       </div>
     </script>
  
@@ -150,62 +151,50 @@
           <!-- Your main view, should have "view-main" class -->
         <div class="view view-main">
             <!-- Pages container, because we use fixed navbar and toolbar, it has additional appropriate classes-->
-            <div class="pages navbar-fixed">
-              <!-- Page, "data-page" contains page name -->
-                <script type="text/template7" id="template_AssetList" >
-                    <div data-page="index" class="page page_index bg-color-page">
-           
-                      <!-- Top Navbar. In Material theme it should be inside of the page-->
-                        <div class="navbar bg-dealer ">
-                            <div class="navbar-inner">
-                                <div class="left">
-                                    <a href="#" class="link icon-only open-panel "> <i class="f7-icons icon-header-menu"></i></a>
-                                </div>
-                                <div class="left navbar_title_index">{{@global.LANGUAGE.MENU_MSG00}}</div>
-                                <div class="right"> 
-                                    <a href="resources/templates/notification.html" class="link notification_button " ><i class="f7-icons icon-header-notification"></i></a>
-                                </div>
-                            </div>
-                         
-                        </div>             
-                        
-                        <div class="toolbar tabbar search_tabbar"> <!-- tabbar-scrollable -->
-                            <div class="toolbar-inner">
-                                <a href="#tab-imei" class="tab-link active">{{@global.LANGUAGE.HOME_MSG00}}</a>
-                                <a href="#tab-imsi" class="tab-link">{{@global.LANGUAGE.HOME_MSG01}}</a>
-                                <a href="#tab-name" class="tab-link">{{@global.LANGUAGE.HOME_MSG02}}</a> 
-                                <span class="tab-link-highlight" style="width: 33.3333%; transform: translate3d(0%, 0px, 0px);"></span>                             
+            
+              
+            <!-- Top Navbar. In Material theme it should be inside of the page-->
+                <div class="navbar bg-dealer ">
+                    <div class="navbar-inner">
+                        <div class="left">
+                            <a href="#" class="link icon-only open-panel "> <i class="f7-icons icon-header-menu"></i></a>
+                        </div>
+                        <div class="center index-title">Home</div> <!-- {{@global.LANGUAGE.MENU_MSG00}} -->
+                        <div class="right"> 
+                            <a href="resources/templates/notification.html" class="link notification_button " ><i class="f7-icons icon-header-notification"></i></a>
+                        </div>
+                        <div class="subnavbar search_tabbar">
+                            <!-- Sub navbar content, for example tabs buttons -->
+                            <div class="buttons-row">
+                                <a href="#tab-imei" class="button tab-link active">IMEI</a> <!-- {{@global.LANGUAGE.HOME_MSG00}} -->
+                                <a href="#tab-imsi" class="button tab-link">IMSI</a> <!-- {{@global.LANGUAGE.HOME_MSG01}} -->
+                                <a href="#tab-name" class="button tab-link">Name</a> <!-- {{@global.LANGUAGE.HOME_MSG02}} -->                    
                             </div>
                         </div>
-
-                        <!-- Scrollable page content -->
-                        <div class="page-content first_login">   
-                            <!-- <div class="list-block no-hairlines virtual-list" >
-                            
-                            </div> -->
-                            <form class="searchbar formSearchDevice">
-                                <div class="searchbar-input">                                    
-                                    <input type="number" placeholder="Search" name="searchInput" data-searchby="IMEI" maxlength="100">
-                                    <i class="f7-icons icon-other-search-input color-blue searchDevice"></i>
-                                    <i class="f7-icons icon-other-delete-text-input color-red searchClear"></i>
-                                    <!-- <a href="#" class="searchbar-clear"></a> -->
-                                   
-                                </div>
-                                <!-- <a href="#" class="searchbar-cancel">Cancel</a> -->                                
-                            </form>                         
+                    </div>                         
+                </div>             
+                        
+                       
+                        
+                <div class="pages navbar-through toolbar-through">
+                    <div data-page="index" class="page page_index bg-color-page with-subnavbar">                                
+                      
+                        <div class="page-content first_login">                              
+                            <div class="searchbar formSearchDevice">
+                                <form class="searchbar-input">                                    
+                                    <input type="search" placeholder="Search" name="searchInput" data-searchby="IMEI" maxlength="100" >
+                                    <a href="#" class="f7-icons icon-other-delete-text-input searchbar-clear searchClear"></a>
+                                     
+                                </form>
+                                <a href="#" class="searchbar-cancel">Cancel</a>       
+                            </div>               
                             
                             <div class="tabs">
-                                <div id="tab-imei" class="tab active">
-                                    <div class="content-block">                                       
-                                    </div>
+                                <div id="tab-imei" class="tab active">                                    
                                 </div>
-                                <div id="tab-imsi" class="tab">
-                                    <div class="content-block">                                        
-                                    </div>
+                                <div id="tab-imsi" class="tab">                                    
                                 </div>
-                                <div id="tab-name" class="tab">
-                                    <div class="content-block">
-                                    </div>
+                                <div id="tab-name" class="tab">                                
                                 </div>
                             </div>
                             
@@ -234,15 +223,15 @@
                                 </ul> -->
                             </div> 
                             <div class="content-block content_block_notes first_login_block">
-                                <span>{{@global.LANGUAGE.COM_MSG06}}</span><br>
-                                {{@global.LANGUAGE.PROMPT_MSG001}}
+                                <span>Search</span><br>  <!-- {{@global.LANGUAGE.COM_MSG06}} -->
+                                In this section, you can find the device by <b>IMEI</b>, <b>IMSI</b>, or <b>Name</b>. Select a specific tab and start the search.  <!-- {{@global.LANGUAGE.PROMPT_MSG001}} -->
                             </div>
 
 
                         </div>
                    
                     </div>
-                </script>
+                <!-- </script> -->
             </div>
         </div>
     </div>
@@ -254,7 +243,7 @@
     <script type="text/javascript" src="resources/libraries/framework7/js/framework7.min.js"></script>
      <!-- jquery libraries -->
     <script type="text/javascript" src="resources/libraries/jquery/jqury-2.2.4.min.js"></script>
-    <script type="text/javascript" src="resources/libraries/jquery/jquery.signalR-2.2.0.min.js"></script>
+<!--     <script type="text/javascript" src="resources/libraries/jquery/jquery.signalR-2.2.0.min.js"></script> -->
     <!-- Path to leaflet Library JS-->
     <script type="text/javascript" src="resources/libraries/leaflet/leaflet.js"></script>
     <!-- Moment -->
@@ -270,8 +259,8 @@
     <script type="text/javascript" src="resources/app/helper.js" ></script>
     <script type="text/javascript" src="resources/app/ProtocolHelpers.js" ></script>
     <script type="text/javascript" src="resources/app/languages.js" ></script>
-    <script type="text/javascript" src="resources/app/hubs.js"></script>
-    <script type="text/javascript" src="resources/app/HubPlus.js" ></script>
+<!--     <script type="text/javascript" src="resources/app/hubs.js"></script>
+<script type="text/javascript" src="resources/app/HubPlus.js" ></script> -->
     <script type="text/javascript" src="resources/app/my-app.js?version=0.2"></script>
 
     
