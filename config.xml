@@ -52,9 +52,11 @@
     <plugin name="cordova-plugin-splashscreen" source="npm" spec="5.0.2" />
     <plugin name="cordova-plugin-camera" source="npm" spec="4.0.3"  />
     <plugin spec="https://github.com/phonegap/phonegap-mobile-accessibility.git" source="git" />
+    <plugin name="phonegap-plugin-barcodescanner" source="npm" />
+
 
     <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
-        <string>You can take a photo of your asset using camera and upload it into the app</string>
+        <string>Camera will be used to scan barcodes</string>
     </edit-config>
     <edit-config target="NSPhotoLibraryUsageDescription" file="*-Info.plist" mode="merge">
         <string>You can select photo of your asset in your photo library and upload it into the app</string>

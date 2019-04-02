@@ -1,17 +1,15 @@
-<div class="navbar">
-    <div class="navbar-inner">
-        <div class="left sliding">
-            <a href="#" class="back link "> <i class="f7-icons icon-header-arrow-back"></i></a>
-        </div>
-        <div class="center sliding navbar_title">{{@global.LANGUAGE.ASSET_COMMANDS_HISTORY_MSG00}}</div>     
-        <div class="right">
-            <!-- <a href="#" class="link getNewHystory" ><i class="f7-icons icon-header-apply"></i></a> -->
-        </div>      
-    </div>
-</div>
-
 <div class="page bg-color-page page_commands_history" data-page="asset.commands.history">
-	
+	<div class="navbar">
+        <div class="navbar-inner">
+            <div class="left">
+                <a href="#" class="back link "> <i class="f7-icons icon-header-arrow-back"></i></a>
+            </div>
+            <div class="left navbar_title">{{@global.LANGUAGE.ASSET_COMMANDS_HISTORY_MSG00}}</div>     
+            <div class="right">
+                <!-- <a href="#" class="link getNewHystory" ><i class="f7-icons icon-header-apply"></i></a> -->
+            </div>      
+        </div>
+    </div>
 	<div class="page-content " > 
         <input type="hidden" name="IMSI" value="{{IMSI}}"> 
         <input type="hidden" name="LastDay" value="{{LastDay}}">
@@ -21,10 +19,10 @@
             {{@global.LANGUAGE.ASSET_COMMANDS_HISTORY_MSG03}}
         </div>
 
-        <div class="list-block ">
+        <div class="list-block media-list">
             <ul>
                 <li class="item-content border_bottom">                  
-             
+                   <!--  <div class="item-media"><i class="f7-icons icon-other-unit"></i></div> -->
                     <div class="item-inner">
                         <div class="item-title label">{{@global.LANGUAGE.ASSET_COMMANDS_HISTORY_MSG06}}</div>
                         <div class="item-input">
@@ -44,7 +42,7 @@
                                 <option value="13">13 {{@global.LANGUAGE.ASSET_COMMANDS_HISTORY_MSG05}}</option> 
                                 <option value="14">14 {{@global.LANGUAGE.ASSET_COMMANDS_HISTORY_MSG05}}</option> 
                             </select>
-                            <i class="f7-icons icon-other-arrow-drop-down select_arrow"></i>
+                            <i class="f7-icons icon-other-arrow-drop-dowm select_arrow"></i>
                         </div>
                     </div>                   
                 </li>
