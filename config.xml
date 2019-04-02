@@ -33,7 +33,7 @@
     <preference name="StatusBarStyle" value="blacktranslucent" />
     <preference name="phonegap-version" value="cli-7.1.0" />
     <plugin name="cordova-plugin-statusbar" source="npm" spec="2.1.3" />
-    <plugin name="phonegap-plugin-barcodescanner" source="npm" spac="8.0.0" />
+  <!--   <plugin name="phonegap-plugin-barcodescanner" source="npm" spac="8.0.0" /> -->
     
     <plugin name="phonegap-plugin-push" source="npm" spec="2.1.2">
         <variable name="SENDER_ID" value="106187216531" />
