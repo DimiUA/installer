@@ -54,14 +54,14 @@
     <plugin name="cordova-plugin-dialogs" source="npm" spec="1.2.1" />
 	<plugin name="cordova-plugin-whitelist" source="npm" spec="1.2.1" />
     <plugin name="cordova-plugin-splashscreen" source="npm" spec="5.0.2" />
-    <!-- <plugin name="cordova-plugin-camera" source="npm" spec="4.0.3"  /> -->
+    <plugin name="cordova-plugin-camera" source="npm" spec="4.0.3"  />
     <plugin spec="https://github.com/phonegap/phonegap-mobile-accessibility.git" source="git" />
     
-	<config-file target="AndroidManifest.xml" parent="/*" mode="merge">
+	<!-- <config-file target="AndroidManifest.xml" parent="/*" mode="merge">
 	    <uses-permission android:name="android.permission.CAMERA" />
 	    <uses-feature android:name="android.hardware.camera" />
 	    <uses-feature android:name="android.hardware.camera.autofocus" />
-	</config-file>
+	</config-file> -->
 
     <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
         <string>Camera will be used to scan barcodes</string>
