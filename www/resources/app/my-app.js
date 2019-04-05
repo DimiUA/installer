@@ -3246,4 +3246,6 @@ function openBarCodeReader(input){
     }else{
         app.dialog.alert('Your device does not support this function');
     }
+
+    
 }
