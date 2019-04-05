@@ -3229,7 +3229,7 @@ function openBarCodeReader(input){
             function (error) {
                 alert("Scanning failed: " + error);
             },
-            {
+            /*{
                   //preferFrontCamera : true, // iOS and Android
                   showFlipCameraButton : true, // iOS and Android
                   showTorchButton : true, // iOS and Android
@@ -3241,7 +3241,7 @@ function openBarCodeReader(input){
                   //orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
                   //disableAnimations : true, // iOS
                   //disableSuccessBeep: false // iOS and Android
-            }
+            }*/
         );
     }else{
         app.dialog.alert('Your device does not support this function');
