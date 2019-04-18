@@ -1296,6 +1296,7 @@ App.onPageInit('asset.settings', function(page){
     });
 
     VINinputEl.on('input', function(){ 
+        this.value = this.value.toUpperCase();
         if (this.value.length == 17 && $$(this).data('prev-val') != this.value ) {
             $$(this).data('prev-val', this.value) ;
             getVehicleDetailsByVin({
