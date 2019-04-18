@@ -282,6 +282,8 @@ API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN3 +"Device/Alarms?MinorToken={0}&d
 
 API_URL.URL_ACTIVATION = "http://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}&DealerName={3}";
 API_URL.URL_REPLACE_IMEI = "http://app.quikprotect.co/activation2/upgrade?DealerToken={0}&imeis={1}";
+//API_URL.URL_GET_DETAILS_BY_VIN = "http://ss.sinopacific.com.ua/vin/v1/{0}";
+API_URL.URL_GET_DETAILS_BY_VIN = "http://ss.sinopacific.com.ua/vin/v1/";
 
 API_URL.URL_GET_COMMAND_HISTORY = API_DOMIAN1 + "Client/GetCommandHisMessages";
 API_URL.URL_GET_SIM_INFO = API_DOMIAN5 + "GetSimInfo";
@@ -1247,6 +1249,13 @@ App.onPageInit('asset.settings', function(page){
     var fitmentOptCustomWrapper = $$(page.container).find('.fitment_opt_custom_wrapper');
     var fitmentOptSelectedArr = [];
 
+    var VINinputEl = $$(page.container).find('[name="Describe7"');
+
+    var makeEl = $$(page.container).find('input[name="Describe1"]');
+    var modelEl = $$(page.container).find('input[name="Describe2"]');
+    var colorEl = $$(page.container).find('input[name="Describe3"]');
+    var yearEl = $$(page.container).find('input[name="Describe4"]');
+
     /*var paymentType = $$(page.container).find('[name="PaymentType"]');
     var tabs = $$(page.container).find('.tab');
 
@@ -1255,7 +1264,7 @@ App.onPageInit('asset.settings', function(page){
     var cardNumber = $$(page.container).find('.card_number');
     var cardHolder = $$(page.container).find('.card_holder');*/
 
-    
+    //
     var selectUnitSpeed = $$('select[name="Unit"]');   
     selectUnitSpeed.val(selectUnitSpeed.data("set"));
 
@@ -1268,6 +1277,39 @@ App.onPageInit('asset.settings', function(page){
             fitmentOptSelect.find('option[value="' + e + '"]').prop("selected", true);
         });
     }
+    
+
+
+    VINinputEl.on('blur', function(){ 
+        if ( $$(this).data('prev-val') != this.value ) {            
+            $$(this).data('prev-val', this.value);            
+            getVehicleDetailsByVin({
+                VIN: this.value,
+                inputs: {
+                    Describe1: makeEl,
+                    Describe2: modelEl,
+                    Describe3: colorEl,
+                    Describe4: yearEl,
+                }                    
+            });          
+        }
+    });
+
+    VINinputEl.on('input', function(){ 
+        if (this.value.length == 17 && $$(this).data('prev-val') != this.value ) {
+            $$(this).data('prev-val', this.value) ;
+            getVehicleDetailsByVin({
+                VIN: this.value,
+                inputs: {
+                    Describe1: makeEl,
+                    Describe2: modelEl,
+                    Describe3: colorEl,
+                    Describe4: yearEl,
+                }         
+            });            
+        }
+    });
+
     
 
     /*paymentType.on('change', function(){        
@@ -3229,7 +3271,7 @@ function openBarCodeReader(input){
             function (error) {
                 alert("Scanning failed: " + error);
             },
-            /*{
+            {
                   //preferFrontCamera : true, // iOS and Android
                   showFlipCameraButton : true, // iOS and Android
                   showTorchButton : true, // iOS and Android
@@ -3241,11 +3283,87 @@ function openBarCodeReader(input){
                   //orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
                   //disableAnimations : true, // iOS
                   //disableSuccessBeep: false // iOS and Android
-            }*/
+            }
         );
     }else{
-        app.dialog.alert('Your device does not support this function');
+        App.alert('Your device does not support this function');
     }
-
-    
 }
+
+function getVehicleDetailsByVin(params){
+        if (params && params.VIN) {
+            
+            var container = $$('body');
+            if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+            App.showProgressbar(container); 
+
+            $.ajax({
+                type: "GET",                               
+                url: API_URL.URL_GET_DETAILS_BY_VIN+params.VIN, 
+                dataType: 'json',            
+                async: true, 
+                cache: false,   
+                          
+                success: function(result){ 
+                    App.hideProgressbar();                         
+                    console.log(result); 
+                    if (result) {
+                        var vehicleDetailsArr = [];
+                        
+                        if (result.make) {
+                            vehicleDetailsArr.push({
+                                name: LANGUAGE.ASSET_SETTINGS_MSG21,
+                                value: result.make,
+                                inputName: 'Describe1',
+                            });
+                        }
+                        if (result.model) {
+                            vehicleDetailsArr.push({
+                                name: LANGUAGE.ASSET_SETTINGS_MSG22,
+                                value: result.model,
+                                inputName: 'Describe2',
+                            });
+                        }
+                        if (result.color) {
+                            vehicleDetailsArr.push({
+                                name: LANGUAGE.ASSET_SETTINGS_MSG23,
+                                value: result.color,
+                                inputName: 'Describe3',
+                            });
+                        }
+                        if (result.year) {
+                            vehicleDetailsArr.push({
+                                name: LANGUAGE.ASSET_SETTINGS_MSG24, 
+                                value: result.year,
+                                inputName: 'Describe4',
+                            });
+                        }
+
+                        if (vehicleDetailsArr.length) {
+                            var message = LANGUAGE.PROMPT_MSG028;
+                            for (var i = vehicleDetailsArr.length - 1; i >= 0; i--) {
+                                message += '</br><b>' + vehicleDetailsArr[i].name + ': ' + vehicleDetailsArr[i].value + '</b>';
+                            }
+                            message += '</br>' + LANGUAGE.PROMPT_MSG029;
+
+                            App.confirm(message, function () {        
+                                for (var i = vehicleDetailsArr.length - 1; i >= 0; i--) {
+                                    params.inputs[vehicleDetailsArr[i].inputName].val(vehicleDetailsArr[i].value);
+                                }
+                            });
+                        }
+                    }
+
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown){
+                    App.hideProgressbar();  
+                    console.log(XMLHttpRequest);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    App.alert(LANGUAGE.PROMPT_MSG027);
+                                           
+                }                                                   
+            });
+            
+        }
+    }

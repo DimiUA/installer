@@ -34,6 +34,7 @@ window.LanguagePackages= {
 		"COM_MSG31": "Disable Notifications",
 		"COM_MSG32": "Protect",
 		"COM_MSG33": "Live",
+
 		"PROMPT_MSG001": "In this section, you can find the device by <b>IMEI</b>, <b>IMSI</b>, or <b>Name</b>. Select a specific tab and start the search.",
 		"PROMPT_MSG002": "Buy more credits to send commands to the devices",
 		"PROMPT_MSG003": "Password has been changed. Please, login with new credential",
@@ -59,7 +60,11 @@ window.LanguagePackages= {
 		"PROMPT_MSG023": "There is no position data or they are incorrect.",
 		"PROMPT_MSG024": "Was payment successful?",		
 		"PROMPT_MSG025": "Activate this device as",	
-		"PROMPT_MSG026": "You do not have permission to activate this device as",		
+		"PROMPT_MSG026": "You do not have permission to activate this device as",
+		"PROMPT_MSG027": "VIN number cannot be recognized",		
+		"PROMPT_MSG028": "We will pre fill Asset Details",
+		"PROMPT_MSG029": "Proceed?",
+
 		"LOGIN_MSG01": "The login(email) or password you entered is incorrect.",
 		"LOGIN_MSG02": "Username / Email",
 		"LOGIN_MSG03": "Password",
