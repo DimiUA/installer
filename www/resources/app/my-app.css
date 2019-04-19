@@ -204,8 +204,8 @@ select{
     	-webkit-transition-duration: .3s;
     	transition-duration: .3s;
     	cursor: pointer;
-    	padding-top: 6px;
-    	font-size: 20px;
+    	padding-top: 4px;
+    	/* font-size: 20px; */
 	}
 	.searchbar .scanBarCode{
 		right: 40px;

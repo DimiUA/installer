@@ -1672,10 +1672,11 @@ function login(){
                     App.closeModal();                
                 }else{                
                     App.alert(LANGUAGE.LOGIN_MSG01);
+                    App.loginScreen();
                 }
                 App.hidePreloader();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); App.loginScreen();}
         );     
     
         
