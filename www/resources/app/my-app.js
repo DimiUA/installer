@@ -1280,7 +1280,8 @@ App.onPageInit('asset.settings', function(page){
     
 
 
-    VINinputEl.on('blur', function(){ 
+    VINinputEl.on('blur change', function(){ 
+        console.log('here');
         if ( $$(this).data('prev-val') != this.value ) {            
             $$(this).data('prev-val', this.value);            
             getVehicleDetailsByVin({
@@ -1295,10 +1296,10 @@ App.onPageInit('asset.settings', function(page){
         }
     });
 
-    VINinputEl.on('input change', function(){         
+    VINinputEl.on('input ', function(){         
         this.value = this.value.toUpperCase();
         if (this.value.length == 17 && $$(this).data('prev-val') != this.value ) {
-            $$(this).data('prev-val', this.value) ;
+            $$(this).data('prev-val', this.value);
             getVehicleDetailsByVin({
                 VIN: this.value,
                 inputs: {
@@ -3270,7 +3271,7 @@ function openBarCodeReader(input){
                         "Cancelled: " + result.cancelled);*/
                 if (result && result.text) {
                     input.val(result.text);
-                    input.change();  // fix to trigger onchange / oninput event listener
+                    input.blur();  // fix to trigger onchange / oninput event listener
                 }
                 
             },
