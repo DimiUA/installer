@@ -37,9 +37,9 @@
     <!-- <plugin name="phonegap-plugin-barcodescanner" source="npm" spec="8.0.1" /> -->       <!--  can't build apk --> 
      <!-- <plugin name="cordova-plugin-barcodescanner" source="npm" spec="0.7.4"/> -->        <!--  working , landscape orientation --> 
      <!-- <plugin name="kaiquecruz-phonegap-plugin-barcodescanner-custom" source="npm" /> --> <!--  working , portatrait orientation --> 
-     <!-- <plugin name="phonegap-plugin-2mundos-barcodescanner-custom-ui" source="npm" />  --><!--  working , auto orientation , torch button, but with strange text --> 
+     <plugin name="phonegap-plugin-2mundos-barcodescanner-custom-ui" source="npm" />          <!--  working , auto orientation , torch button, but with strange text --> 
     <!-- <plugin name="cordova-plugin-barcodescanner-browser-support" source="npm" /> -->     <!--  can't build apk --> 
-    <plugin name="heytz-plugin-barcodescanner" source="npm" />
+   <!--  <plugin name="heytz-plugin-barcodescanner" source="npm" />     -->                   <!--  can't build apk --> 
 
 
      
