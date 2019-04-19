@@ -1295,7 +1295,7 @@ App.onPageInit('asset.settings', function(page){
         }
     });
 
-    VINinputEl.on('input change', function(){ 
+    VINinputEl.on('input change', function(){         
         this.value = this.value.toUpperCase();
         if (this.value.length == 17 && $$(this).data('prev-val') != this.value ) {
             $$(this).data('prev-val', this.value) ;
@@ -3270,6 +3270,7 @@ function openBarCodeReader(input){
                         "Cancelled: " + result.cancelled);*/
                 if (result && result.text) {
                     input.val(result.text);
+                    input.change();  // fix to trigger onchange / oninput event listener
                 }
                 
             },
