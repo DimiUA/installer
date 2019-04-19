@@ -3271,7 +3271,7 @@ function openBarCodeReader(input){
                         "Cancelled: " + result.cancelled);*/
                 if (result && result.text) {
                     input.val(result.text);
-                    input.blur();  // fix to trigger onchange / oninput event listener
+                    input.change();  // fix to trigger onchange / oninput event listener
                 }
                 
             },
