@@ -1295,7 +1295,7 @@ App.onPageInit('asset.settings', function(page){
         }
     });
 
-    VINinputEl.on('input', function(){ 
+    VINinputEl.on('input change', function(){ 
         this.value = this.value.toUpperCase();
         if (this.value.length == 17 && $$(this).data('prev-val') != this.value ) {
             $$(this).data('prev-val', this.value) ;
@@ -3268,7 +3268,10 @@ function openBarCodeReader(input){
                         "Result: " + result.text + "\n" +
                         "Format: " + result.format + "\n" +
                         "Cancelled: " + result.cancelled);*/
-                input.val(result.text);
+                if (result && result.text) {
+                    input.val(result.text);
+                }
+                
             },
             function (error) {
                 alert("Scanning failed: " + error);
