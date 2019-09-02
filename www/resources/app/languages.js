@@ -238,7 +238,7 @@ window.LanguagePackages= {
 		"ASSET_POSITION_MSG00": 'Position',
 		"ASSET_POSITION_MSG01": 'km/h',
 		"ASSET_POSITION_MSG02": 'Direction',
-		"ASSET_DEVICE_CONFIG_MSG12": 'Device Settigns',
+		"ASSET_DEVICE_CONFIG_MSG12": 'Device Configuration',
 		"PHOTO_EDIT_MSG00": 'Edit Photo',
 		"PHOTO_EDIT_MSG01": 'Take Picture',
 		"PHOTO_EDIT_MSG02": 'From Gallery',	
