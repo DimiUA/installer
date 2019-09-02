@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" id="com.sinopacific.installergps" version="1.1.10" xmlns="http://www.w3.org/ns/widgets" defaultlocale="en-US" android-versionCode="80" ios-CFBundleVersion="80">
+<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" id="com.sinopacific.installergps" version="1.1.10" xmlns="http://www.w3.org/ns/widgets" defaultlocale="en-US" android-versionCode="81" ios-CFBundleVersion="81">
     <name>GPS Installer</name>
     <description>
         GPS Installer
