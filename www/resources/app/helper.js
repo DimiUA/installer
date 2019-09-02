@@ -249,7 +249,7 @@ Protocol = {
         },
         getAddressByGeocoder: function(latlng,replyFunc){
             /*var url = "http://map.quiktrak.co/reverse.php?format=json&lat={0}&lon={1}&zoom=18&addressdetails=1".format(latlng.lat, latlng.lng);
-            JSON.request(url, function(result){ replyFunc(result.display_name);});*/
+            JSON1.request(url, function(result){ replyFunc(result.display_name);});*/
             var coords = LANGUAGE.COM_MSG09 + ': ' + latlng.lat + ', ' + LANGUAGE.COM_MSG10 + ': ' + latlng.lng;
             $.ajax({
                    type: "GET",                    
@@ -287,7 +287,7 @@ Protocol = {
         },
         getLatLngByGeocoder: function(address,replyFunc){            
             var url = "https://nominatim.openstreetmap.org/search?q={0}&format=json&polygon=1&addressdetails=1".format(address);
-                /*JSON.request(url, function(result){                    
+                /*JSON1.request(url, function(result){                    
                     var res = new L.LatLng(result[0].lat, result[0].lon);
                     replyFunc(res);
                 });*/
