@@ -109,6 +109,7 @@ window.LanguagePackages= {
 		"ASSET_COMMANDS_MSG07": "Get as Live",
 		"ASSET_COMMANDS_MSG08": "Immobilise",
 		"ASSET_COMMANDS_MSG09": "Unimmobilise",
+		"ASSET_COMMANDS_MSG10": "Check Settings",
 
 		"ASSET_COMMANDS_HISTORY_MSG00": "Commands History",
 		"ASSET_COMMANDS_HISTORY_MSG01": "There was no messages in selected period",
@@ -237,6 +238,7 @@ window.LanguagePackages= {
 		"ASSET_POSITION_MSG00": 'Position',
 		"ASSET_POSITION_MSG01": 'km/h',
 		"ASSET_POSITION_MSG02": 'Direction',
+		"ASSET_DEVICE_CONFIG_MSG12": 'Device Settigns',
 		"PHOTO_EDIT_MSG00": 'Edit Photo',
 		"PHOTO_EDIT_MSG01": 'Take Picture',
 		"PHOTO_EDIT_MSG02": 'From Gallery',	

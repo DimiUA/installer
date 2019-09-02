@@ -35,8 +35,8 @@ function getPlusInfo(){
             if(!localStorage.PUSH_DEVICE_TOKEN)
             localStorage.PUSH_DEVICE_TOKEN = uid;
             //localStorage.PUSH_DEVICE_TOKEN = "75ba1639-92ae-0c4c-d423-4fad1e48a49d"
-        localStorage.PUSH_APPID_ID = 'webapp';
-        localStorage.DEVICE_TYPE = "webapp";        
+        localStorage.PUSH_APPID_ID = 'android.app.quiktrak.eu.installer';
+        localStorage.DEVICE_TYPE = "android.app.quiktrak.eu.installer";        
     }
 }
 
@@ -252,10 +252,10 @@ var mainView = App.addView('.view-main', {
     swipeBackPage: false
 });
 
-var API_DOMIAN1 = "http://api.m2mglobaltech.com/Installer/V1/";
+var API_DOMIAN1 = "https://api.m2mglobaltech.com/Installer/V1/";
 var API_DOMIAN2 = "http://quiktrak.co/webapp/QuikProtect.Api2/";
-var API_DOMIAN3 = "http://api.m2mglobaltech.com/QuikTrak/V1/";
-var API_DOMIAN4 = "http://api.m2mglobaltech.com/QuikProtect/V1/Client/";
+var API_DOMIAN3 = "https://api.m2mglobaltech.com/QuikTrak/V1/";
+var API_DOMIAN4 = "https://api.m2mglobaltech.com/QuikProtect/V1/Client/";
 var API_DOMIAN5 = "https://m2mdata.co/api/Service/";
 
 var API_URL = {};
@@ -275,6 +275,7 @@ API_URL.URL_GET_LIVE_POSITION = API_DOMIAN1 + "Client/LivePostion";
 API_URL.URL_GET_VERIFY2 = API_DOMIAN1 + "Client/Verfiy2";
 API_URL.URL_SENT_NOTIFY = API_DOMIAN1 + "Client/SentNotify";
 API_URL.URL_EDIT_DEVICE = API_DOMIAN1 + "Client/EditAsset";
+API_URL.URL_GET_DEVICE_SETTINGS = API_DOMIAN1 + "Client/Config";
 
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN3 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
@@ -880,7 +881,7 @@ App.onPageInit('notification', function(page){
                 }
                 
                 switch (item.alarm){
-                    case 'Status':
+                    case 'Status': case "Config":
                         var timeCheck = item.CreateDateTime.indexOf('T');
                         if (timeCheck != -1) {
                             item.CreateDateTime = moment.utc(item.CreateDateTime).toDate();
@@ -1071,6 +1072,8 @@ App.onPageInit('notification', function(page){
 
                 if(props && data.alarm == 'Status' ){
                     loadPageStatus(props);                 
+                }else if(props && data.alarm == 'Config' ){
+                	loadPageDeviceConfig(props);
                 }else if (props && parseFloat(data.lat) && parseFloat(data.lat)) { 
                     loadPagePosition(props);
                 }else{
@@ -1217,6 +1220,10 @@ App.onPageInit('asset.commands', function(page){
                 });  
                 break;
 
+            case '6':
+                requestDeviceSettings();
+                break;
+
 
             default:
 
@@ -1281,7 +1288,6 @@ App.onPageInit('asset.settings', function(page){
 
 
     VINinputEl.on('blur change', function(){ 
-        console.log('here');
         if ( $$(this).data('prev-val') != this.value ) {            
             $$(this).data('prev-val', this.value);            
             getVehicleDetailsByVin({
@@ -1505,6 +1511,29 @@ App.onPageInit('asset.status', function(page){
         App.actions(notificationMenu);
     });
 });
+
+App.onPageInit('asset.device.config', function(page){
+    var notificationMenu = [                  
+        {
+            text: LANGUAGE.COM_MSG31,  
+            onClick: function () {
+                changeAssetNotificationState(false,{'CurrState':true});
+            },          
+        },        
+        {
+            text: LANGUAGE.COM_MSG04,
+            color: 'red',
+            onClick: function () {
+                //App.alert('Cancel clicked');
+            }
+        },
+    ];
+    $$('.notificationMenu').on('click',function(){
+        App.actions(notificationMenu);
+    });
+});
+
+
 
 App.onPageInit('asset.verification', function(page){
     var container =  $$(page.container).find('.page-content');
@@ -2179,6 +2208,24 @@ function checkMapExisting(){
     }   
 }
 
+function loadPageDeviceConfig(data){
+	var timeCheck = data.CreateDateTime.indexOf('T');
+    if (timeCheck != -1) {
+        data.CreateDateTime = moment.utc(data.CreateDateTime).toDate();
+        data.CreateDateTime = moment(data.CreateDateTime).format(window.COM_TIMEFORMAT);
+    }
+    TargetAsset.IMEI = data.Imei;
+    var deviceParams = data.PARAMS ? isJsonString(data.PARAMS) : ''; 
+    if (deviceParams) {
+    	data.PARAMS = deviceParams;
+    }           
+               
+    mainView.router.load({
+        url:'resources/templates/asset.device.config.html',
+        context: data,
+        
+    });  
+}
 
 function loadPageStatus(data){
     console.log(data);
@@ -2597,6 +2644,47 @@ function requestUnimmobilise(){
     }
 }
 
+function requestDeviceSettings(){
+    if (TargetAsset.IMEI) {
+        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+        var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
+        var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
+        var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
+
+        var data = {
+            'IMEI': TargetAsset.IMEI,   
+            'MinorToken': getUserinfo().userCode,
+            "MobileToken": mobileToken,
+            "AppKey": appKey,
+            "Token": deviceToken,        
+            "Type": deviceType,  
+        };              
+        
+        App.showPreloader();
+        JSON1.requestPost(API_URL.URL_GET_DEVICE_SETTINGS,data,function(result){
+                console.log(result);
+                if(result.MajorCode == '000') { 
+                    turnNotificationOn();
+                    App.addNotification({
+                        hold: 3000,
+                        message: LANGUAGE.COM_MSG03
+                    });
+                    getCreditBalance();
+                }else if(result.MinorCode == '1006'){
+                    App.confirm(LANGUAGE.PROMPT_MSG011, function () {     // "PROMPT_MSG011":"The balance is insufficient, please renew", 
+                        loadRechargeCreditPage();    
+                    });          
+                }else{                
+                    App.alert(LANGUAGE.PROMPT_MSG013);
+                }
+                App.hidePreloader();
+            },
+            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        );    
+       
+    }
+}
+
 function requestCommandHistory(params){
     if (params && params.IMSI && params.LastDay) {
         var data = {
@@ -2946,6 +3034,8 @@ function processClickOnPushNotification(msgJ){
             
                 if(typeof(msg.alarm) == 'string' && msg.alarm.toLowerCase() == "status" ){
                     loadPageStatus(msg);                 
+                }else if(typeof(msg.alarm) == 'string' && msg.alarm.toLowerCase() == "config" ){
+                	loadPageDeviceConfig(msg); 
                 }else if (parseFloat(msg.Lat) && parseFloat(msg.Lng)) { 
                     loadPagePosition(msg);
                 }else{
@@ -3064,6 +3154,13 @@ function processMessage(msg){
             msg.CreateDateTime = msg.CreateDateTime.replace("T", " ");
         }                              
         loadPageStatus(msg);    
+    }else if (data.alarm == 'config') {
+    	if (msg.CreateDateTime) {
+            /*msg.CreateDateTime = moment.utc(msg.CreateDateTime).toDate();
+            msg.CreateDateTime = moment(msg.CreateDateTime).format(window.COM_TIMEFORMAT);*/
+            msg.CreateDateTime = msg.CreateDateTime.replace("T", " ");
+        }     
+        loadPageDeviceConfig(msg);    
     }else if (parseFloat(data.lat) && parseFloat(data.lng)){         
         if (msg.PositionTime) {
            /* msg.PositionTime = moment.utc(msg.PositionTime).toDate();
