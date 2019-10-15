@@ -491,10 +491,32 @@ $$('body').on('click', '.search_tabbar .tab-link', function () {
    
 });
 
-$$('body').on('click', '.scanBarCode', function(){
+/*$$('body').on('click', '.scanBarCode', function(){
     let input = $$(this).siblings('input'); 
     openBarCodeReader(input);
+});*/
+$$('body').on('click', '.scanBarCode', function() {
+    let input = $$(this).siblings('input');
+
+    let permissions = cordova.plugins.permissions;
+    if (!permissions) {
+        App.alert('plugin not supported')
+    } else {
+        permissions.hasPermission(permissions.CAMERA, function(status) {
+            if (status.hasPermission) {
+                openBarCodeReader(input);
+            } else {
+                permissions.requestPermission(permissions.CAMERA, function(status1){
+                    openBarCodeReader(input);
+                    if (!status1.hasPermission) error();
+                }, requestPermissionCameraError);
+            }
+        });
+    }
 });
+function requestPermissionCameraError() {
+    App.alert('Camera permission is not turned on');
+}
 
 $$(document).on('click', '.user_settigns_tabbar a.tab-link', function(e){
     e.preventDefault();   
