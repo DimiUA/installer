@@ -49,7 +49,7 @@
     <preference name="StatusBarStyle" value="blacktranslucent" />
     <preference name="phonegap-version" value="cli-9.0.0" />
     
-    <plugin name="phonegap-plugin-barcodescanner" source="npm" spec="8.1.0" />
+    <plugin name="kaiquecruz-phonegap-plugin-barcodescanner-custom" source="npm" />
      <!-- <plugin name="cordova-plugin-barcodescanner" source="npm" /> -->
     
     
