@@ -1,3 +1,16 @@
+var storage;
+var fail;
+var uid;
+try {
+    uid = new Date;
+    (storage = window.localStorage).setItem(uid, uid);
+    fail = storage.getItem(uid) != uid;
+    storage.removeItem(uid);
+    fail && (storage = false);
+} catch (exception) {
+    window.localStorage.clear();
+}
+
 $hub = null;
 window.NULL = null;
 window.COM_TIMEFORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -1290,13 +1303,14 @@ App.onPageInit('asset.settings', function(page){
     VINinputEl.on('blur change', function(){ 
         if ( $$(this).data('prev-val') != this.value ) {            
             $$(this).data('prev-val', this.value);            
-            getVehicleDetailsByVin({
+            checkVinNumber({
                 VIN: this.value,
                 inputs: {
                     Describe1: makeEl,
                     Describe2: modelEl,
                     Describe3: colorEl,
                     Describe4: yearEl,
+                    Describe7: VINinputEl,
                 }                    
             });          
         }
@@ -1306,13 +1320,14 @@ App.onPageInit('asset.settings', function(page){
         this.value = this.value.toUpperCase();
         if (this.value.length == 17 && $$(this).data('prev-val') != this.value ) {
             $$(this).data('prev-val', this.value);
-            getVehicleDetailsByVin({
+            checkVinNumber({
                 VIN: this.value,
                 inputs: {
                     Describe1: makeEl,
                     Describe2: modelEl,
                     Describe3: colorEl,
                     Describe4: yearEl,
+                    Describe7: VINinputEl,
                 }         
             });            
         }
@@ -3394,80 +3409,127 @@ function openBarCodeReader(input){
     }
 }
 
-function getVehicleDetailsByVin(params){
+
+
+function checkVinNumber(params){
         if (params && params.VIN) {
-            
-            var container = $$('body');
-            if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
-            App.showProgressbar(container); 
-
-            $.ajax({
-                type: "GET",                               
-                url: API_URL.URL_GET_DETAILS_BY_VIN+params.VIN, 
-                dataType: 'json',            
-                async: true, 
-                cache: false,   
-                          
-                success: function(result){ 
-                    App.hideProgressbar();                         
-                    console.log(result); 
-                    if (result) {
-                        var vehicleDetailsArr = [];
-                        
-                        if (result.make) {
-                            vehicleDetailsArr.push({
-                                name: LANGUAGE.ASSET_SETTINGS_MSG21,
-                                value: result.make,
-                                inputName: 'Describe1',
-                            });
-                        }
-                        if (result.model) {
-                            vehicleDetailsArr.push({
-                                name: LANGUAGE.ASSET_SETTINGS_MSG22,
-                                value: result.model,
-                                inputName: 'Describe2',
-                            });
-                        }
-                        if (result.color) {
-                            vehicleDetailsArr.push({
-                                name: LANGUAGE.ASSET_SETTINGS_MSG23,
-                                value: result.color,
-                                inputName: 'Describe3',
-                            });
-                        }
-                        if (result.year) {
-                            vehicleDetailsArr.push({
-                                name: LANGUAGE.ASSET_SETTINGS_MSG24, 
-                                value: result.year,
-                                inputName: 'Describe4',
-                            });
-                        }
-
-                        if (vehicleDetailsArr.length) {
-                            var message = LANGUAGE.PROMPT_MSG028;
-                            for (var i = vehicleDetailsArr.length - 1; i >= 0; i--) {
-                                message += '</br><b>' + vehicleDetailsArr[i].name + ': ' + vehicleDetailsArr[i].value + '</b>';
+            var vinLength = params.VIN.length;
+            console.log(vinLength);
+            if (vinLength == 18){
+                params.VIN = params.VIN.slice(1);
+                getVehicleDetailsByVin(params);
+            } else if(vinLength > 18 || vinLength < 17){
+                App.modal({
+                    title: '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>',
+                    text: '<div class="custom-modal-text">' + LANGUAGE.PROMPT_MSG030 + ':</div>',
+                    afterText: `
+                <div class="list-block list-block-modal m-0 no-hairlines ">          
+                    <ul>                               
+                        <li>
+                            <div class="item-content pl-0">                                    
+                                <div class="item-inner pr-0">                                      
+                                    <div class="item-input item-input-field">
+                                        <input type="text" placeholder="${ LANGUAGE.ASSET_SETTINGS_MSG19 }" name="VIN-check" value="${ params.VIN }" >
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                `,
+                    buttons: [{
+                        text: LANGUAGE.COM_MSG04,
+                    },
+                        {
+                            text: LANGUAGE.COM_MSG34,
+                            bold: true,
+                            onClick: function(modal, e) {
+                                params.VIN = $$(modal).find('input[name="VIN-check"]').val();
+                                params.inputs.Describe7.data('prev-val',params.VIN);
+                                params.inputs.Describe7.val(params.VIN);
+                                getVehicleDetailsByVin(params);
                             }
-                            message += '</br>' + LANGUAGE.PROMPT_MSG029;
-
-                            App.confirm(message, function () {        
-                                for (var i = vehicleDetailsArr.length - 1; i >= 0; i--) {
-                                    params.inputs[vehicleDetailsArr[i].inputName].val(vehicleDetailsArr[i].value);
-                                }
-                            });
-                        }
-                    }
-
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown){
-                    App.hideProgressbar();  
-                    console.log(XMLHttpRequest);
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    App.alert(LANGUAGE.PROMPT_MSG027);
-                                           
-                }                                                   
-            });
-            
+                        },
+                    ]
+                });
+            }else{
+                getVehicleDetailsByVin(params);
+            }
         }
     }
+
+function getVehicleDetailsByVin(params) {
+    if (params && params.VIN) {
+        var container = $$('body');
+        if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+        App.showProgressbar(container);
+
+        $.ajax({
+            type: "GET",
+            url: API_URL.URL_GET_DETAILS_BY_VIN+params.VIN,
+            dataType: 'json',
+            async: true,
+            cache: false,
+
+            success: function(result){
+                App.hideProgressbar();
+                console.log(result);
+                if (result) {
+                    var vehicleDetailsArr = [];
+
+                    if (result.make) {
+                        vehicleDetailsArr.push({
+                            name: LANGUAGE.ASSET_SETTINGS_MSG21,
+                            value: result.make,
+                            inputName: 'Describe1',
+                        });
+                    }
+                    if (result.model) {
+                        vehicleDetailsArr.push({
+                            name: LANGUAGE.ASSET_SETTINGS_MSG22,
+                            value: result.model,
+                            inputName: 'Describe2',
+                        });
+                    }
+                    if (result.color) {
+                        vehicleDetailsArr.push({
+                            name: LANGUAGE.ASSET_SETTINGS_MSG23,
+                            value: result.color,
+                            inputName: 'Describe3',
+                        });
+                    }
+                    if (result.year) {
+                        vehicleDetailsArr.push({
+                            name: LANGUAGE.ASSET_SETTINGS_MSG24,
+                            value: result.year,
+                            inputName: 'Describe4',
+                        });
+                    }
+
+                    if (vehicleDetailsArr.length) {
+                        var message = LANGUAGE.PROMPT_MSG028;
+                        for (var i = vehicleDetailsArr.length - 1; i >= 0; i--) {
+                            message += '</br><b>' + vehicleDetailsArr[i].name + ': ' + vehicleDetailsArr[i].value + '</b>';
+                        }
+                        message += '</br>' + LANGUAGE.PROMPT_MSG029;
+
+                        App.confirm(message, function () {
+                            for (var i = vehicleDetailsArr.length - 1; i >= 0; i--) {
+                                params.inputs[vehicleDetailsArr[i].inputName].val(vehicleDetailsArr[i].value);
+                            }
+                        });
+                    }
+                }
+
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+                App.hideProgressbar();
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
+                App.alert(LANGUAGE.PROMPT_MSG027);
+
+            }
+        });
+    }
+}

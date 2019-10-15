@@ -34,6 +34,7 @@ window.LanguagePackages= {
 		"COM_MSG31": "Disable Notifications",
 		"COM_MSG32": "Protect",
 		"COM_MSG33": "Live",
+		"COM_MSG34": "Confirm",
 
 		"PROMPT_MSG001": "In this section, you can find the device by <b>IMEI</b>, <b>IMSI</b>, or <b>Name</b>. Select a specific tab and start the search.",
 		"PROMPT_MSG002": "Buy more credits to send commands to the devices",
@@ -64,6 +65,7 @@ window.LanguagePackages= {
 		"PROMPT_MSG027": "VIN number cannot be recognized",		
 		"PROMPT_MSG028": "We will pre fill Asset Details",
 		"PROMPT_MSG029": "Proceed?",
+		"PROMPT_MSG030": "Scanned VIN number length is not as usual, please check number and confirm",
 
 		"LOGIN_MSG01": "The login(email) or password you entered is incorrect.",
 		"LOGIN_MSG02": "Username / Email",
