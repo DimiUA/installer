@@ -7,8 +7,7 @@
   xmlns="http://www.w3.org/ns/widgets" 
   xmlns:cdv="http://cordova.apache.org/ns/1.0"    
   xmlns:android="http://schemas.android.com/apk/res/android"
-  defaultlocale="en-US">
-  
+  defaultlocale="en-US">  
     <name>GPS Installer</name>
     <description>
         GPS Installer
@@ -18,6 +17,7 @@
     </author>
     <content src="index.html" />
     <access origin="*"  allows-arbitrary-loads-for-media='true' allows-arbitrary-loads-in-web-content='true' allows-local-networking='true' />
+
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -43,12 +43,13 @@
     <preference name="android-minSdkVersion" value="19" />
     <!-- <preference name="android-maxSdkVersion" value="27" /> -->
     <preference name="android-targetSdkVersion" value="28" />
+    <preference name="multiDexEnabled" value="true" />    
     <preference name="deployment-target" value="10.2" />
     <preference name="StatusBarOverlaysWebView" value="false" />
     <!-- <preference name="StatusBarBackgroundColor" value="#333" /> -->
     <preference name="StatusBarStyle" value="blacktranslucent" />
     <preference name="phonegap-version" value="cli-9.0.0" />
-    
+    <preference name="android-build-tool" value="gradle" />
     <plugin name="kaiquecruz-phonegap-plugin-barcodescanner-custom" source="npm" />
      <!-- <plugin name="cordova-plugin-barcodescanner" source="npm" /> -->
     
@@ -68,7 +69,7 @@
     <plugin name="cordova-plugin-device" source="npm" spec="2.0.2" />
     <plugin name="cordova-plugin-buildinfo" source="npm" spec="2.0.2" />    
     <plugin name="cordova-plugin-dialogs" source="npm" spec="1.2.1" />
-<!--     <plugin name="cordova-plugin-whitelist" source="npm" spec="1.2.1" /> -->
+    <!-- <plugin name="cordova-plugin-whitelist" source="npm" spec="1.2.1" /> -->
     <plugin name="cordova-plugin-splashscreen" source="npm" spec="5.0.2" />
     <plugin name="cordova-plugin-camera" source="npm" spec="4.0.3"  />
     <plugin spec="https://github.com/phonegap/phonegap-mobile-accessibility.git" source="git" />
