@@ -78,7 +78,7 @@
     <plugin name="cordova-plugin-dialogs" source="npm" spec="1.2.1" />
     <plugin name="cordova-plugin-whitelist" source="npm" spec="1.2.1" />
     <plugin name="cordova-plugin-splashscreen" source="npm" spec="5.0.2" />
-    <!-- <plugin name="cordova-plugin-camera" source="npm" spec="4.1.0"  /> -->
+    <plugin name="cordova-plugin-camera" source="npm" spec="4.1.0"  />
     <plugin spec="https://github.com/phonegap/phonegap-mobile-accessibility.git" source="git" />
     <plugin name="cordova-plugin-inappbrowser" source="npm" spec="3.0.0"  />
     <plugin name="cordova-plugin-android-permissions" source="npm" spec="1.0.2" />
