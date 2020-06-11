@@ -34,6 +34,9 @@ window.LanguagePackages= {
 		"COM_MSG31": "Disable Notifications",
 		"COM_MSG32": "Protect",
 		"COM_MSG33": "Live",
+		"COM_MSG34": "Confirm",
+		"COM_MSG35": "km",
+		"COM_MSG36": "h",
 
 		"PROMPT_MSG001": "In this section, you can find the device by <b>IMEI</b>, <b>IMSI</b>, or <b>Name</b>. Select a specific tab and start the search.",
 		"PROMPT_MSG002": "Buy more credits to send commands to the devices",
