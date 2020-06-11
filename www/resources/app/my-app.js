@@ -1435,6 +1435,7 @@ App.onPageInit('asset.settings', function(page){
         if(imageUploaded){
             data.Icon = imageUploaded;
         }
+        //data.Icon = 'IMEI_0000001700091735.png';
         console.log(data);
         //return;
         App.showPreloader();
