@@ -1431,7 +1431,12 @@ App.onPageInit('asset.settings', function(page){
         if (fitmentOptSelectedArr.indexOf('D') != -1) {
             data.Attr6 = $$(page.container).find('input[name="FitmentOptCustom"]').val();
         }
+        var imageUploaded = $$('.add_photo img.user-img').data('name');
+        if(imageUploaded){
+            data.Icon = imageUploaded;
+        }
         console.log(data);
+        //return;
         App.showPreloader();
         JSON1.requestPost(API_URL.URL_EDIT_DEVICE,data,function(result){
                 console.log(result);
@@ -3432,7 +3437,7 @@ function saveImg() {
         height: 200
     }).toDataURL();
 
-    $$('.add_photo img.user-img ').attr('src', resImg);
+
 
    /* if (TargetAsset.IMEI) {
         $$('.assets_list li[data-imei="' + TargetAsset.IMEI + '"] .item-media img').attr('src', resImg);
@@ -3459,6 +3464,7 @@ function saveImg() {
             if (result.MajorCode == "000") {
                 /*App.alert('Result Data:'+ result.Data);*/
                 TargetAsset.IMEI = result.Data;
+                $$('.add_photo img.user-img').attr('src', resImg).addClass('user-img-shadow rounded').data('name', result.Data);
             } else {
                 App.alert(LANGUAGE.PROMPT_MSG013);
             }
