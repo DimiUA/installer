@@ -10,54 +10,13 @@
             </div>      
         </div>
     </div>
-	<div class="page-content " >  
-        <!-- <div class="list-block media-list no-hairlines-between no-hairlines">
-            <ul > 
-                <li class="item-content">
-                    <div class="item-media"></div>
-                    <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG01}}</div>
-                        <div class="item-input ">
-                            <select name="Fee" >                                
-                                <option value="" selected>{{@global.LANGUAGE.ASSET_SETTINGS_MSG30}}</option>
-                                <option value="">{{@global.LANGUAGE.ASSET_SETTINGS_MSG31}}</option>
-                                <option value="">{{@global.LANGUAGE.ASSET_SETTINGS_MSG32}}</option>
-                                <option value="">{{@global.LANGUAGE.ASSET_SETTINGS_MSG33}}</option>
-                                <option value="">{{@global.LANGUAGE.ASSET_SETTINGS_MSG34}}</option>
-                            </select>
-                            <i class="f7-icons icon-other-arrow-drop-dowm select_arrow"></i>
-                        </div>
-                    </div>
-                </li>
-                <li class="item-content">                  
-                    <div class="item-media"></div>
-                    <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG02}}</div>
-                        <div class="item-input">                            
-                            <textarea placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG02}}" name="Remark" value="" maxlength="1000" class=""></textarea>
-                        </div>
-                    </div>                   
-                </li>
-                <li class="item-content">                  
-                    <div class="item-media"></div>
-                    <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG03}}</div>
-                        <div class="item-input">
-                            <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG03}}" name="QSO" value="" maxlength="200" class="">
-                        </div>
-                    </div>                   
-                </li>
-                <li class="item-content">                  
-                    <div class="item-media"></div>
-                    <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG04}}</div>
-                        <div class="item-input">
-                            <input type="date" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG04}}" name="Date" value="{{Date}}" maxlength="200" class="">
-                        </div>
-                    </div>                   
-                </li>
-            </ul>
-        </div> -->
+	<div class="page-content " >
+        <input type="file" hidden name="AssetImageInput" id="AssetImageInput" accept="image/*">
+        <div class="content-block asset-image-big-wrapper text-align-center">
+            <a href="#" class="link add_photo">
+                {{AssetImg}}
+            </a>
+        </div>
         
         <div class="content-block-title border_top showBlockControll">{{@global.LANGUAGE.ASSET_SETTINGS_MSG05}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>
         <!-- <div class="list-block media-list list-block-readonly-iputs no-hairlines-between no-hairlines sliding active">           
@@ -316,14 +275,23 @@
                         </div>
                     </div>                   
                 </li>
-                <li class="item-content border_bottom">                  
+                <li class="item-content">
                     <div class="item-media"></div>
                     <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG25}}</div>
+                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG25}}({{@global.LANGUAGE.COM_MSG35}})</div>
                         <div class="item-input">
                             <input type="tel" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG25}}" name="Odometer" value="{{Odometer}}" maxlength="200" class="only_numbers">
                         </div>
                     </div>                   
+                </li>
+                <li class="item-content border_bottom">
+                    <div class="item-media"></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG58}}({{@global.LANGUAGE.COM_MSG36}})</div>
+                        <div class="item-input">
+                            <input type="tel" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG58}}" name="EngineHours" value="{{EngineHours}}" maxlength="200" class="only_numbers">
+                        </div>
+                    </div>
                 </li>
                 <li class="item-content">                  
                     <div class="item-media"><i class="f7-icons icon-other-unit"></i></div>
@@ -404,10 +372,9 @@
 
 
 
-        <!-- <div class="content-block-title border_top showBlockControll">{{@global.LANGUAGE.ASSET_SETTINGS_MSG27}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>
+         <!--<div class="content-block-title border_top showBlockControll">{{@global.LANGUAGE.ASSET_SETTINGS_MSG27}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>
         <div class="content-block sliding active">
             <div class="row ">
-                Each "cell" has col-[widht in percents] class
                 <div class="col-33">
                     <img class="add_photo" src="resources/images/other_add_photo_border.svg" alt="">
                 </div>
@@ -418,7 +385,7 @@
                     <img class="add_photo" src="resources/images/other_add_photo_border.svg" alt="">
                 </div>
             </div>
-        </div> -->
+        </div>-->
             
 
         <!-- <div class="content-block-title border_top showBlockControll">{{@global.LANGUAGE.ASSET_SETTINGS_MSG28}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>

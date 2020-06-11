@@ -34,7 +34,6 @@ window.LanguagePackages= {
 		"COM_MSG31": "Disable Notifications",
 		"COM_MSG32": "Protect",
 		"COM_MSG33": "Live",
-		"COM_MSG34": "Confirm",
 
 		"PROMPT_MSG001": "In this section, you can find the device by <b>IMEI</b>, <b>IMSI</b>, or <b>Name</b>. Select a specific tab and start the search.",
 		"PROMPT_MSG002": "Buy more credits to send commands to the devices",
@@ -157,7 +156,7 @@ window.LanguagePackages= {
 		"ASSET_SETTINGS_MSG22": "Model",
 		"ASSET_SETTINGS_MSG23": "Color",
 		"ASSET_SETTINGS_MSG24": "Year",
-		"ASSET_SETTINGS_MSG25": "Odometer",
+		"ASSET_SETTINGS_MSG25": "Initial Odometer",
 		"ASSET_SETTINGS_MSG26": "Unit",
 		"ASSET_SETTINGS_MSG27": "Add Photos",
 		"ASSET_SETTINGS_MSG28": "Payment Details",
@@ -190,6 +189,7 @@ window.LanguagePackages= {
 		"ASSET_SETTINGS_MSG55": "Immobilizer",
 		"ASSET_SETTINGS_MSG56": "Custom",
 		"ASSET_SETTINGS_MSG57": "Fitment Option Custom",
+		"ASSET_SETTINGS_MSG58": "Initial Engine Hours",
 
 		"CLIENT_DETAILS_MSG00": "Client Details",
 		"CLIENT_DETAILS_MSG01": "Login Name",
@@ -206,6 +206,14 @@ window.LanguagePackages= {
 		"CLIENT_DETAILS_MSG12": "Asset verification",
 		"CLIENT_DETAILS_MSG13": "Install Profile",
 		"CLIENT_DETAILS_MSG14": "Notes",
+
+		"CLIENT_DETAILS_MSG15": "Installer Details ",
+		"CLIENT_DETAILS_MSG16": "Company ",
+		"CLIENT_DETAILS_MSG17": "Name ",
+		"CLIENT_DETAILS_MSG18": "Email",
+
+		"CLIENT_DETAILS_MSG19": "Asset Details",
+
 
 		"ASSET_VIRIFICATION_MSG00": "Verify installation",
 		"ASSET_VIRIFICATION_MSG01": 'IMEI',

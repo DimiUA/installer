@@ -25,7 +25,8 @@ select{
 	background: #F2F1F4;
 }
 
-.text-a-c{
+.text-a-c,
+.text-align-center{
 	text-align: center;
 }
 .w-space-normal{
@@ -392,7 +393,7 @@ select{
 				padding-top: 2px;
 				padding-bottom: 2px;
 				min-height: auto;
-				min-width: 60px;
+				min-width: 90px;
 			}
 			.list-block-readonly-wider.list-block-readonly.list-block .item-media,
 			.list-block-readonly-wider.list-block-readonly.list-block .item-inner{
@@ -982,6 +983,22 @@ select{
 			.leaflet-control-layers-base input[type=radio]:checked + span{
 				color: #000;
 			}
+
+.asset-image-big-wrapper .user-img{
+	width: 120px;
+	height: 120px;
+
+
+}
+.user-img-shadow{
+	-webkit-box-shadow: 0px 3px 3px 0px rgba(0,0,0,.15);
+	-moz-box-shadow: 0px 3px 3px 0px rgba(0,0,0,.15);
+	box-shadow: 0px 3px 3px 0px rgba(0,0,0,.15);
+
+}
+.rounded{
+	border-radius: 50%;
+}
 
 /* ASSET EDIT PHOTO */
 #redo{

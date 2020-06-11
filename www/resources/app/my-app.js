@@ -271,6 +271,8 @@ var API_DOMIAN3 = "https://api.m2mglobaltech.com/QuikTrak/V1/";
 var API_DOMIAN4 = "https://api.m2mglobaltech.com/QuikProtect/V1/Client/";
 var API_DOMIAN5 = "https://m2mdata.co/api/Service/";
 
+var API_DOMIAN9 = "https://upload.quiktrak.co/";
+
 var API_URL = {};
 //API_URL.URL_GET_LOGIN = API_DOMIAN1 + "Client/Login";
 API_URL.URL_GET_LOGIN = API_DOMIAN1 + "Client/Login2";
@@ -289,6 +291,7 @@ API_URL.URL_GET_VERIFY2 = API_DOMIAN1 + "Client/Verfiy2";
 API_URL.URL_SENT_NOTIFY = API_DOMIAN1 + "Client/SentNotify";
 API_URL.URL_EDIT_DEVICE = API_DOMIAN1 + "Client/EditAsset";
 API_URL.URL_GET_DEVICE_SETTINGS = API_DOMIAN1 + "Client/Config";
+API_URL.URL_PHOTO_UPLOAD = API_DOMIAN9 + "image/Upload";
 
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN3 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
@@ -333,13 +336,13 @@ var cameraButtons = [
     {
         text: LANGUAGE.PHOTO_EDIT_MSG01,
         onClick: function () {
-            getImage();
+            getImage(1);
         }
     },
     {
         text: LANGUAGE.PHOTO_EDIT_MSG02,
         onClick: function () {
-            galleryImgs();
+            getImage(0);
         }
     },
     {
@@ -413,8 +416,8 @@ $$('.login-form').on('submit', function (e) {
     return false;
 });
 $$('body').on('change keyup input click', '.only_numbers', function(){
-    if (this.value.match(/[^0-9]/g)) {
-         this.value = this.value.replace(/[^0-9]/g, '');
+    if (this.value.match(/[^0-9-]/g)) {
+         this.value = this.value.replace(/[^0-9-]/g, '');
     }
 });
 
@@ -1357,7 +1360,7 @@ App.onPageInit('asset.settings', function(page){
 
     
 
-    /*paymentType.on('change', function(){        
+    /*paymentType.on('change', function(){
         var value = this.value;    
         App.showTab('#tab'+value);
     });
@@ -1379,13 +1382,13 @@ App.onPageInit('asset.settings', function(page){
             $(cardNumber).mask("9999 9999 9999 9999");
         }
     });
-    $(expDate).mask("99/99");
-    
+    $(expDate).mask("99/99");*/
+
 
 
     $$('.add_photo').on('click', function (e) {        
         App.actions(cameraButtons);        
-    });*/ 
+    });
 
     fitmentOptSelect.on('change', function(){
         fitmentOptSelectedArr = [];        
@@ -1415,7 +1418,7 @@ App.onPageInit('asset.settings', function(page){
             "Name": $$(page.container).find('input[name="AssetName"]').val(),
             "SpeedUnit": $$(page.container).find('select[name="Unit"]').val(),
             "InitMileage": $$(page.container).find('input[name="Odometer"]').val(),
-            //"InitAccHours": "",
+            "InitAccHours": $$(page.container).find('input[name="EngineHours"]').val(),
             "TagName": $$(page.container).find('input[name="LicensePlate"]').val(),
             "Attr1": $$(page.container).find('input[name="Describe1"]').val(),
             "Attr2": $$(page.container).find('input[name="Describe2"]').val(),
@@ -1451,20 +1454,34 @@ App.onPageInit('client.details', function (page) {
 
     $$(sendSetting).on('click', function(){ 
         var data ={
-            'IMEI': $$(page.container).find('[name="IMEI"]').val(),
-            'MinorToken': getUserinfo().userCode,
-            'TaskID': $$(page.container).find('[name="TaskID"]').val(),
-            'LoginName': $$(page.container).find('[name="LoginName"]').val(),
-            'FirstName': $$(page.container).find('[name="FirstName"]').val(),
-            'LastName': $$(page.container).find('[name="LastName"]').val(),
-            'PhoneNumber': $$(page.container).find('[name="PhoneNumber"]').val(),
-            'AddressOfJob': $$(page.container).find('[name="AddressOfJob"]').val(),
-            'JobDetail': $$(page.container).find('[name="JobDetail"]').val(),
-            'ContactCode': $$(page.container).find('[name="ContactCode"]').val(),
-            'Notes': $$(page.container).find('[name="Notes"]').val(),
+            IMEI: $$(page.container).find('[name="IMEI"]').val(),
+            MinorToken: getUserinfo().userCode,
+            TaskID: $$(page.container).find('[name="TaskID"]').val(),
+            LoginName: $$(page.container).find('[name="LoginName"]').val(),
+            FirstName: $$(page.container).find('[name="FirstName"]').val(),
+            LastName: $$(page.container).find('[name="LastName"]').val(),
+            PhoneNumber: $$(page.container).find('[name="PhoneNumber"]').val(),
+            AddressOfJob: $$(page.container).find('[name="AddressOfJob"]').val(),
+            JobDetail: $$(page.container).find('[name="JobDetail"]').val(),
+            ContactCode: $$(page.container).find('[name="ContactCode"]').val(),
+            Notes: $$(page.container).find('[name="Notes"]').val(),
+
+            InstallerCompany: $$(page.container).find('[name="InstallerCompany"]').val(),
+            InstallerName: $$(page.container).find('[name="InstallerName"]').val(),
+            InstallerEmail: $$(page.container).find('[name="InstallerEmail"]').val(),
+            InstallerLogin: $$(page.container).find('[name="InstallerLogin"]').val(),
+
+            Describe1: $$(page.container).find('[name="Describe1"]').val(),
+            Describe2: $$(page.container).find('[name="Describe2"]').val(),
+            Describe3: $$(page.container).find('[name="Describe3"]').val(),
+            Describe4: $$(page.container).find('[name="Describe4"]').val(),
+            InstallPosition: $$(page.container).find('[name="InstallPosition"]').val(),
         };
 
-        
+
+console.log(data);
+
+
         JSON1.requestPost(API_URL.URL_SENT_NOTIFY,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
@@ -1502,7 +1519,7 @@ App.onPageInit('client.details', function (page) {
                 App.hidePreloader();
             },
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
-        );       
+        );
     });
 
 });
@@ -2094,7 +2111,7 @@ function loadPageSettings(){
             if(result.MajorCode == '000') { 
                 var asset = getAssetParametersName(result.Data);
                 console.log(asset);
-                
+                let assetImg = getAssetImg(asset, {'assetEdit':true});
 
                 mainView.router.load({
                     url:'resources/templates/asset.settings.html',
@@ -2117,10 +2134,12 @@ function loadPageSettings(){
                         Describe3: asset.Describe3,
                         Describe4: asset.Describe4,
                         Odometer: asset.InitMilage,
+                        EngineHours: asset.InitAcconHours,
                         Unit: asset.Unit,
                         InstallPosition: asset.InstallPosition,
                         FitmentOpt: asset.FitmentOpt,
-                        FitmentOptCustom: asset.Describe6
+                        FitmentOptCustom: asset.Describe6,
+                        AssetImg: assetImg,
                     }
                 });                     
             }else{                
@@ -2130,6 +2149,27 @@ function loadPageSettings(){
         },
         function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
     );      
+}
+
+function getAssetDetails(params){
+
+    App.showPreloader();
+    JSON1.requestPost(API_URL.URL_GET_DEVICE_DETAIL,params.data,function(result){
+            console.log(result);
+            if(result.MajorCode == '000') {
+                var asset = getAssetParametersName(result.Data);
+                console.log(asset);
+                params.assetData = asset;
+                if (params.callback instanceof Function){
+                    params.callback(params)
+                }
+            }else{
+                App.alert(LANGUAGE.PROMPT_MSG013);
+            }
+            App.hidePreloader();
+        },
+        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+    );
 }
 
 
@@ -2307,7 +2347,17 @@ function loadPageClientDetails(data){
                 FirstName: data.FirstName,   
                 LastName: data.LastName,   
                 PhoneNumber: data.PhoneNumber, 
-                ContactCode: data.ContactCode,       
+                ContactCode: data.ContactCode,
+
+                InstallerCompany: data.InstallerCompany,
+                InstallerName: data.InstallerName,
+                InstallerEmail: data.InstallerEmail,
+                InstallerLogin: data.InstallerLogin,
+                Describe1: data.Describe1,
+                Describe2: data.Describe2,
+                Describe3: data.Describe3,
+                Describe4: data.Describe4,
+                InstallPosition: data.InstallPosition,
             }
         });  
 
@@ -2553,18 +2603,45 @@ function requestPositionLive(){
 
 function requestVerify(){
     if (TargetAsset.IMEI) {
+        var userInfo = getUserinfo();
         var data = {
             'IMEI': TargetAsset.IMEI,
-            'MinorToken': getUserinfo().userCode,                  
+            'MinorToken': userInfo.userCode,
         };        
         
         App.showPreloader();
         JSON1.requestPost(API_URL.URL_GET_VERIFY2,data,function(result){
                 console.log(result);
-                if(result.MajorCode == '000') { 
-                    
-                    loadPageClientDetails(result.Data);                    
-                    
+                if(result.MajorCode == '000') {
+
+                    if(userInfo.customerName){
+                        result.Data.InstallerCompany = userInfo.customerName;
+                    }
+                    if(userInfo.firstName || userInfo.lastName){
+                        result.Data.InstallerName = userInfo.firstName + ' ' + userInfo.lastName;
+                    }
+                    if(userInfo.email){
+                        result.Data.InstallerEmail = userInfo.email;
+                    }
+                    result.Data.InstallerLogin = localStorage.ACCOUNT;
+
+                    getAssetDetails({
+                        data:{
+                            "Code": userInfo.code,
+                            "Id": TargetAsset.Id,
+                        },
+                        prevData: result.Data,
+                        callback: function (params) {
+                            params.prevData.Describe1 = params.assetData.Describe1;
+                            params.prevData.Describe2 = params.assetData.Describe2;
+                            params.prevData.Describe3 = params.assetData.Describe3;
+                            params.prevData.Describe4 = params.assetData.Describe4;
+                            params.prevData.InstallPosition = params.assetData.InstallPosition;
+
+                            loadPageClientDetails(params.prevData);
+                        }
+                    });
+
                 }else if(result.MajorCode == '100'){
                     var msg = LANGUAGE.ASSET_VIRIFICATION_MSG12;  
                     if (result.Data) {
@@ -3269,128 +3346,164 @@ function getAssetParametersName(data){
     return device;
 }
 
+function getAssetImg(params, imgFor){
+    let self = this;
+    let assetImg = '';
+    let pattern = /^IMEI_/i;
+    let pattern2 = 'ic_';
+    let regex = /_/gi;
+    let regex2 = /\.[^/.]+$/; //remove extension (.png, .jpg etc)
+    let splitted = '';
+
+    if (params && imgFor.assetList) {
+        if (params.Icon && pattern.test(params.Icon)) {
+            assetImg = `<img class="user-img user-img-shadow rounded" src="${API_DOMIAN9}Attachment/images/${params.Icon}?${ new Date().getTime() }" alt="">`;
+        }else if(params.Icon && params.Icon.substring(0,3) == pattern2){
+            assetImg = '<div class="user-img bg-color-custom display-flex justify-content-center align-items-center"><div class="text-align-center vertical-center size-28 "><i class="icon text-color-white asset-icon-'+params.Icon.replace(regex, '-').replace(regex2, '')+'"></i></div></div>';
+
+        }else if (params.Name) {
+            params.Name = $.trim(params.Name);
+            splitted = params.Name.split(' ');
+            if (splitted.length > 1) {
+                let one = '';
+                let two = '';
+                for (let i = 0; i < splitted.length; i++) {
+                    if (splitted[i] && splitted[i][0]) {
+                        if (!one || !two) {
+                            if (!one) {
+                                one = splitted[i][0];
+                            }else{
+                                two = splitted[i][0];
+                                break;
+                            }
+                        }
+                    }
+                }
+                assetImg = '<div class="user-img bg-color-custom text-color-white display-flex justify-content-center align-items-center"><span class="size-24">'+one+two+'</span></div>';
+            }else{
+                assetImg = '<div class="user-img bg-color-custom text-color-white display-flex justify-content-center align-items-center"><span class="size-24">'+params.Name[0]+params.Name[1]+'</span></div>';
+            }
+
+        }else if(params.IMEI){
+            assetImg = '<div class="user-img bg-color-custom text-color-white display-flex justify-content-center align-items-center"><span class="size-24">'+params.IMEI[0]+params.IMEI[1]+'</span></div>';
+        }
+    }else if (params && imgFor.assetEdit) {
+        if (params.Icon && pattern.test(params.Icon)) {
+            assetImg = `<img class="user-img user-img-shadow rounded" data-name="${params.Icon}" src="${API_DOMIAN9}Attachment/images/${params.Icon+'?'+ new Date().getTime()}" alt="">`;
+        }/*else if(params.Icon && params.Icon.substring(0,3) == pattern2){
+            assetImg = '<div class="user-img bg-color-custom display-flex justify-content-center align-items-center"><div class="text-align-center vertical-center size-75 "><i class="icon text-color-white asset-icon-'+params.Icon.replace(regex, '-').replace(regex2, '')+'"></i></div></div>';
+        }*/else{
+            assetImg = `<img class="user-img" src="resources/images/other_add_photo.svg" alt="">`;
+        }
+
+    }else{
+        assetImg = false;
+    }
+    //console.log(assetImg);
+    return assetImg;
+}
 
 /* EDIT PHOTO */
 
 var cropper = null;
 var resImg = null;
-function initCropper(){     
-    var image = document.getElementById('image'); 
-    //alert(image);     
+
+function initCropper() {
+    var image = document.getElementById('image');
+    //alert(image);
     cropper = new Cropper(image, {
-        aspectRatio: 1/1,
-        dragMode:'move',
-        rotatable:true,
-        minCropBoxWidth:200,
-        minCropBoxHeight:200,
-        minCanvasWidth:200,
-        minCanvasHeight:200,
-        minContainerWidth:200,
-        minContainerHeight:200,
-        crop: function(data) {
-         }
+        aspectRatio: 1 / 1,
+        dragMode: 'move',
+        rotatable: true,
+        minCropBoxWidth: 200,
+        minCropBoxHeight: 200,
+        minCanvasWidth: 200,
+        minCanvasHeight: 200,
+        minContainerWidth: 200,
+        minContainerHeight: 200,
+        crop: function(data) {}
     });
 
 }
 
-//Take pictures
-function getImage() {
-    if(window.plus){
-        var cmr = plus.camera.getCamera();
-        cmr.captureImage( function (p) {
-            plus.io.resolveLocalFileSystemURL( p, function ( entry ) {    
-                var localurl = entry.toLocalURL();//
-                GetBase64Code(localurl);
-            });
-        });
-    }else{
-        console.log('Plus not found');
-    }
-        
-}
-
-//Select from album
-function galleryImgs(){
-    if(window.plus){
-        plus.gallery.pick( function(e){
-            GetBase64Code(e.files[0]);
-        }, function ( e ) {
-            //outSet( "CANCEL SELECT" );
-        },{filter:"image",multiple:true, maximum:1});
-    }else{
-        console.log('Plus not found');
-    }
-        
-}
-
-function GetBase64Code(path) //image path
-{
-    var bitmap = new plus.nativeObj.Bitmap("test");
-    // load image
-    bitmap.load(path,function(){
-        var base4=bitmap.toBase64Data();        
-        
-        mainView.router.load({
-            url: 'resources/templates/edit.photo.html',
-            context: {
-                imgSrc: base4
-            }
-        });
-       
-        //console.log('IMAGEЈє'+base4);
-    },function(e){
-        //alert('ERRORЈє'+JSON.stringify(e));
-    });
-}
-
-
-
-function saveImg(){
-    resImg =  cropper.getCroppedCanvas({
-          width: 200,
-          height: 200
+function saveImg() {
+    resImg = cropper.getCroppedCanvas({
+        width: 200,
+        height: 200
     }).toDataURL();
-    
-    mainView.router.back();
-    //$$('.asset_img img').attr('src',resImg);     
 
-    /*if (TargetAsset.ASSET_IMEI) { 
-        $$('.assets_list li[data-imei="'+TargetAsset.ASSET_IMEI+'"] .item-media img').attr('src',resImg);
-    }
+    $$('.add_photo img.user-img ').attr('src', resImg);
+
+   /* if (TargetAsset.IMEI) {
+        $$('.assets_list li[data-imei="' + TargetAsset.IMEI + '"] .item-media img').attr('src', resImg);
+    }*/
 
     var assetImg = {
-        data: resImg, 
-        id: 'IMEI_'+TargetAsset.ASSET_IMEI
-    };                  
- 
+        data: resImg,
+        id: 'IMEI_' + TargetAsset.IMEI
+    };
+
     App.showPreloader();
     $.ajax({
         type: 'POST',
         url: API_URL.URL_PHOTO_UPLOAD,
         data: assetImg,
-        async: true, 
+        async: true,
         cache: false,
         crossDomain: true,
-        success: function (result) {
-            App.hidePreloader(); 
+        success: function(result) {
+            App.hidePreloader();
             //var res = JSON.stringify(result);
             //alert(res);
-            result = typeof (result) == 'string' ? eval("(" + result + ")") : result;
-            if (result.MajorCode == "000") {              
-                TargetAsset.ASSET_IMG = result.Data;
-            }else{
-                App.alert('Something wrong');
+            result = typeof(result) == 'string' ? eval("(" + result + ")") : result;
+            if (result.MajorCode == "000") {
+                /*App.alert('Result Data:'+ result.Data);*/
+                TargetAsset.IMEI = result.Data;
+            } else {
+                App.alert(LANGUAGE.PROMPT_MSG013);
             }
             mainView.router.back();
         },
-        error: function(XMLHttpRequest, textStatus, errorThrown){ 
-           App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02);
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            App.hidePreloader();
+            App.alert(LANGUAGE.COM_MSG02);
         }
-    });*/
+    });
 
-        
-    
-}   
+}
+
+
+function getImage(source) {
+
+    if (!navigator.camera) {
+        alert("Camera API not supported", "Error");
+
+    } else {
+        var options = {
+            quality: 50,
+            destinationType: Camera.DestinationType.DATA_URL,
+            sourceType: source, // 0:Photo Library, 1=Camera, 2=Saved Album
+            encodingType: 0 // 0=JPG 1=PNG
+        };
+
+        navigator.camera.getPicture(
+            function(imgData) {
+                //$('.media-object', this.$el).attr('src', "data:image/jpeg;base64,"+imgData);
+                mainView.router.load({
+                    url: 'resources/templates/edit.photo.html',
+                    context: {
+                        imgSrc: "data:image/jpeg;base64," + imgData
+                    }
+                });
+
+            },
+            function() {
+                //alert('Error taking picture', 'Error');
+            },
+            options);
+    }
+
+}
 
 
 
