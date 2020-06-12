@@ -309,52 +309,6 @@ API_URL.URL_GET_SIM_LIST = API_DOMIAN5 + "GetDeviceList";
 API_URL.URL_REFRESH_TOKEN = API_DOMIAN3 + "User/RefreshToken";
 
 
-
-//http://api.m2mglobaltech.com/Installer/V1/Client/GetAssetList
-//http://api.m2mglobaltech.com/Installer/V1/Client/Status
-//http://api.m2mglobaltech.com/Installer/V1/Client/ProtectPostion
-//http://api.m2mglobaltech.com/Installer/V1/Client/LivePostion
-//http://api.m2mglobaltech.com/Installer/V1/Client/Config
-//http://api.m2mglobaltech.com/Installer/V1/Client/Logout
-//http://api.m2mglobaltech.com/Installer/V1/Client/StartPush
-//http://api.m2mglobaltech.com/Installer/V1/Client/EndPush
-//http://api.m2mglobaltech.com/Installer/V1/Client/GetAssetCommandList
-//http://api.m2mglobaltech.com/Installer/V1/Client/GetCommandHisMessages
-
-//http://api.m2mglobaltech.com/Installer/V1/Client/Immobilise
-//http://api.m2mglobaltech.com/Installer/V1/Client/Unimobilise
-//http://api.m2mglobaltech.com/Installer/V1/Client/LiveVerify
-//http://api.m2mglobaltech.com/Installer/V1/Client/ProtectVerfiy 
-
-
-//http://quiktrak.co/webapp/QuikProtect.Api2/ProtectPostion.json?IMEI=0354188046331901
-//http://quiktrak.co/webapp/QuikProtect.Api2/Status.json?IMEI=0354188046331901
-
-
-
-var cameraButtons = [
-    {
-        text: LANGUAGE.PHOTO_EDIT_MSG01,
-        onClick: function () {
-            getImage(1);
-        }
-    },
-    {
-        text: LANGUAGE.PHOTO_EDIT_MSG02,
-        onClick: function () {
-            getImage(0);
-        }
-    },
-    {
-        text: LANGUAGE.COM_MSG04,
-        color: 'red',
-        onClick: function () {
-            //App.alert('Cancel clicked');
-        }
-    },
-];
-
-
 var html = Template7.templates.template_Login_Screen();
 $$(document.body).append(html); 
 html = Template7.templates.template_Popover_Menu();
@@ -784,9 +738,6 @@ $$('body').on('click', '.showBlockControll', function () {
 
 App.onPageInit('user.profile', function (page) { 
 
-    /*$$('.user_img').on('click', function (e) {        
-        App.actions(cameraButtons);        
-    }); */
 
     
     $$('.applyUserProfile').on('click', function(e){
@@ -1387,7 +1338,29 @@ App.onPageInit('asset.settings', function(page){
 
 
     $$('.add_photo').on('click', function (e) {        
-        App.actions(cameraButtons);        
+
+        var uploadButtons = [
+            {
+                text: LANGUAGE.PHOTO_EDIT_MSG01,
+                onClick: function () {
+                    getImage(1, 'assetPhoto', TargetAsset.IMEI);
+                }
+            },
+            {
+                text: LANGUAGE.PHOTO_EDIT_MSG02,
+                onClick: function () {
+                    getImage(0, 'assetPhoto', TargetAsset.IMEI);
+                }
+            },
+            {
+                text: LANGUAGE.COM_MSG04,
+                color: 'red',
+                onClick: function () {
+                    //App.alert('Cancel clicked');
+                }
+            },
+        ];
+        App.actions(uploadButtons);
     });
 
     fitmentOptSelect.on('change', function(){
@@ -1464,13 +1437,13 @@ App.onPageInit('client.details', function (page) {
         {
             text: LANGUAGE.PHOTO_EDIT_MSG01,
             onClick: function () {
-                getImageInstallPhoto(1, 'installPhoto', $$(page.container).find('[name="IMEI"]').val());
+                getImage(1, 'installPhoto', $$(page.container).find('[name="IMEI"]').val());
             }
         },
         {
             text: LANGUAGE.PHOTO_EDIT_MSG02,
             onClick: function () {
-                getImageInstallPhoto(0, 'installPhoto', $$(page.container).find('[name="IMEI"]').val());
+                getImage(0, 'installPhoto', $$(page.container).find('[name="IMEI"]').val());
             }
         },
         {
@@ -1483,7 +1456,12 @@ App.onPageInit('client.details', function (page) {
     ];
 
     uploadPhotoButton.on('click', function () {
-        App.actions(uploadButtons);
+        let installPhotosEl = $$(page.container).find('.install-photo-item');
+        if(installPhotosEl.length < 4){
+            App.actions(uploadButtons);
+        }else{
+            App.alert(LANGUAGE.PROMPT_MSG031);
+        }
     });
 
 
@@ -1517,9 +1495,18 @@ App.onPageInit('client.details', function (page) {
             InstallPosition: $$(page.container).find('[name="InstallPosition"]').val(),
         };
 
+        let installPhotosEl = $$(page.container).find('.install-photo-item');
+        if(installPhotosEl.length){
+            let photos = [];
+            for (let i = 0; i < installPhotosEl.length; i++) {
+                photos.push($$(installPhotosEl[i]).find('img').data('name'));
+            }
+            data.photos = photos;
+        }
+
 
 console.log(data);
-
+return;
 
         JSON1.requestPost(API_URL.URL_SENT_NOTIFY,data,function(result){
                 console.log(result);
@@ -1643,7 +1630,7 @@ App.onPageInit('edit.photo', function (page) {
         imgFor: $$(page.container).find('[name="imgFor"]').val(),
         imei:  $$(page.container).find('[name="imei"]').val(),
     }
-    initCropper();
+    initCropper(data.imgFor);
     //alert(cropper);
     
     //After the selection or shooting is complete, jump out of the crop page and pass the image path to this page
@@ -3451,11 +3438,11 @@ function getAssetImg(params, imgFor){
 var cropper = null;
 var resImg = null;
 
-function initCropper() {
+function initCropper(imgFor) {
     var image = document.getElementById('image');
     //alert(image);
     cropper = new Cropper(image, {
-        aspectRatio: 1 / 1,
+        aspectRatio: imgFor === 'installPhoto' ? NaN : 1 / 1,
         dragMode: 'move',
         rotatable: true,
         minCropBoxWidth: 200,
@@ -3471,9 +3458,10 @@ function initCropper() {
 
 function saveImg(params={}) {
     resImg = cropper.getCroppedCanvas({
-        width: 200,
-        height: 200
+        minWidth: 200,
+        minHeight: 200
     }).toDataURL();
+    //resImg = cropper.getCroppedCanvas().toDataURL();
 
 
 
@@ -3524,7 +3512,7 @@ function saveImg(params={}) {
 
 }
 
-function getImageInstallPhoto(source, imgFor, imei) {
+function getImage(source, imgFor, imei) {
     if (!navigator.camera) {
         alert("Camera API not supported", "Error");
 
@@ -3555,7 +3543,7 @@ function getImageInstallPhoto(source, imgFor, imei) {
             options);
     }
 }
-
+/*
 function getImage(source) {
 
     if (!navigator.camera) {
@@ -3586,7 +3574,7 @@ function getImage(source) {
             options);
     }
 
-}
+}*/
 
 
 

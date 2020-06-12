@@ -68,6 +68,7 @@ window.LanguagePackages= {
 		"PROMPT_MSG028": "We will pre fill Asset Details",
 		"PROMPT_MSG029": "Proceed?",
 		"PROMPT_MSG030": "Scanned VIN number length is not as usual, please check number and confirm",
+		"PROMPT_MSG031": "Maximum 4 images are allowed.",
 
 		"LOGIN_MSG01": "The login(email) or password you entered is incorrect.",
 		"LOGIN_MSG02": "Username / Email",
