@@ -1457,6 +1457,39 @@ App.onPageInit('asset.settings', function(page){
 
 App.onPageInit('client.details', function (page) { 
     var sendSetting = $$('body').find('.sendClientDetails');
+    let uploadPhotoButton = $$(page.container).find('.uploadPhoto');
+
+
+    var uploadButtons = [
+        {
+            text: LANGUAGE.PHOTO_EDIT_MSG01,
+            onClick: function () {
+                getImageInstallPhoto(1, 'installPhoto', $$(page.container).find('[name="IMEI"]').val());
+            }
+        },
+        {
+            text: LANGUAGE.PHOTO_EDIT_MSG02,
+            onClick: function () {
+                getImageInstallPhoto(0, 'installPhoto', $$(page.container).find('[name="IMEI"]').val());
+            }
+        },
+        {
+            text: LANGUAGE.COM_MSG04,
+            color: 'red',
+            onClick: function () {
+                //App.alert('Cancel clicked');
+            }
+        },
+    ];
+
+    uploadPhotoButton.on('click', function () {
+        App.actions(uploadButtons);
+    });
+
+
+    $$(page.container).on('click', '.removePhoto', function () {
+        $$(this).closest('.install-photo-item').remove();
+    });
 
     $$(sendSetting).on('click', function(){ 
         var data ={
@@ -1606,7 +1639,10 @@ App.onPageInit('asset.verification', function(page){
 
 App.onPageInit('edit.photo', function (page) { 
     //page.context.imgSrc = 'resources/images/add_photo_general.png';
-
+    let data = {
+        imgFor: $$(page.container).find('[name="imgFor"]').val(),
+        imei:  $$(page.container).find('[name="imei"]').val(),
+    }
     initCropper();
     //alert(cropper);
     
@@ -1615,7 +1651,7 @@ App.onPageInit('edit.photo', function (page) {
     //image.src = "img/head-default.jpg";    
 
     $$('.savePhoto').on('click', function(){
-        saveImg();
+        saveImg(data);
     });
     $$('#redo').on('click', function(){
         cropper.rotate(90);
@@ -2327,8 +2363,9 @@ function loadPageStatus(data){
 }
 
 function loadPageClientDetails(data){
+    console.log(data)
     if (data){
-        if (data.Date) {            
+        if (data.Date) {
             var localTime = moment.utc(data.Date).toDate();
             if (localTime == 'Invalid Date') {
                 var converted = moment(data.Date,'DD/MM/YYYY HH:mm:ss');
@@ -3432,7 +3469,7 @@ function initCropper() {
 
 }
 
-function saveImg() {
+function saveImg(params={}) {
     resImg = cropper.getCroppedCanvas({
         width: 200,
         height: 200
@@ -3446,8 +3483,11 @@ function saveImg() {
 
     var assetImg = {
         data: resImg,
-        id: 'IMEI_' + TargetAsset.IMEI
+        id: 'IMEI_' + params.imei
     };
+    if(params.imgFor === 'installPhoto'){
+        assetImg.id += '_install_'+ new Date().getTime();
+    }
 
     App.showPreloader();
     $.ajax({
@@ -3464,8 +3504,13 @@ function saveImg() {
             result = typeof(result) == 'string' ? eval("(" + result + ")") : result;
             if (result.MajorCode == "000") {
                 /*App.alert('Result Data:'+ result.Data);*/
-                TargetAsset.IMEI = result.Data;
-                $$('.add_photo img.user-img').attr('src', resImg).addClass('user-img-shadow rounded').data('name', result.Data);
+               // TargetAsset.IMEI = result.Data;
+                if(params.imgFor === 'installPhoto'){
+                    $$('.install-photo-block .row').append(`<div class="col-50 install-photo-item"><img src="${resImg}" data-name="${result.Data}" alt=""><i class="f7-icons icon-other-delete-text-input color-red removePhoto"></i></div>`);
+                }else{
+                    $$('.add_photo img.user-img').attr('src', resImg).addClass('user-img-shadow rounded').data('name', result.Data);
+                }
+
             } else {
                 App.alert(LANGUAGE.PROMPT_MSG013);
             }
@@ -3479,6 +3524,37 @@ function saveImg() {
 
 }
 
+function getImageInstallPhoto(source, imgFor, imei) {
+    if (!navigator.camera) {
+        alert("Camera API not supported", "Error");
+
+    } else {
+        var options = {
+            quality: 50,
+            destinationType: Camera.DestinationType.DATA_URL,
+            sourceType: source, // 0:Photo Library, 1=Camera, 2=Saved Album
+            encodingType: 0 // 0=JPG 1=PNG
+        };
+
+        navigator.camera.getPicture(
+            function(imgData) {
+                //$('.media-object', this.$el).attr('src', "data:image/jpeg;base64,"+imgData);
+                mainView.router.load({
+                    url: 'resources/templates/edit.photo.html',
+                    context: {
+                        imgFor: imgFor,
+                        imei: imei,
+                        imgSrc: "data:image/jpeg;base64," + imgData
+                    }
+                });
+
+            },
+            function() {
+                //alert('Error taking picture', 'Error');
+            },
+            options);
+    }
+}
 
 function getImage(source) {
 
@@ -3675,3 +3751,4 @@ function getVehicleDetailsByVin(params) {
         });
     }
 }
+

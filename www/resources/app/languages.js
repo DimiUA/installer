@@ -216,6 +216,7 @@ window.LanguagePackages= {
 		"CLIENT_DETAILS_MSG18": "Email",
 
 		"CLIENT_DETAILS_MSG19": "Asset Details",
+		"CLIENT_DETAILS_MSG20": "Installation Photos",
 
 
 		"ASSET_VIRIFICATION_MSG00": "Verify installation",

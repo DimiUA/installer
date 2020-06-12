@@ -35,6 +35,15 @@ select{
 .dislay_none{
 	display: none;
 }
+.display-flex{
+	display: flex;
+}
+.justify-content-space-between{
+	justify-content: space-between!important;
+}
+.align-items-center{
+	align-items: center!important
+}
 .navbar_title{
 	display: inline-block !important;
 	width: calc(100% - 112px);
@@ -1243,3 +1252,27 @@ select{
 .theme-dealer .modal .item-input-field.not-empty-state:after{
 	background: #757575;
 }
+
+.install-photo-item{
+	margin-bottom: 16px;
+	height: 120px;
+	position: relative;
+
+}
+	.install-photo-item img{
+		position: absolute;
+		right: 0;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+		max-height: 100%;
+		max-width: 100%;
+		border-radius: 6px;
+	}
+	.removePhoto{
+		position: absolute;
+		right: 0;
+		top: 0;
+		padding: 4px;
+	}
