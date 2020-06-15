@@ -299,6 +299,7 @@ API_URL.URL_EDIT_DEVICE = API_DOMIAN1 + "Client/EditAsset";
 API_URL.URL_GET_DEVICE_SETTINGS = API_DOMIAN1 + "Client/Config";
 API_URL.URL_PHOTO_UPLOAD = API_DOMIAN9 + "image/Upload";
 
+
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN3 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
 API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN3 +"Device/Alarms?MinorToken={0}&deviceToken={1}";
@@ -3534,7 +3535,8 @@ function saveImg(params={}) {
                 /*App.alert('Result Data:'+ result.Data);*/
                // TargetAsset.IMEI = result.Data;
                 if(params.imgFor === 'installPhoto'){
-                    $$('.install-photo-block .row').append(`<div class="col-50 install-photo-item"><img src="${resImg}" data-name="${API_URL.URL_PHOTO_UPLOAD+'/'+result.Data}" alt=""><i class="f7-icons icon-other-delete-text-input color-red removePhoto"></i></div>`);
+                    $$('.install-photo-block .row').append(`<div class="col-50 install-photo-item"><img src="${resImg}" data-name="${API_URL.URL_PHOTO_UPLOAD+'Attachment/images/'+result.Data}" alt=""><i class="f7-icons icon-other-delete-text-input color-red removePhoto"></i></div>`);
+                    //App.alert(API_URL.URL_PHOTO_UPLOAD+'/'+result.Data);
                 }else{
                     $$('.add_photo img.user-img').attr('src', resImg).addClass('user-img-shadow rounded').data('name', result.Data);
                 }
