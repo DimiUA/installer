@@ -1276,3 +1276,8 @@ select{
 		top: 0;
 		padding: 4px;
 	}
+
+.modal{
+	max-height: 80%;
+	overflow: auto;
+}
