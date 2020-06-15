@@ -45,7 +45,7 @@
 
     <preference name="load-url-timeout" value="140000" />
     <preference name="DisallowOverscroll" value="true" />
-    <preference name="Orientation" value="portrait" />
+    <preference name="Orientation" value="default" />
     <preference name="android-minSdkVersion" value="19" />
     <!-- <preference name="android-maxSdkVersion" value="27" /> -->
     <preference name="android-targetSdkVersion" value="28" />
@@ -61,7 +61,7 @@
 
     
     
-    <plugin name="phonegap-plugin-push" source="npm" spec="2.1.2">
+    <plugin name="phonegap-plugin-push" source="npm" spec="2.3.0">
         <variable name="SENDER_ID" value="106187216531" />
     </plugin>
     <platform name="android">
@@ -84,7 +84,8 @@
     <plugin name="cordova-plugin-android-permissions" source="npm" spec="1.0.2" />
     <plugin name="cordova-plugin-ignore-lint-translation" source="npm" />
     
-
+    <plugin name="uk.co.workingedge.phonegap.plugin.istablet" source="npm" spec="1.2.0"  />
+    <plugin name="cordova-plugin-screen-orientation" source="npm" spec="3.0.2"  />
 
     <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
         <string>Camera will be used to scan barcodes</string>

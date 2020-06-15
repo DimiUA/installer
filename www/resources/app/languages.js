@@ -69,6 +69,8 @@ window.LanguagePackages= {
 		"PROMPT_MSG029": "Proceed?",
 		"PROMPT_MSG030": "Scanned VIN number length is not as usual, please check number and confirm",
 		"PROMPT_MSG031": "Maximum 4 images are allowed.",
+		"PROMPT_MSG032": "Please, fill in field",
+		"PROMPT_MSG033": "Validation",
 
 		"LOGIN_MSG01": "The login(email) or password you entered is incorrect.",
 		"LOGIN_MSG02": "Username / Email",

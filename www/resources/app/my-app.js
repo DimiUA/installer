@@ -78,7 +78,13 @@ function onDeviceReady(){
     }
     if (StatusBar) {
         StatusBar.styleDefault();
-    } 
+    }
+
+    if(window.isTablet){
+        screen.orientation.unlock('any');
+    }else{
+        screen.orientation.lock('portrait');
+    }
 
     setupPush();
 
@@ -1469,7 +1475,37 @@ App.onPageInit('client.details', function (page) {
         $$(this).closest('.install-photo-item').remove();
     });
 
-    $$(sendSetting).on('click', function(){ 
+    $$(page.container).on('click', '.install-photo-block img', function () {
+        let images = $$(page.container).find('.install-photo-block img');
+        let imgs = [];
+        let currentImgSrc = this.src;
+        let currentImgIndex = 0;
+        for (let i = 0; i < images.length; i++) {
+            imgs.push(images[i].src);
+            if(currentImgSrc === images[i].src){
+                currentImgIndex = i;
+            }
+        }
+        App.photoBrowser({
+            photos : imgs,
+            theme: 'dark',
+            loop: true,
+        }).open(currentImgIndex);
+    });
+
+
+
+    $$(sendSetting).on('click', function(){
+        let requiredFields = $$(page.container).find('[required]');
+        if(requiredFields.length){
+            for (let i = 0; i < requiredFields.length; i++) {
+                if(!requiredFields[i].value.trim()){
+                    App.alert(LANGUAGE.PROMPT_MSG032 + ' - <b>' + $$(requiredFields[i]).closest('.item-inner').find('.item-title').text() +'</b>', LANGUAGE.PROMPT_MSG033);
+                    return;
+                }
+            }
+        }
+
         var data ={
             IMEI: $$(page.container).find('[name="IMEI"]').val(),
             MinorToken: getUserinfo().userCode,
@@ -1497,16 +1533,17 @@ App.onPageInit('client.details', function (page) {
 
         let installPhotosEl = $$(page.container).find('.install-photo-item');
         if(installPhotosEl.length){
-            let photos = [];
+            //let photos = [];
             for (let i = 0; i < installPhotosEl.length; i++) {
-                photos.push($$(installPhotosEl[i]).find('img').data('name'));
+                //photos.push($$(installPhotosEl[i]).find('img').data('name'));
+                let imgNum = i+1;
+                data['photo'+imgNum] = $$(installPhotosEl[i]).find('img').data('name');
             }
-            data.photos = photos;
+            //data.photos = photos;
         }
 
 
-console.log(data);
-return;
+
 
         JSON1.requestPost(API_URL.URL_SENT_NOTIFY,data,function(result){
                 console.log(result);
