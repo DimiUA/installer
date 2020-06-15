@@ -1581,7 +1581,12 @@ App.onPageInit('client.details', function (page) {
                 
                 App.hidePreloader();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(jqXHR, textStatus){
+                alert(JSON.stringify(jqXHR))
+                alert(JSON.stringify(textStatus))
+                App.hidePreloader();
+                App.alert(LANGUAGE.COM_MSG02);
+            }
         );
     });
 
