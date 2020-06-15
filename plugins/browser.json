@@ -66,6 +66,21 @@
         },
         "cordova-plugin-buildinfo": {
             "PACKAGE_NAME": "com.sinopacific.installergps"
+        },
+        "kaiquecruz-phonegap-plugin-barcodescanner-custom": {
+            "PACKAGE_NAME": "com.sinopacific.installergps"
+        },
+        "cordova-plugin-android-permissions": {
+            "PACKAGE_NAME": "com.sinopacific.installergps"
+        },
+        "cordova-plugin-ignore-lint-translation": {
+            "PACKAGE_NAME": "com.sinopacific.installergps"
+        },
+        "uk.co.workingedge.phonegap.plugin.istablet": {
+            "PACKAGE_NAME": "com.sinopacific.installergps"
+        },
+        "cordova-plugin-screen-orientation": {
+            "PACKAGE_NAME": "com.sinopacific.installergps"
         }
     },
     "dependent_plugins": {

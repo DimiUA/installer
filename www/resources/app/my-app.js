@@ -1582,8 +1582,6 @@ App.onPageInit('client.details', function (page) {
                 App.hidePreloader();
             },
             function(jqXHR, textStatus){
-                alert(JSON.stringify(jqXHR))
-                alert(JSON.stringify(textStatus))
                 App.hidePreloader();
                 App.alert(LANGUAGE.COM_MSG02);
             }
@@ -3547,6 +3545,9 @@ function saveImg(params={}) {
             mainView.router.back();
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
+            App.alert(JSON.stringify(XMLHttpRequest))
+            App.alert(JSON.stringify(textStatus))
+            App.alert(JSON.stringify(errorThrown))
             App.hidePreloader();
             App.alert(LANGUAGE.COM_MSG02);
         }

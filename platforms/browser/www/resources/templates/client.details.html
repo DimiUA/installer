@@ -1,204 +1,331 @@
-    <div class="navbar">
+<div class="page bg-color-page page_settings" data-page="client.details">
+	<div class="navbar">
         <div class="navbar-inner">
-            <div class="left sliding">
+            <div class="left">
                 <a href="#" class="back link "> <i class="f7-icons icon-header-arrow-back"></i></a>
             </div>
-            <div class="center sliding navbar_title">{{@global.LANGUAGE.CLIENT_DETAILS_MSG00}}</div>     
-            <div class="right sliding">
+            <div class="left navbar_title">{{@global.LANGUAGE.CLIENT_DETAILS_MSG12}}</div>     
+            <div class="right">
                 <a href="#" class="link sendClientDetails" ><i class="f7-icons icon-header-apply"></i></a>
             </div>      
         </div>
     </div>
-
-<div class="pages">
-    <div class="page bg-color-page page_settings" data-page="client.details">
-    	
-    	<div class="page-content " >  
-            <input type="text" hidden name="ContactCode" value="{{ContactCode}}">
-            <input type="text" hidden name="IMEI" value="{{IMEI}}">
-            <input type="text" hidden name="IMSI" value="{{IMSI}}">
-            <input type="text" hidden name="TaskID" value="{{TaskID}}">
-            <input type="text" hidden name="Product" value="{{Product}}">
-            <input type="text" hidden name="Service" value="{{Service}}">
-            <input type="text" hidden name="Name" value="{{Name}}">
-            <input type="text" hidden name="Account" value="{{Account}}">
-            <input type="text" hidden name="LoginName" value="{{LoginName}}">
-            <input type="text" hidden name="Date" value="{{Date}}">
-            
-            <div class="content-block-title border_top showBlockControll">{{@global.LANGUAGE.CLIENT_DETAILS_MSG13}}<i class="f7-icons icon-other-arrow-drop-down"></i></div>
-            <div class="list-block list-block-readonly no-hairlines-between sliding active">           
-                <ul>                 
-                    <li class="item-content color-dealer">                  
-                        <div class="item-media">
-                            {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG01}}
-                        </div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                {{IMEI}}
-                            </div>                        
-                        </div>                   
-                    </li>
-                    <li class="item-content">                  
-                        <div class="item-media">
-                            {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG02}}
-                        </div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                {{IMSI}}
-                            </div>                        
-                        </div>                   
-                    </li>
-                    <li class="item-content">                  
-                        <div class="item-media">
-                            {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG07}}
-                        </div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                {{TaskID}}
-                            </div>                        
-                        </div>                   
-                    </li>
-                    <li class="item-content">                  
-                        <div class="item-media">
-                            {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG08}}
-                        </div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                {{Product}}
-                            </div>                        
-                        </div>                   
-                    </li>
-                    <li class="item-content">                  
-                        <div class="item-media">
-                            {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG09}}
-                        </div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                {{Service}}
-                            </div>                        
-                        </div>                   
-                    </li>
-                    <li class="item-content">                  
-                        <div class="item-media">
-                            {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG03}}
-                        </div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                {{Name}}
-                            </div>                        
-                        </div>                   
-                    </li>
-                    <li class="item-content">                  
-                        <div class="item-media">
-                            {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG10}}
-                        </div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                {{Account}}
-                            </div>                        
-                        </div>                   
-                    </li>
-                    {{#if LoginName}}
-                    <li class="item-content">                  
-                        <div class="item-media">
-                            {{@global.LANGUAGE.CLIENT_DETAILS_MSG01}}
-                        </div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                {{LoginName}}
-                            </div>                        
-                        </div>                   
-                    </li>
-                    {{/if}}
-                    {{#if Date}}
-                    <li class="item-content">                  
-                        <div class="item-media">
-                            {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG04}}
-                        </div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                {{Date}}
-                            </div>                        
-                        </div>                   
-                    </li>
-                    {{/if}}
-                    
-                </ul>
-            </div>
-
-            <div class="content-block-title border_top showBlockControll">{{@global.LANGUAGE.CLIENT_DETAILS_MSG00}}<i class="f7-icons icon-other-arrow-drop-down"></i></div>
-            <div class="list-block sliding active">
-                <ul >
-                    {{#if FirstName}}
-                    <li class="item-content">                  
-                        <div class="item-media"><i class="f7-icons icon-other-name"></i></div>
-                        <div class="item-inner">
-                            <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG02}}</div>
-                            <div class="item-input">
-                                <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG02}}" name="FirstName" value="{{FirstName}}" maxlength="200" class="">
-                            </div>
-                        </div>                   
-                    </li>
-                    {{/if}}
-                    {{#if LastName}}
-                    <li class="item-content">                  
-                        <div class="item-media"></div>
-                        <div class="item-inner">
-                            <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG11}}</div>
-                            <div class="item-input">
-                                <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG11}}" name="LastName" value="{{LastName}}" maxlength="200" class="">
-                            </div>
-                        </div>                   
-                    </li>
-                    {{/if}}
-                    <li class="item-content">                  
-                        <div class="item-media"><i class="f7-icons icon-other-add-address"></i></div>
-                        <div class="item-inner">
-                            <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG03}}</div>
-                            <div class="item-input">
-                                <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG03}}" name="AddressOfJob" value="{{AddressOfJob}}" maxlength="400" class="">
-                            </div>
-                        </div>                   
-                    </li>    
-                    {{#if PhoneNumber}}            
-                    <li class="item-content">                  
-                        <div class="item-media"><i class="f7-icons icon-other-mobile-phone"></i></div>
-                        <div class="item-inner">
-                            <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG04}}</div>
-                            <div class="item-input">
-                                <input type="tel" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG04}}" name="PhoneNumber" value="{{PhoneNumber}}" maxlength="200" class="only_numbers">
-                            </div>
-                        </div>                   
-                    </li>    
-                    {{/if}}         
-                    <li class="item-content">
-                        <div class="item-media"></div>
-                        <div class="item-inner">
-                            <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG05}}</div>
-                            <div class="item-input ">
-                                <select name="JobDetail" >                                
-                                    <option value="1" selected>{{@global.LANGUAGE.CLIENT_DETAILS_MSG06}}</option>
-                                    <option value="2">{{@global.LANGUAGE.CLIENT_DETAILS_MSG07}}</option>
-                                    <option value="3">{{@global.LANGUAGE.CLIENT_DETAILS_MSG08}}</option>
-                                    <option value="4">{{@global.LANGUAGE.CLIENT_DETAILS_MSG09}}</option>
-                                    <option value="5">{{@global.LANGUAGE.CLIENT_DETAILS_MSG10}}</option>
-                                </select>
-                                <i class="f7-icons icon-other-arrow-drop-dowm select_arrow"></i>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="item-content">                  
-                        <div class="item-media"></div>
-                        <div class="item-inner">
-                            <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG14}}</div>
-                            <div class="item-input">
-                                <textarea placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG14}}" name="Notes" maxlength="400" class=""></textarea>
-                            </div>
-                        </div>                   
-                    </li>    
-            
-                </ul>
-            </div>        
+	<div class="page-content " >  
+        <input type="text" hidden name="ContactCode" value="{{ContactCode}}">
+        <input type="text" hidden name="IMEI" value="{{IMEI}}">
+        <input type="text" hidden name="IMSI" value="{{IMSI}}">
+        <input type="text" hidden name="TaskID" value="{{TaskID}}">
+        <input type="text" hidden name="Product" value="{{Product}}">
+        <input type="text" hidden name="Service" value="{{Service}}">
+        <!--<input type="text" hidden name="Name" value="{{Name}}">-->
+        <input type="text" hidden name="Account" value="{{Account}}">
+        <input type="text" hidden name="LoginName" value="{{LoginName}}">
+        <input type="text" hidden name="Date" value="{{Date}}">
+        
+        <!-- <div class="content-block-title border_top showBlockControll">{{@global.LANGUAGE.CLIENT_DETAILS_MSG13}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div> -->
+        <div class="list-block list-block-first media-list list-block-readonly no-hairlines no-hairlines-between sliding active">           
+            <ul>                 
+                <li class="item-content">                  
+                    <div class="item-media">
+                        {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG01}}
+                    </div>
+                    <div class="item-inner">
+                        <div class="item-title">
+                            {{IMEI}}
+                        </div>                        
+                    </div>                   
+                </li>
+                <li class="item-content">                  
+                    <div class="item-media">
+                        {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG02}}
+                    </div>
+                    <div class="item-inner">
+                        <div class="item-title">
+                            {{IMSI}}
+                        </div>                        
+                    </div>                   
+                </li>
+                <li class="item-content">                  
+                    <div class="item-media">
+                        {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG07}}
+                    </div>
+                    <div class="item-inner">
+                        <div class="item-title">
+                            {{TaskID}}
+                        </div>                        
+                    </div>                   
+                </li>
+                <li class="item-content">                  
+                    <div class="item-media">
+                        {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG08}}
+                    </div>
+                    <div class="item-inner">
+                        <div class="item-title">
+                            {{Product}}
+                        </div>                        
+                    </div>                   
+                </li>
+                <li class="item-content">                  
+                    <div class="item-media">
+                        {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG09}}
+                    </div>
+                    <div class="item-inner">
+                        <div class="item-title">
+                            {{Service}}
+                        </div>                        
+                    </div>                   
+                </li>
+                <!--<li class="item-content">
+                    <div class="item-media">
+                        {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG03}}
+                    </div>
+                    <div class="item-inner">
+                        <div class="item-title">
+                            {{Name}}
+                        </div>                        
+                    </div>                   
+                </li>-->
+                <li class="item-content">                  
+                    <div class="item-media">
+                        {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG10}}
+                    </div>
+                    <div class="item-inner">
+                        <div class="item-title">
+                            {{Account}}
+                        </div>                        
+                    </div>                   
+                </li>
+                {{#if LoginName}}
+                <li class="item-content">                  
+                    <div class="item-media">
+                        {{@global.LANGUAGE.CLIENT_DETAILS_MSG01}}
+                    </div>
+                    <div class="item-inner">
+                        <div class="item-title">
+                            {{LoginName}}
+                        </div>                        
+                    </div>                   
+                </li>
+                {{/if}}
+                {{#if Date}}
+                <li class="item-content">                  
+                    <div class="item-media">
+                        {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG04}}
+                    </div>
+                    <div class="item-inner">
+                        <div class="item-title">
+                            {{Date}}
+                        </div>                        
+                    </div>                   
+                </li>
+                {{/if}}
+                
+            </ul>
         </div>
+
+        <div class="content-block-title border_top showBlockControll ripple">{{@global.LANGUAGE.CLIENT_DETAILS_MSG00}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>
+        <div class="list-block media-list no-hairlines-between no-hairlines sliding active">
+            <ul >
+                {{#if FirstName}}
+                <li class="item-content">                  
+                    <div class="item-media"><i class="f7-icons icon-other-name"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG02}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG02}}" name="FirstName" value="{{FirstName}}" maxlength="200" class="">
+                        </div>
+                    </div>                   
+                </li>
+                {{/if}}
+                {{#if LastName}}
+                <li class="item-content">                  
+                    <div class="item-media"></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG11}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG11}}" name="LastName" value="{{LastName}}" maxlength="200" class="">
+                        </div>
+                    </div>                   
+                </li>
+                {{/if}}
+                <li class="item-content">                  
+                    <div class="item-media"><i class="f7-icons icon-status-address"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG03}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG03}}" name="AddressOfJob" value="{{AddressOfJob}}" maxlength="400" class="">
+                        </div>
+                    </div>                   
+                </li>    
+                {{#if PhoneNumber}}            
+                <li class="item-content">                  
+                    <div class="item-media"><i class="f7-icons icon-other-mobile-phone"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG04}}</div>
+                        <div class="item-input">
+                            <input type="tel" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG04}}" name="PhoneNumber" value="{{PhoneNumber}}" maxlength="200" class="only_numbers">
+                        </div>
+                    </div>                   
+                </li>    
+                {{/if}}         
+                <li class="item-content">
+                    <div class="item-media"></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG05}}</div>
+                        <div class="item-input ">
+                            <select name="JobDetail" >                                
+                                <option value="1" selected>{{@global.LANGUAGE.CLIENT_DETAILS_MSG06}}</option>
+                                <option value="2">{{@global.LANGUAGE.CLIENT_DETAILS_MSG07}}</option>
+                                <option value="3">{{@global.LANGUAGE.CLIENT_DETAILS_MSG08}}</option>
+                                <option value="4">{{@global.LANGUAGE.CLIENT_DETAILS_MSG09}}</option>
+                                <option value="5">{{@global.LANGUAGE.CLIENT_DETAILS_MSG10}}</option>
+                            </select>
+                            <i class="f7-icons icon-other-arrow-drop-dowm select_arrow"></i>
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content">                  
+                    <div class="item-media"></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG14}}</div>
+                        <div class="item-input">
+                            <textarea placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG14}}" name="Notes" maxlength="400" class=""></textarea>
+                        </div>
+                    </div>                   
+                </li>    
+        
+            </ul>
+        </div>
+
+        <div class="content-block-title border_top showBlockControll ripple">{{@global.LANGUAGE.CLIENT_DETAILS_MSG15}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>
+        <div class="list-block media-list no-hairlines-between no-hairlines sliding active">
+            <ul >
+                <li class="item-content">
+                    <div class="item-media"><!--<i class="f7-icons icon-other-name"></i>--></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG16}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG16}}" name="InstallerCompany" value="{{InstallerCompany}}" maxlength="200" class="" required>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="item-content">
+                    <div class="item-media"><i class="f7-icons icon-other-name"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG17}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG17}}" name="InstallerName" value="{{InstallerName}}" maxlength="200" class="" required>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="item-content">
+                    <div class="item-media"><i class="f7-icons icon-other-email"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG18}}</div>
+                        <div class="item-input">
+                            <input type="email" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG18}}" name="InstallerEmail" value="{{InstallerEmail}}" maxlength="400" class="">
+                        </div>
+                    </div>
+                </li>
+
+                <li class="item-content">
+                    <div class="item-media"><i class="f7-icons icon-other-name"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG01}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG01}}" name="InstallerLogin" value="{{InstallerLogin}}" maxlength="200" readonly >
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="content-block-title border_top showBlockControll ripple">{{@global.LANGUAGE.CLIENT_DETAILS_MSG19}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>
+        <div class="list-block media-list no-hairlines-between no-hairlines sliding active">
+            <ul >
+                <li class="item-content">
+                    <div class="item-media"><i class="f7-icons icon-other-asset-details"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.ASSET_VIRIFICATION_MSG03}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.ASSET_VIRIFICATION_MSG03}}" name="Name" value="{{Name}}" maxlength="200" class="">
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-media"></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG21}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG21}}" name="Describe1" value="{{Describe1}}" maxlength="200" class="">
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-media"></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG22}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG22}}" name="Describe2" value="{{Describe2}}" maxlength="200" class="">
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-media"></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG23}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG23}}" name="Describe3" value="{{Describe3}}" maxlength="200" class="">
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-media"></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG24}}</div>
+                        <div class="item-input">
+                            <input type="tel" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG24}}" name="Describe4" value="{{Describe4}}" maxlength="200" class="only_numbers">
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content">
+                    <div class="item-media"> </div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG50}}</div>
+                        <div class="item-input">
+                            <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG52}}" name="InstallPosition" value="{{InstallPosition}}" maxlength="300" class="">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="content-block-title border_top display-flex justify-content-space-between align-items-center ripple uploadPhoto">{{@global.LANGUAGE.CLIENT_DETAILS_MSG20}}<i class="f7-icons icon-export"></i></div>
+        <div class="content-block install-photo-block">
+            <div class="row">
+                <!--<div class="col-50 install-photo-item">
+                    <img src="https://upload.quiktrak.co/Attachment/images/IMEI_0000142181154754.png" data-name="IMEI_0000142181154754.png" alt="">
+                    <i class="f7-icons icon-other-delete-text-input color-red removePhoto"></i>
+                </div>
+                <div class="col-50 install-photo-item">
+                    <img src="https://res.cloudinary.com/dmuibj5uf/image/upload/v1591374240/sinoafrica/pckahbvv5pt7lgo0rjac.png" data-name="pckahbvv5pt7lgo0rjac.png" alt="">
+                    <i class="f7-icons icon-other-delete-text-input color-red removePhoto"></i>
+                </div>-->
+                <!--<div class="col-50 install-photo-item">
+                    <img src="https://upload.quiktrak.co/Attachment/images/IMEI_0000142181154754.png" data-name="IMEI_0000142181154754.png" alt="">
+                    <i class="f7-icons icon-other-delete-text-input color-red removePhoto"></i>
+                </div>
+                <div class="col-50 install-photo-item">
+                    <img src="https://res.cloudinary.com/dmuibj5uf/image/upload/v1591374240/sinoafrica/pckahbvv5pt7lgo0rjac.png" data-name="pckahbvv5pt7lgo0rjac.png" alt="">
+                    <i class="f7-icons icon-other-delete-text-input color-red removePhoto"></i>
+                </div>-->
+
+            </div>
+        </div>
+
     </div>
 </div>
+

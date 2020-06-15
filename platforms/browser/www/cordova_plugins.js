@@ -610,6 +610,42 @@ module.exports = [
         "clobbers": [
             "BuildInfo"
         ]
+    },
+    {
+        "file": "plugins/kaiquecruz-phonegap-plugin-barcodescanner-custom/www/barcodescanner.js",
+        "id": "kaiquecruz-phonegap-plugin-barcodescanner-custom.BarcodeScanner",
+        "pluginId": "kaiquecruz-phonegap-plugin-barcodescanner-custom",
+        "clobbers": [
+            "cordova.plugins.barcodeScanner"
+        ]
+    },
+    {
+        "file": "plugins/kaiquecruz-phonegap-plugin-barcodescanner-custom/src/browser/BarcodeScannerProxy.js",
+        "id": "kaiquecruz-phonegap-plugin-barcodescanner-custom.BarcodeScannerProxy",
+        "pluginId": "kaiquecruz-phonegap-plugin-barcodescanner-custom",
+        "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-android-permissions/www/permissions-dummy.js",
+        "id": "cordova-plugin-android-permissions.Permissions",
+        "pluginId": "cordova-plugin-android-permissions",
+        "clobbers": [
+            "cordova.plugins.permissions"
+        ]
+    },
+    {
+        "file": "plugins/uk.co.workingedge.phonegap.plugin.istablet/www/istablet.js",
+        "id": "uk.co.workingedge.phonegap.plugin.istablet.IsTablet",
+        "pluginId": "uk.co.workingedge.phonegap.plugin.istablet",
+        "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
+        "id": "cordova-plugin-screen-orientation.screenorientation",
+        "pluginId": "cordova-plugin-screen-orientation",
+        "clobbers": [
+            "cordova.plugins.screenorientation"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -635,7 +671,12 @@ module.exports.metadata =
     "cordova-plugin-statusbar": "2.1.3",
     "cordova-plugin-vibration": "2.1.6",
     "cordova-plugin-whitelist": "1.2.2",
-    "cordova-plugin-buildinfo": "2.0.2"
+    "cordova-plugin-buildinfo": "2.0.2",
+    "kaiquecruz-phonegap-plugin-barcodescanner-custom": "6.0.5",
+    "cordova-plugin-android-permissions": "1.0.2",
+    "cordova-plugin-ignore-lint-translation": "0.0.1",
+    "uk.co.workingedge.phonegap.plugin.istablet": "1.2.0",
+    "cordova-plugin-screen-orientation": "3.0.2"
 }
 // BOTTOM OF METADATA
 });

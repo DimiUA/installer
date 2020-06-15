@@ -34,6 +34,10 @@ window.LanguagePackages= {
 		"COM_MSG31": "Disable Notifications",
 		"COM_MSG32": "Protect",
 		"COM_MSG33": "Live",
+		"COM_MSG34": "Confirm",
+		"COM_MSG35": "km",
+		"COM_MSG36": "h",
+
 		"PROMPT_MSG001": "In this section, you can find the device by <b>IMEI</b>, <b>IMSI</b>, or <b>Name</b>. Select a specific tab and start the search.",
 		"PROMPT_MSG002": "Buy more credits to send commands to the devices",
 		"PROMPT_MSG003": "Password has been changed. Please, login with new credential",
@@ -59,7 +63,15 @@ window.LanguagePackages= {
 		"PROMPT_MSG023": "There is no position data or they are incorrect.",
 		"PROMPT_MSG024": "Was payment successful?",		
 		"PROMPT_MSG025": "Activate this device as",	
-		"PROMPT_MSG026": "You do not have permission to activate this device as",		
+		"PROMPT_MSG026": "You do not have permission to activate this device as",
+		"PROMPT_MSG027": "VIN number cannot be recognized",		
+		"PROMPT_MSG028": "We will pre fill Asset Details",
+		"PROMPT_MSG029": "Proceed?",
+		"PROMPT_MSG030": "Scanned VIN number length is not as usual, please check number and confirm",
+		"PROMPT_MSG031": "Maximum 4 images are allowed.",
+		"PROMPT_MSG032": "Please, fill in field",
+		"PROMPT_MSG033": "Validation",
+
 		"LOGIN_MSG01": "The login(email) or password you entered is incorrect.",
 		"LOGIN_MSG02": "Username / Email",
 		"LOGIN_MSG03": "Password",
@@ -104,6 +116,7 @@ window.LanguagePackages= {
 		"ASSET_COMMANDS_MSG07": "Get as Live",
 		"ASSET_COMMANDS_MSG08": "Immobilise",
 		"ASSET_COMMANDS_MSG09": "Unimmobilise",
+		"ASSET_COMMANDS_MSG10": "Check Settings",
 
 		"ASSET_COMMANDS_HISTORY_MSG00": "Commands History",
 		"ASSET_COMMANDS_HISTORY_MSG01": "There was no messages in selected period",
@@ -149,7 +162,7 @@ window.LanguagePackages= {
 		"ASSET_SETTINGS_MSG22": "Model",
 		"ASSET_SETTINGS_MSG23": "Color",
 		"ASSET_SETTINGS_MSG24": "Year",
-		"ASSET_SETTINGS_MSG25": "Odometer",
+		"ASSET_SETTINGS_MSG25": "Initial Odometer",
 		"ASSET_SETTINGS_MSG26": "Unit",
 		"ASSET_SETTINGS_MSG27": "Add Photos",
 		"ASSET_SETTINGS_MSG28": "Payment Details",
@@ -182,6 +195,7 @@ window.LanguagePackages= {
 		"ASSET_SETTINGS_MSG55": "Immobilizer",
 		"ASSET_SETTINGS_MSG56": "Custom",
 		"ASSET_SETTINGS_MSG57": "Fitment Option Custom",
+		"ASSET_SETTINGS_MSG58": "Initial Engine Hours",
 
 		"CLIENT_DETAILS_MSG00": "Client Details",
 		"CLIENT_DETAILS_MSG01": "Login Name",
@@ -198,6 +212,15 @@ window.LanguagePackages= {
 		"CLIENT_DETAILS_MSG12": "Asset verification",
 		"CLIENT_DETAILS_MSG13": "Install Profile",
 		"CLIENT_DETAILS_MSG14": "Notes",
+
+		"CLIENT_DETAILS_MSG15": "Installer Details ",
+		"CLIENT_DETAILS_MSG16": "Company ",
+		"CLIENT_DETAILS_MSG17": "Name ",
+		"CLIENT_DETAILS_MSG18": "Email",
+
+		"CLIENT_DETAILS_MSG19": "Asset Details",
+		"CLIENT_DETAILS_MSG20": "Installation Photos",
+
 
 		"ASSET_VIRIFICATION_MSG00": "Verify installation",
 		"ASSET_VIRIFICATION_MSG01": 'IMEI',
@@ -232,6 +255,7 @@ window.LanguagePackages= {
 		"ASSET_POSITION_MSG00": 'Position',
 		"ASSET_POSITION_MSG01": 'km/h',
 		"ASSET_POSITION_MSG02": 'Direction',
+		"ASSET_DEVICE_CONFIG_MSG12": 'Device Configuration',
 		"PHOTO_EDIT_MSG00": 'Edit Photo',
 		"PHOTO_EDIT_MSG01": 'Take Picture',
 		"PHOTO_EDIT_MSG02": 'From Gallery',	

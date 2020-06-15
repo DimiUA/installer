@@ -176,5 +176,45 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "kaiquecruz-phonegap-plugin-barcodescanner-custom": {
+        "source": {
+            "type": "registry",
+            "id": "kaiquecruz-phonegap-plugin-barcodescanner-custom"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-android-permissions": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-android-permissions@1.0.2"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-ignore-lint-translation": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-ignore-lint-translation"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "uk.co.workingedge.phonegap.plugin.istablet": {
+        "source": {
+            "type": "registry",
+            "id": "uk.co.workingedge.phonegap.plugin.istablet@1.2.0"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-screen-orientation": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-screen-orientation@3.0.2"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }
