@@ -3500,7 +3500,7 @@ function saveImg(params={}) {
     resImg = cropper.getCroppedCanvas({
         minWidth: 200,
         minHeight: 200
-    }).toDataURL();
+    }).toDataURL("image/jpeg",0.7);
     //resImg = cropper.getCroppedCanvas().toDataURL();
 
 
@@ -3559,7 +3559,7 @@ function getImage(source, imgFor, imei) {
 
     } else {
         var options = {
-            quality: 25,
+            quality: 50,
             destinationType: Camera.DestinationType.DATA_URL,
             sourceType: source, // 0:Photo Library, 1=Camera, 2=Saved Album
             encodingType: 0 // 0=JPG 1=PNG
