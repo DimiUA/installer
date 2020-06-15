@@ -3535,7 +3535,7 @@ function saveImg(params={}) {
                 /*App.alert('Result Data:'+ result.Data);*/
                // TargetAsset.IMEI = result.Data;
                 if(params.imgFor === 'installPhoto'){
-                    $$('.install-photo-block .row').append(`<div class="col-50 install-photo-item"><img src="${resImg}" data-name="${API_URL.URL_PHOTO_UPLOAD+'Attachment/images/'+result.Data}" alt=""><i class="f7-icons icon-other-delete-text-input color-red removePhoto"></i></div>`);
+                    $$('.install-photo-block .row').append(`<div class="col-50 install-photo-item"><img src="${resImg}" data-name="${API_DOMIAN9}Attachment/images/${result.Data}" alt=""><i class="f7-icons icon-other-delete-text-input color-red removePhoto"></i></div>`);
                     //App.alert(API_URL.URL_PHOTO_UPLOAD+'/'+result.Data);
                 }else{
                     $$('.add_photo img.user-img').attr('src', resImg).addClass('user-img-shadow rounded').data('name', result.Data);
