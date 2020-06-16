@@ -195,7 +195,7 @@ select{
 		}
 
 .searchbar .searchbar-clear{
-	
+	right: 32px;
 }
 /* .icon {
     font-size: 24px;    
@@ -213,6 +213,18 @@ select{
 	vertical-align: middle;
 } */
 
+.scanBarCode{
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 20px;
+	padding: 4px;
+	padding-right: 8px;
+}
+.item-input .scanBarCode{
+	padding: 10px;
+	padding-right: 13px;
+}
 .border_bottom{
 	margin-bottom: 24px;
 }

@@ -293,6 +293,7 @@ API_URL.URL_SENT_NOTIFY = API_DOMIAN1 + "Client/SentNotify";
 API_URL.URL_EDIT_DEVICE = API_DOMIAN1 + "Client/EditAsset";
 API_URL.URL_GET_DEVICE_SETTINGS = API_DOMIAN1 + "Client/Config";
 API_URL.URL_PHOTO_UPLOAD = API_DOMIAN9 + "image/Upload";
+API_URL.URL_GET_DETAILS_BY_VIN = "http://ss.sinopacific.com.ua/vin/v1/";
 
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN3 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
@@ -517,6 +518,29 @@ $$(document).on('click', '.user_settigns_tabbar a.tab-link', function(e){
     
     return false;
 });
+
+$$('body').on('click', '.scanBarCode', function() {
+    let input = $$(this).siblings('input');
+
+    let permissions = cordova.plugins.permissions;
+    if (!permissions) {
+        App.alert('plugin not supported')
+    } else {
+        permissions.hasPermission(permissions.CAMERA, function(status) {
+            if (status.hasPermission) {
+                openBarCodeReader(input);
+            } else {
+                permissions.requestPermission(permissions.CAMERA, function(status1){
+                    openBarCodeReader(input);
+                    if (!status1.hasPermission) error();
+                }, requestPermissionCameraError);
+            }
+        });
+    }
+});
+function requestPermissionCameraError() {
+    App.alert('Camera permission is not turned on');
+}
 
 $$('.formSearchDevice input[name="searchInput"]').on('change keyup input click', function(){     
     if (this.value.length > 0) {       
@@ -1448,8 +1472,8 @@ App.onPageInit('client.details', function (page) {
             }
             //data.photos = photos;
         }
-        console.log(data);
-return;
+       /* console.log(data);
+return;*/
         JSON1.requestPost(API_URL.URL_SENT_NOTIFY,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
@@ -1919,8 +1943,11 @@ function toIndex() {
 }
 
 function submitSearchForm(input) {
-    //var input = $$('.formSearchDevice input[name="searchInput"');    
-    
+    //var input = $$('.formSearchDevice input[name="searchInput"');
+    if (!input) {
+        input = $$('.formSearchDevice input[name="searchInput"');
+    }
+
     if (input.value) {
        
         input.blur();
@@ -3413,7 +3440,7 @@ function saveImg(params={}) {
                 /*App.alert('Result Data:'+ result.Data);*/
                 // TargetAsset.IMEI = result.Data;
                 if(params.imgFor === 'installPhoto'){
-                    $$('.install-photo-block .row').append(`<div class="col-50 tablet-25 install-photo-item"><img src="${resImg}" data-name="${API_DOMIAN9}Attachment/images/${result.Data}" alt=""><i class="f7-icons icon-other-delete-text color-red removePhoto"></i></div>`);
+                    $$('.install-photo-block .row').append(`<div class="col-50 tablet-25 install-photo-item"><img src="${API_DOMIAN9}Attachment/images/${result.Data}" data-name="${API_DOMIAN9}Attachment/images/${result.Data}" alt=""><i class="f7-icons icon-other-delete-text color-red removePhoto"></i></div>`);
                 }else{
                     $$('.add_photo img.user-img').attr('src', resImg).addClass('user-img-shadow rounded').data('name', result.Data);
                 }
@@ -3460,5 +3487,173 @@ function getImage(source, imgFor, imei) {
                 //alert('Error taking picture', 'Error');
             },
             options);
+    }
+}
+
+
+
+
+function openBarCodeReader(input){
+    //console.log(input);
+    if(window.device && cordova.plugins && cordova.plugins.barcodeScanner) {
+        cordova.plugins.barcodeScanner.scan(
+            function (result) {
+                /*alert("We got a barcode\n" +
+                      "Result: " + result.text + "\n" +
+                      "Format: " + result.format + "\n" +
+                      "Cancelled: " + result.cancelled);*/
+                if (result && result.text) {
+                    input.val(result.text);
+                    if(input.attr('name') == 'searchInput') {
+                        submitSearchForm();
+                    }
+                    input.change();  // fix to trigger onchange / oninput event listener
+                }
+
+            },
+            function (error) {
+                alert("Scanning failed: " + error);
+            },
+            {
+                //preferFrontCamera : true, // iOS and Android
+                showFlipCameraButton : true, // iOS and Android
+                showTorchButton : true, // iOS and Android
+                torchOn: true, // Android, launch with the torch switched on (if available)
+                //saveHistory: true, // Android, save scan history (default false)
+                prompt : "Place a barcode inside the scan area", // Android
+                resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+                //formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+                //orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+                //disableAnimations : true, // iOS
+                //disableSuccessBeep: false // iOS and Android
+            }
+        );
+    }else{
+        App.alert('Your device does not support this function');
+    }
+}
+
+
+
+function checkVinNumber(params){
+    if (params && params.VIN) {
+        var vinLength = params.VIN.length;
+        console.log(vinLength);
+        if (vinLength == 18){
+            params.VIN = params.VIN.slice(1);
+            getVehicleDetailsByVin(params);
+        } else if(vinLength > 18 || vinLength < 17){
+            App.modal({
+                title: '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>',
+                text: '<div class="custom-modal-text">' + LANGUAGE.PROMPT_MSG030 + ':</div>',
+                afterText: `
+                <div class="list-block list-block-modal m-0 no-hairlines ">          
+                    <ul>                               
+                        <li>
+                            <div class="item-content pl-0">                                    
+                                <div class="item-inner pr-0">                                      
+                                    <div class="item-input item-input-field">
+                                        <input type="text" placeholder="${ LANGUAGE.ASSET_SETTINGS_MSG19 }" name="VIN-check" value="${ params.VIN }" >
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                `,
+                buttons: [{
+                    text: LANGUAGE.COM_MSG04,
+                },
+                    {
+                        text: LANGUAGE.COM_MSG34,
+                        bold: true,
+                        onClick: function(modal, e) {
+                            params.VIN = $$(modal).find('input[name="VIN-check"]').val();
+                            params.inputs.Describe7.data('prev-val',params.VIN);
+                            params.inputs.Describe7.val(params.VIN);
+                            getVehicleDetailsByVin(params);
+                        }
+                    },
+                ]
+            });
+        }else{
+            getVehicleDetailsByVin(params);
+        }
+    }
+}
+
+function getVehicleDetailsByVin(params) {
+    if (params && params.VIN) {
+        var container = $$('body');
+        if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+        App.showProgressbar(container);
+
+        $.ajax({
+            type: "GET",
+            url: API_URL.URL_GET_DETAILS_BY_VIN+params.VIN,
+            dataType: 'json',
+            async: true,
+            cache: false,
+
+            success: function(result){
+                App.hideProgressbar();
+                console.log(result);
+                if (result) {
+                    var vehicleDetailsArr = [];
+
+                    if (result.make) {
+                        vehicleDetailsArr.push({
+                            name: LANGUAGE.ASSET_SETTINGS_MSG21,
+                            value: result.make,
+                            inputName: 'Describe1',
+                        });
+                    }
+                    if (result.model) {
+                        vehicleDetailsArr.push({
+                            name: LANGUAGE.ASSET_SETTINGS_MSG22,
+                            value: result.model,
+                            inputName: 'Describe2',
+                        });
+                    }
+                    if (result.color) {
+                        vehicleDetailsArr.push({
+                            name: LANGUAGE.ASSET_SETTINGS_MSG23,
+                            value: result.color,
+                            inputName: 'Describe3',
+                        });
+                    }
+                    if (result.year) {
+                        vehicleDetailsArr.push({
+                            name: LANGUAGE.ASSET_SETTINGS_MSG24,
+                            value: result.year,
+                            inputName: 'Describe4',
+                        });
+                    }
+
+                    if (vehicleDetailsArr.length) {
+                        var message = LANGUAGE.PROMPT_MSG028;
+                        for (var i = vehicleDetailsArr.length - 1; i >= 0; i--) {
+                            message += '</br><b>' + vehicleDetailsArr[i].name + ': ' + vehicleDetailsArr[i].value + '</b>';
+                        }
+                        message += '</br>' + LANGUAGE.PROMPT_MSG029;
+
+                        App.confirm(message, function () {
+                            for (var i = vehicleDetailsArr.length - 1; i >= 0; i--) {
+                                params.inputs[vehicleDetailsArr[i].inputName].val(vehicleDetailsArr[i].value);
+                            }
+                        });
+                    }
+                }
+
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+                App.hideProgressbar();
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
+                App.alert(LANGUAGE.PROMPT_MSG027);
+
+            }
+        });
     }
 }

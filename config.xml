@@ -2,8 +2,8 @@
 <widget 
   id="com.sinopacific.installergps" 
   version="1.1.12"
-  android-versionCode="85"
-  ios-CFBundleVersion="85"
+  android-versionCode="86"
+  ios-CFBundleVersion="86"
   xmlns="http://www.w3.org/ns/widgets" 
   xmlns:cdv="http://cordova.apache.org/ns/1.0"    
   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -88,7 +88,7 @@
     <plugin name="cordova-plugin-screen-orientation" source="npm" spec="3.0.2"  />
 
     <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
-        <string>Camera will be used to scan barcodes</string>
+        <string>Camera will be used to scan barcodes and to take photo of assets</string>
     </edit-config>
     <edit-config target="NSPhotoLibraryUsageDescription" file="*-Info.plist" mode="merge">
         <string>You can select photo of your asset in your photo library and upload it into the app</string>
