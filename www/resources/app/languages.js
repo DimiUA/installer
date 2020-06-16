@@ -1,9 +1,9 @@
 window.LanguagePackages= {
 	"zh":{
-
+		
 	},
 	"en":{
-		"COM_MSG00": "SAVE",
+		"COM_MSG00": "SAVE",		
 		"COM_MSG02": "Network Connection Failed.",
 		"COM_MSG03": "Command Sent",
 		"COM_MSG04": "Cancel",
@@ -13,7 +13,7 @@ window.LanguagePackages= {
 		"COM_MSG08": "Loading...",
 		"COM_MSG09": "Latitude",
 		"COM_MSG10": "Longitude",
-		"COM_MSG11": "No Data",
+		"COM_MSG11": "No Data",		
 		"COM_MSG14": "Passwords do not match",
 		"COM_MSG15": "Password should contain at least 6 characters",
 		"COM_MSG16": "show",
@@ -49,22 +49,22 @@ window.LanguagePackages= {
 		"PROMPT_MSG009": "Fill in the form, please",
 		"PROMPT_MSG010": "Are you sure want to delete this notification?",
 		"PROMPT_MSG011": "The balance is insufficient, please renew it",
-		"PROMPT_MSG012": "Are you sure want to exit the application?",
-		"PROMPT_MSG013": "Something not good. Please, try again later",
-		"PROMPT_MSG014": "Delete notification?",
-		"PROMPT_MSG015": "Are you sure you want to close the application?",
-		"PROMPT_MSG016": "Are you sure you want to delete all notifications?",
-		"PROMPT_MSG017": "Are you sure you want to delete selected notifications?",
+		"PROMPT_MSG012": "Are you sure want to exit the application?",	
+		"PROMPT_MSG013": "Something not good. Please, try again later",	
+		"PROMPT_MSG014": "Delete notification?",	
+		"PROMPT_MSG015": "Are you sure you want to close the application?",	
+		"PROMPT_MSG016": "Are you sure you want to delete all notifications?",	
+		"PROMPT_MSG017": "Are you sure you want to delete selected notifications?",	
 		"PROMPT_MSG018": "Notification disabled for",
 		"PROMPT_MSG019": "Notification activated for",
 		"PROMPT_MSG020": "Are you sure you want to send command -",
 		"PROMPT_MSG021": "To verify again, please push the button below.",
 		"PROMPT_MSG022": "Something not good. Please, review and update submission again.",
 		"PROMPT_MSG023": "There is no position data or they are incorrect.",
-		"PROMPT_MSG024": "Was payment successful?",
-		"PROMPT_MSG025": "Activate this device as",
+		"PROMPT_MSG024": "Was payment successful?",		
+		"PROMPT_MSG025": "Activate this device as",	
 		"PROMPT_MSG026": "You do not have permission to activate this device as",
-		"PROMPT_MSG027": "VIN number cannot be recognized",
+		"PROMPT_MSG027": "VIN number cannot be recognized",		
 		"PROMPT_MSG028": "We will pre fill Asset Details",
 		"PROMPT_MSG029": "Proceed?",
 		"PROMPT_MSG030": "Scanned VIN number length is not as usual, please check number and confirm",
@@ -101,11 +101,11 @@ window.LanguagePackages= {
 		"USER_PROFILE_MSG06": "Password",
 		"USER_PROFILE_MSG07": "New Password",
 		"USER_PROFILE_MSG08": "Confirm Password",
-		"USER_PROFILE_MSG09": "User Profile",
-		"USER_RECHARGE_MSG00": "Recharge credit",
+		"USER_PROFILE_MSG09": "User Profile",	
+		"USER_RECHARGE_MSG00": "Recharge credit",		
 		"USER_RECHARGE_MSG01": "Renewal",
 		"USER_RECHARGE_MSG02": "credits",
-		"USER_RECHARGE_MSG03": "Buy now",
+		"USER_RECHARGE_MSG03": "Buy now",	
 		"ASSET_COMMANDS_MSG00": "Command",
 		"ASSET_COMMANDS_MSG01": "In this section, you can send different commands to test the device.",
 		"ASSET_COMMANDS_MSG02": "Command List",
@@ -162,7 +162,7 @@ window.LanguagePackages= {
 		"ASSET_SETTINGS_MSG22": "Model",
 		"ASSET_SETTINGS_MSG23": "Color",
 		"ASSET_SETTINGS_MSG24": "Year",
-		"ASSET_SETTINGS_MSG25": "Odometer",
+		"ASSET_SETTINGS_MSG25": "Initial Odometer",
 		"ASSET_SETTINGS_MSG26": "Unit",
 		"ASSET_SETTINGS_MSG27": "Add Photos",
 		"ASSET_SETTINGS_MSG28": "Payment Details",
@@ -195,7 +195,7 @@ window.LanguagePackages= {
 		"ASSET_SETTINGS_MSG55": "Immobilizer",
 		"ASSET_SETTINGS_MSG56": "Custom",
 		"ASSET_SETTINGS_MSG57": "Fitment Option Custom",
-		"ASSET_SETTINGS_MSG58": "Engine Hours",
+		"ASSET_SETTINGS_MSG58": "Initial Engine Hours",
 
 		"CLIENT_DETAILS_MSG00": "Client Details",
 		"CLIENT_DETAILS_MSG01": "Login Name",
@@ -234,11 +234,11 @@ window.LanguagePackages= {
 		"ASSET_VIRIFICATION_MSG09": 'Service',
 		"ASSET_VIRIFICATION_MSG10": 'Account',
 		"ASSET_VIRIFICATION_MSG11": 'Verify',
-		"ASSET_VIRIFICATION_MSG12": 'Check the device, please.',
+		"ASSET_VIRIFICATION_MSG12": 'Check the device, please.',	
 		"ASSET_VIRIFICATION_MSG13": 'Device offline',
 		"ASSET_VIRIFICATION_MSG14": 'No Status and Position response for past 10 min or they have issues.',
 		"ASSET_VIRIFICATION_MSG15": 'No Status response for past 10 min or Status response have issues.',
-		"ASSET_VIRIFICATION_MSG16": 'No Position response for past 10 min or Position response have issues.',
+		"ASSET_VIRIFICATION_MSG16": 'No Position response for past 10 min or Position response have issues.',					
 		"ASSET_STATUS_MSG00": 'Status',
 		"ASSET_STATUS_MSG01": 'IMEI',
 		"ASSET_STATUS_MSG02": 'IMSI',
@@ -258,12 +258,12 @@ window.LanguagePackages= {
 		"ASSET_DEVICE_CONFIG_MSG12": 'Device Configuration',
 		"PHOTO_EDIT_MSG00": 'Edit Photo',
 		"PHOTO_EDIT_MSG01": 'Take Picture',
-		"PHOTO_EDIT_MSG02": 'From Gallery',
-
+		"PHOTO_EDIT_MSG02": 'From Gallery',	
+		
 		"NOTIFICATION_MSG00": "Notifications",
 	},
 	"es":{
-
+			
 	}
 };
 var lang = navigator.browserLanguage ? navigator.browserLanguage.toLowerCase() : navigator.language.toLowerCase();
@@ -275,9 +275,9 @@ else if(lang.indexOf("es") >= 0) {
 }
 else if(lang.indexOf("zh") >= 0) {
 	lang = "en";
-}
+}	
 else {
-	lang = "en";
+	lang = "en";		
 }
 window.LANGUAGE = LanguagePackages[lang];
 if(!Template7.global)
