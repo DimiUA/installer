@@ -46,7 +46,8 @@ select{
 .align-items-center{
 	align-items: center!important
 }
-.no-margin{
+.no-margin,
+.m-0{
 	margin: 0;
 }
 .no-padding{
@@ -218,11 +219,11 @@ select{
 	top: 0;
 	right: 0;
 	font-size: 20px;
-	padding: 4px;
+	padding: 6px;
 	padding-right: 8px;
 }
 .item-input .scanBarCode{
-	padding: 10px;
+	padding: 2px;
 	padding-right: 13px;
 }
 .border_bottom{

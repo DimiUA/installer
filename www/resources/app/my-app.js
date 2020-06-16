@@ -518,7 +518,10 @@ $$(document).on('click', '.user_settigns_tabbar a.tab-link', function(e){
     
     return false;
 });
-
+/*$$('body').on('click', '.scanBarCode', function(){
+    let input = $$(this).siblings('input');
+    openBarCodeReader(input);
+});*/
 $$('body').on('click', '.scanBarCode', function() {
     let input = $$(this).siblings('input');
 
@@ -1233,6 +1236,13 @@ App.onPageInit('asset.settings', function(page){
     var fitmentOptSelectSet = fitmentOptSelect.data("set");
     var fitmentOptCustomWrapper = $$(page.container).find('.fitment_opt_custom_wrapper');
     var fitmentOptSelectedArr = [];
+
+    var VINinputEl = $$(page.container).find('[name="Describe7"');
+
+    var makeEl = $$(page.container).find('input[name="Describe1"]');
+    var modelEl = $$(page.container).find('input[name="Describe2"]');
+    var colorEl = $$(page.container).find('input[name="Describe3"]');
+    var yearEl = $$(page.container).find('input[name="Describe4"]');
     
     var selectUnitSpeed = $$('select[name="Unit"]');   
     selectUnitSpeed.val(selectUnitSpeed.data("set"));
@@ -1296,6 +1306,39 @@ App.onPageInit('asset.settings', function(page){
     $$('.add_photo').on('click', function (e) {        
         App.actions(cameraButtons);        
     }); */
+
+    VINinputEl.on('blur change', function(){
+        if ( $$(this).data('prev-val') != this.value ) {
+            $$(this).data('prev-val', this.value);
+            checkVinNumber({
+                VIN: this.value,
+                inputs: {
+                    Describe1: makeEl,
+                    Describe2: modelEl,
+                    Describe3: colorEl,
+                    Describe4: yearEl,
+                    Describe7: VINinputEl,
+                }
+            });
+        }
+    });
+
+    VINinputEl.on('input ', function(){
+        this.value = this.value.toUpperCase();
+        if (this.value.length == 17 && $$(this).data('prev-val') != this.value ) {
+            $$(this).data('prev-val', this.value);
+            checkVinNumber({
+                VIN: this.value,
+                inputs: {
+                    Describe1: makeEl,
+                    Describe2: modelEl,
+                    Describe3: colorEl,
+                    Describe4: yearEl,
+                    Describe7: VINinputEl,
+                }
+            });
+        }
+    });
 
     $$('.add_photo').on('click', function (e) {
 
@@ -3546,20 +3589,10 @@ function checkVinNumber(params){
             App.modal({
                 title: '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>',
                 text: '<div class="custom-modal-text">' + LANGUAGE.PROMPT_MSG030 + ':</div>',
-                afterText: `
-                <div class="list-block list-block-modal m-0 no-hairlines ">          
-                    <ul>                               
-                        <li>
-                            <div class="item-content pl-0">                                    
-                                <div class="item-inner pr-0">                                      
-                                    <div class="item-input item-input-field">
-                                        <input type="text" placeholder="${ LANGUAGE.ASSET_SETTINGS_MSG19 }" name="VIN-check" value="${ params.VIN }" >
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                afterText: `                
+                        <div class="input-field">
+                            <input type="text" class="modal-text-input" name="VIN-check" value="${ params.VIN }" placeholder="${ LANGUAGE.ASSET_SETTINGS_MSG19 }">
+                        </div>  
                 `,
                 buttons: [{
                     text: LANGUAGE.COM_MSG04,
