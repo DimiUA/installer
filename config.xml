@@ -2,8 +2,8 @@
 <widget 
   id="com.sinopacific.installergps" 
   version="1.1.12"
-  android-versionCode="86"
-  ios-CFBundleVersion="86"
+  android-versionCode="87"
+  ios-CFBundleVersion="87"
   xmlns="http://www.w3.org/ns/widgets" 
   xmlns:cdv="http://cordova.apache.org/ns/1.0"    
   xmlns:android="http://schemas.android.com/apk/res/android"
