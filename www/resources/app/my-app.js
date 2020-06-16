@@ -1307,7 +1307,7 @@ App.onPageInit('asset.settings', function(page){
         App.actions(cameraButtons);        
     }); */
 
-    VINinputEl.on('blur change', function(){
+    VINinputEl.on('blur change touchleave touchcancel', function() {
         if ( $$(this).data('prev-val') != this.value ) {
             $$(this).data('prev-val', this.value);
             checkVinNumber({

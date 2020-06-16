@@ -57,7 +57,10 @@ select{
 	padding-left: 16px;
 }
 .pr-16{
-	padding-right: 16px;
+	padding-right: 16px!important;
+}
+.pr-25{
+	padding-right: 25px!important;
 }
 .mt-16{
 	margin-top: 16px;
@@ -216,14 +219,14 @@ select{
 
 .scanBarCode{
 	position: absolute;
-	top: 0;
 	right: 0;
 	font-size: 20px;
-	padding: 6px;
-	padding-right: 8px;
+	top: 5px;
+	padding: 0 8px 6px 6px ;
 }
 .item-input .scanBarCode{
-	padding: 2px;
+	top: 12px;
+	/*padding: 2px;*/
 	padding-right: 13px;
 }
 .border_bottom{
