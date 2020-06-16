@@ -1,16 +1,3 @@
-var storage;
-var fail;
-var uid;
-try {
-    uid = new Date;
-    (storage = window.localStorage).setItem(uid, uid);
-    fail = storage.getItem(uid) != uid;
-    storage.removeItem(uid);
-    fail && (storage = false);
-} catch (exception) {
-    window.localStorage.clear();
-}
-
 $hub = null;
 window.NULL = null;
 window.COM_TIMEFORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -48,8 +35,8 @@ function getPlusInfo(){
             if(!localStorage.PUSH_DEVICE_TOKEN)
             localStorage.PUSH_DEVICE_TOKEN = uid;
             //localStorage.PUSH_DEVICE_TOKEN = "75ba1639-92ae-0c4c-d423-4fad1e48a49d"
-        localStorage.PUSH_APPID_ID = 'android.app.quiktrak.eu.installer';
-        localStorage.DEVICE_TYPE = "android.app.quiktrak.eu.installer";        
+        localStorage.PUSH_APPID_ID = 'ios.app.quiktrak.eu.installer';
+        localStorage.DEVICE_TYPE = "ios.app.quiktrak.eu.installer";        
     }
 }
 
@@ -76,15 +63,16 @@ function onDeviceReady(){
     if (window.MobileAccessibility) {
         window.MobileAccessibility.usePreferredTextZoom(false);    
     }
+
     if (StatusBar) {
         StatusBar.styleDefault();
     }
-
     if(window.isTablet){
         screen.orientation.unlock('any');
     }else{
         screen.orientation.lock('portrait');
     }
+
 
     setupPush();
 
@@ -235,21 +223,21 @@ function backFix(event){
     } 
 }
 
-
-
 // Initialize your app
 var MapTrack = null;
 window.PosMarker = {};
 var virtualNotificationList = null;
 var virtualCommandsHistoryList = null;
+
 var App = new Framework7({
-    swipePanel: 'left',   
-    swipeBackPage: false,
-    material: true,
+    animateNavBackIcon: true,    
+    swipeBackPage: false,    
     //pushState: true,       
+    swipePanel: 'left', 
     allowDuplicateUrls: true,    
     sortable: false,    
     modalTitle: 'GPS Installer',
+    notificationTitle: 'GPS Installer',
     precompileTemplates: true,
     template7Pages: true,
     tapHold: false, //enable tap hold events
@@ -261,6 +249,8 @@ var App = new Framework7({
     }   
 });
 
+
+
 // Export selectors engine
 var $$ = Dom7;
 
@@ -268,13 +258,14 @@ var $$ = Dom7;
 var mainView = App.addView('.view-main', {
     //main: true,
     domCache: true,  
-    swipeBackPage: false
+    swipeBackPage: false,
+    dynamicNavbar: true,
 });
 
-var API_DOMIAN1 = "https://api.m2mglobaltech.com/Installer/V1/";
+var API_DOMIAN1 = "http://api.m2mglobaltech.com/Installer/V1/";
 var API_DOMIAN2 = "http://quiktrak.co/webapp/QuikProtect.Api2/";
-var API_DOMIAN3 = "https://api.m2mglobaltech.com/QuikTrak/V1/";
-var API_DOMIAN4 = "https://api.m2mglobaltech.com/QuikProtect/V1/Client/";
+var API_DOMIAN3 = "http://api.m2mglobaltech.com/QuikTrak/V1/";
+var API_DOMIAN4 = "http://api.m2mglobaltech.com/QuikProtect/V1/Client/";
 var API_DOMIAN5 = "https://m2mdata.co/api/Service/";
 
 var API_DOMIAN9 = "https://upload.quiktrak.co/";
@@ -288,9 +279,13 @@ API_URL.URL_GET_CREDIT = API_DOMIAN1 + "Client/GetCredit";
 API_URL.URL_GET_DEVICE_DETAIL = API_DOMIAN1 + "Client/GetAssetDetail";
 API_URL.URL_CHANGE_NOTIFICATION_STATUS = API_DOMIAN1 + "Client/Notification";
 
+//API_URL.URL_GET_PROTECT_POSITION = API_DOMIAN1 + "Client/ProtectPostion";
 API_URL.URL_GET_PROTECT_POSITION = API_DOMIAN1 + "Client/ProtectPostion2";
+//API_URL.URL_GET_STATUS = API_DOMIAN1 + "Client/Status";
 API_URL.URL_GET_STATUS = API_DOMIAN1 + "Client/Status2";
+//API_URL.URL_SET_IMMOBILISE = API_DOMIAN1 + "Client/Immobilise";
 API_URL.URL_SET_IMMOBILISE = API_DOMIAN1 + "Client/Immobilise2";
+//API_URL.URL_SET_UNIMMOBILISE = API_DOMIAN1 + "Client/Unimobilise";
 API_URL.URL_SET_UNIMMOBILISE = API_DOMIAN1 + "Client/Unimobilise2";
 API_URL.URL_GET_LIVE_POSITION = API_DOMIAN1 + "Client/LivePostion";
 API_URL.URL_GET_VERIFY2 = API_DOMIAN1 + "Client/Verfiy2";
@@ -299,15 +294,12 @@ API_URL.URL_EDIT_DEVICE = API_DOMIAN1 + "Client/EditAsset";
 API_URL.URL_GET_DEVICE_SETTINGS = API_DOMIAN1 + "Client/Config";
 API_URL.URL_PHOTO_UPLOAD = API_DOMIAN9 + "image/Upload";
 
-
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN3 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
 API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN3 +"Device/Alarms?MinorToken={0}&deviceToken={1}";
 
 API_URL.URL_ACTIVATION = "http://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}&DealerName={3}";
 API_URL.URL_REPLACE_IMEI = "http://app.quikprotect.co/activation2/upgrade?DealerToken={0}&imeis={1}";
-//API_URL.URL_GET_DETAILS_BY_VIN = "http://ss.sinopacific.com.ua/vin/v1/{0}";
-API_URL.URL_GET_DETAILS_BY_VIN = "http://ss.sinopacific.com.ua/vin/v1/";
 
 API_URL.URL_GET_COMMAND_HISTORY = API_DOMIAN1 + "Client/GetCommandHisMessages";
 API_URL.URL_GET_SIM_INFO = API_DOMIAN5 + "GetSimInfo";
@@ -315,12 +307,55 @@ API_URL.URL_GET_SIM_LIST = API_DOMIAN5 + "GetDeviceList";
 
 API_URL.URL_REFRESH_TOKEN = API_DOMIAN3 + "User/RefreshToken";
 
+//http://api.m2mglobaltech.com/Installer/V1/Client/GetAssetList
+//http://api.m2mglobaltech.com/Installer/V1/Client/Status
+//http://api.m2mglobaltech.com/Installer/V1/Client/ProtectPostion
+//http://api.m2mglobaltech.com/Installer/V1/Client/LivePostion
+//http://api.m2mglobaltech.com/Installer/V1/Client/Config
+//http://api.m2mglobaltech.com/Installer/V1/Client/Logout
+//http://api.m2mglobaltech.com/Installer/V1/Client/StartPush
+//http://api.m2mglobaltech.com/Installer/V1/Client/EndPush
+//http://api.m2mglobaltech.com/Installer/V1/Client/GetAssetCommandList
+
+//http://api.m2mglobaltech.com/Installer/V1/Client/Immobilise
+//http://api.m2mglobaltech.com/Installer/V1/Client/Unimobilise
+//http://api.m2mglobaltech.com/Installer/V1/Client/LiveVerify
+//http://api.m2mglobaltech.com/Installer/V1/Client/ProtectVerfiy 
+
+
+//http://quiktrak.co/webapp/QuikProtect.Api2/ProtectPostion.json?IMEI=0354188046331901
+//http://quiktrak.co/webapp/QuikProtect.Api2/Status.json?IMEI=0354188046331901
+
+
+/*
+var cameraButtons = [
+    {
+        text: LANGUAGE.PHOTO_EDIT_MSG01,
+        onClick: function () {
+            getImage(1);
+        }
+    },
+    {
+        text: LANGUAGE.PHOTO_EDIT_MSG02,
+        onClick: function () {
+            getImage(0);
+        }
+    },
+    {
+        text: LANGUAGE.COM_MSG04,
+        color: 'red',
+        onClick: function () {
+            //App.alert('Cancel clicked');
+        }
+    },
+];*/
+
 
 var html = Template7.templates.template_Login_Screen();
 $$(document.body).append(html); 
 html = Template7.templates.template_Popover_Menu();
 $$(document.body).append(html);
-html = Template7.templates.template_AssetList();
+/*html = Template7.templates.template_AssetList();*/
 $$('.navbar-fixed').append(html);
 
 
@@ -330,21 +365,23 @@ var virtualAssetList = App.virtualList('.assetList', {
     items: [
     ],
     height: function (item) {        
-        return 139; //display the image with 50px height
+        return 131; //display the image with 50px height
+
     },
     // Display the each item using Template7 template parameter
     renderItem: function (index, item) {
         /*var notificationStates = getAssetNotificationState();
         var notState = 0;
+        console.log(notificationStates);
         if (notificationStates && notificationStates[item.IMEI]) {
             notState = notificationStates[item.IMEI];
         }*/
 
         var ret = '';       
-        ret +=  '<li class="item-content" data-imei="'+item.IMEI+'" data-imsi="'+item.IMSI+'" data-name="'+item.Name+'" data-id="'+item.Id+'" data-type="'+item.ProductName+'" data-notifications="'+item.NotificationState+'" data-customer="'+item.Customer+'" >';
+        ret +=  '<li class="item-content" data-imei="'+item.IMEI+'" data-imsi="'+item.IMSI+'" data-name="'+item.Name+'" data-id="'+item.Id+'" data-type="'+item.ProductName+'" data-customer="'+item.Customer+'" >';
         ret +=      '<div class="item-inner">';
         ret +=          '<div class="item-title-row">';
-        ret +=              '<div class="item-title color-blue">IMEI: '+item.IMEI+'</div>';
+        ret +=              '<div class="item-title color-dealer">IMEI: '+item.IMEI+'</div>';
         ret +=              '<div class="item-after"><a href="#" class="item-link f7-icons icon-other-menu-content menuDevice"></a></div>';
         ret +=          '</div>';
         ret +=          '<div class="item-subtitle">IMSI: '+item.IMSI+'</div>';
@@ -362,7 +399,7 @@ var virtualAssetList = App.virtualList('.assetList', {
 
 
 if (inBrowser) {
-    if(localStorage.ACCOUNT && localStorage.PASSWORD) {
+    if(getUserinfo().code) {
         preLogin();     
     }
     else {
@@ -372,14 +409,9 @@ if (inBrowser) {
 
 
 $$('.login-form').on('submit', function (e) {    
-    e.preventDefault();     
-    preLogin(); 
+    e.preventDefault(); 
+    preLogin();     
     return false;
-});
-$$('body').on('change keyup input click', '.only_numbers', function(){
-    if (this.value.match(/[^0-9-]/g)) {
-         this.value = this.value.replace(/[^0-9-]/g, '');
-    }
 });
 
 $$('body').on('click', '.toggle-password', function(){
@@ -391,6 +423,19 @@ $$('body').on('click', '.toggle-password', function(){
     }  
     $(this).toggleClass('color-white');  
 });
+$$('body').on('change keyup input click', '.only_numbers', function(){
+    if (this.value.match(/[^0-9]/g)) {
+         this.value = this.value.replace(/[^0-9]/g, '');
+    }
+});
+
+/*$$('body').on('click', '.navbar_title, .navbar_title_index, .index-title', function(){
+   
+    var msg = '{"title":"IGNITION ON WARNING","type":32768,"imei":"0863014530724883","name":"AA5638PT Merc2008 Дешевий","lat":50.439684,"lng":30.3883,"speed":0,"direct":0,"time":"2018-09-06 16:09:43","alarm":32768,"Lat":50.439684,"Lng":30.3883,"Imei":"0863014530724883","AssetName":"AA5638PT Merc2008 Дешевий","PositionTime":"2018-09-06 16:09:43"}';
+    //var msg = '{"Lat":"-33.970022","Lng":"151.127198","Valid":"A","Speed":"0","Direction":"0","Acc":"OFF","Battery":"13.06","GSM":"23","GPS":"9","Ignition":"77834","Mileage":"447679","alarm":"location","PositionTime":"2018-08-08T13:09:46","Imei":"0352544074331597","Imsi":"234500003188471","AssetName":"Sydney Swift","CreateDateTime":"2018-08-08T13:09:46"}';
+ 
+    showMsgNotification([msg]);
+});*/
 
 $$('body').on('click', '#menu li', function () {
     var page = $$(this).data('page');  
@@ -409,7 +454,7 @@ $$('body').on('click', '#menu li', function () {
                 break; 
             case 'user.recharge.credit':
                 loadRechargeCreditPage();
-                break;                     
+                break;                    
             case 'login':
                 App.confirm(LANGUAGE.PROMPT_MSG012, LANGUAGE.MENU_MSG04, function () {        
                     logout();
@@ -438,49 +483,20 @@ $$('body').on('click', '.search_tabbar .tab-link', function () {
     
     var href = $$(this).attr('href');
     var searchInput = $$('.formSearchDevice input[name="searchInput"]');
-
+    
     switch(href){
         case '#tab-imei':
-            searchInput.data('searchby','IMEI').attr('type', 'number');
+            searchInput.data('searchby','IMEI');
             break;
         case '#tab-imsi':
-            searchInput.data('searchby','IMSI').attr('type', 'number');
+            searchInput.data('searchby','IMSI');
             break;
 
         default:
-        console.log('here');
-        searchInput.data('searchby','Name').attr('type', 'search');
-        break;
+        searchInput.data('searchby','Name');
     }
-   
+    
 });
-
-/*$$('body').on('click', '.scanBarCode', function(){
-    let input = $$(this).siblings('input'); 
-    openBarCodeReader(input);
-});*/
-$$('body').on('click', '.scanBarCode', function() {
-    let input = $$(this).siblings('input');
-
-    let permissions = cordova.plugins.permissions;
-    if (!permissions) {
-        App.alert('plugin not supported')
-    } else {
-        permissions.hasPermission(permissions.CAMERA, function(status) {
-            if (status.hasPermission) {
-                openBarCodeReader(input);
-            } else {
-                permissions.requestPermission(permissions.CAMERA, function(status1){
-                    openBarCodeReader(input);
-                    if (!status1.hasPermission) error();
-                }, requestPermissionCameraError);
-            }
-        });
-    }
-});
-function requestPermissionCameraError() {
-    App.alert('Camera permission is not turned on');
-}
 
 $$(document).on('click', '.user_settigns_tabbar a.tab-link', function(e){
     e.preventDefault();   
@@ -502,53 +518,35 @@ $$(document).on('click', '.user_settigns_tabbar a.tab-link', function(e){
     return false;
 });
 
-$$('.formSearchDevice input[name="searchInput"]').focus(function(){     
-    if (this.value.length > 0) {
-        $$('.searchDevice').show();
-        $$('.searchClear').hide();
+$$('.formSearchDevice input[name="searchInput"]').on('change keyup input click', function(){     
+    if (this.value.length > 0) {       
+        $$('.formSearchDevice').addClass('searchbar-not-empty');
+    }else{
+        $$('.formSearchDevice').removeClass('searchbar-not-empty');
     }
 });
 
-$$('.formSearchDevice input[name="searchInput"]').blur(function(){   
-    if (this.value.length > 0) {
-        setTimeout(function(){
-            $$('.searchDevice').hide();
-            $$('.searchClear').show();
-        }, 300);
-            
-    }
-});
+
 
 $$('body').on('submit', '.formSearchDevice', function (e) {
     e.preventDefault();    
-    submitSearchForm();
+    
     return false;
 });
-$$('body').on('click', '.searchDevice', function () {
-    submitSearchForm();
+
+
+$$('.formSearchDevice input[name="searchInput"]').on('search', function () {    
+    submitSearchForm(this);
 });
+
 $$('body').on('click', '.searchClear', function () {    
     var input = $$(this).siblings('input[name="searchInput"]');
     input.val('');
     input.focus();
-    $$('.searchDevice').show();
-    $$('.searchClear').hide();
+    
+    $$('.formSearchDevice').removeClass('searchbar-not-empty');
 });
 
-/*$$('body').on('click', '.navbar_title, .navbar_title_index', function(){
-
-    var msg = '{"title":"IGNITION ON WARNING","type":32768,"imei":"0863014530724883","name":"AA5638PT Merc2008 Дешевий","lat":50.439684,"lng":30.3883,"speed":0,"direct":0,"time":"2018-09-06 16:09:43","alarm":32768,"Lat":50.439684,"Lng":30.3883,"Imei":"0863014530724883","AssetName":"AA5638PT Merc2008 Дешевий","PositionTime":"2018-09-06 16:09:43"}';
-    //var msg = '{"Lat":"-33.970022","Lng":"151.127198","Valid":"A","Speed":"0","Direction":"0","Acc":"OFF","Battery":"13.06","GSM":"23","GPS":"9","Ignition":"77834","Mileage":"447679","alarm":"location","PositionTime":"2018-08-08T13:09:46","Imei":"0352544074331597","Imsi":"234500003188471","AssetName":"Sydney Swift","CreateDateTime":"2018-08-08T13:09:46"}';
-   
-    
-    //processClickOnPushNotification(all_msg); 
-    //console.log('click');
-    showMsgNotification([msg]);
-});*/
-
-
-
-    
 $$(document).on('click', '.backToIndex', function(e){    
     mainView.router.back({
         pageName: 'index', 
@@ -569,94 +567,57 @@ $$(document).on('change', '.leaflet-control-layers-selector[type="radio"]', func
     }
 });
 
+$$('body').on('click', '.showBlockControll',function () {
+    var block = $$(this).next('div');
+    if ($$(block).hasClass('sliding')) {
+        if ($$(block).hasClass('active')) {
+            $(block).slideUp( "slow", function() {
+                // Animation complete.
+                $$(block).removeClass('active');
+            });
+        }else{
+            $(block).slideDown( "slow", function() {
+                // Animation complete.
+                $$(block).addClass('active');
+            });
+        }
+    }            
+});
+
 $$('body').on('click', '.assetList .item-inner', function () {
     var parrent = $$(this).closest('.item-content');    
-    //var caption = parrent.data('imei');   
+    //var caption = parrent.data('imei');    
 
     var userPermissions = Protocol.Helper.getPermissions(getUserinfo().Permissions);
-    //var userPermissions = Protocol.Helper.getPermissions(1);
+    //var userPermissions = Protocol.Helper.getPermissions(8);
     //console.log(userPermissions);
     
     TargetAsset.IMEI = !parrent.data('imei')? '' : parrent.data('imei');   
     TargetAsset.IMSI = !parrent.data('imsi')? '' : parrent.data('imsi'); 
     TargetAsset.Name = !parrent.data('name')? '' : parrent.data('name');
     TargetAsset.Id = !parrent.data('id')? '' : parrent.data('id');
-    TargetAsset.Type = !parrent.data('type')? '' : parrent.data('type');
-    TargetAsset.Customer = !parrent.data('customer')? '' : parrent.data('customer');   
+    TargetAsset.Type = !parrent.data('type')? '' : parrent.data('type'); 
+    TargetAsset.Customer = !parrent.data('customer')? '' : parrent.data('customer');    
 
-    var notificationsCheck = '';    
-    if (parrent.data('notifications') == 1) {        
-        notificationsCheck = 'checked="checked"';
-    }    
-
-
-    var commands =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-other-commands color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.HOME_MSG03 +
-                        '</div>'+
-                    '</div>';
-
-    var commandsHistory =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-header-history-command-screen color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.ASSET_COMMANDS_HISTORY_MSG00 +
-                        '</div>'+
-                    '</div>';
-
-    var simInfo =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-other-info color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.ASSET_SIM_INFO_MSG00 +
-                        '</div>'+
-                    '</div>';
-
-    var settings =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-other-service-details color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.HOME_MSG04 +
-                        '</div>'+
-                    '</div>'; 
-
-    var upgrade =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-replace-imei color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.HOME_MSG08 +
-                        '</div>'+
-                    '</div>'; 
-
-    var activation =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-other-activation color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.HOME_MSG09 +
-                        '</div>'+
-                    '</div>'; 
+    var notificationStates = getAssetNotificationState();
+    var notState = 0;
+    
+    if (notificationStates && notificationStates[TargetAsset.IMEI]) {
+        notState = notificationStates[TargetAsset.IMEI];
+    }
+    
+    var data ={
+        'NotificatioState' : notState,
+    };
 
     
-    var notification =  '<div class="action_button_wrapper">'+                            
-                            '<div class="action_button_block action_button_media">'+
-                                '<i class="f7-icons icon-header-notification color-blue "></i>'+
-                            '</div>'+
-                            '<div class="action_button_block action_button_text">'+
-                                LANGUAGE.HOME_MSG05 +
-                            '</div>'+
-                            '<span class="label-switch actionButton-label">'+
-                                '<input type="checkbox" name="checkbox-alarm" '+notificationsCheck+'>'+
-                                '<div class="checkbox"></div>'+
-                            '</span>'+
-                        '</div>';
+    var commands = LANGUAGE.HOME_MSG03;
+    var commandsHistory = LANGUAGE.ASSET_COMMANDS_HISTORY_MSG00;
+    var simInfo = LANGUAGE.ASSET_SIM_INFO_MSG00;
+    var settings = LANGUAGE.HOME_MSG04;
+    var upgrade = LANGUAGE.HOME_MSG08;
+    var activation = LANGUAGE.HOME_MSG09;
+    
                     
     var buttons = [
         {
@@ -674,7 +635,7 @@ $$('body').on('click', '.assetList .item-inner', function () {
         {
             text: commands,  
             onClick: function () {
-                loadPageCommands();
+                loadPageCommands(data);
             },          
         },
         {
@@ -711,40 +672,19 @@ $$('body').on('click', '.assetList .item-inner', function () {
             onClick: function () {
                 loadPageUpgrade();
             },  
-        },      
-        {
-            text: notification,           
-            onClick: function () {
-                changeAssetNotificationState(parrent);
-            },  
         }
     );
-
     App.actions(buttons);
 });
 
 
 
-$$('body').on('click', '.showBlockControll', function () {
-    var block = $$(this).next('div');
-    if ($$(block).hasClass('sliding')) {
-        if ($$(block).hasClass('active')) {
-            $(block).slideUp( "slow", function() {
-                // Animation complete.
-                $$(block).removeClass('active');
-            });
-        }else{
-            $(block).slideDown( "slow", function() {
-                // Animation complete.
-                $$(block).addClass('active');
-            });
-        }
-    }            
-});
-
 
 App.onPageInit('user.profile', function (page) { 
 
+    /*$$('.user_img').on('click', function (e) {        
+        App.actions(cameraButtons);        
+    }); */
 
     
     $$('.applyUserProfile').on('click', function(e){
@@ -798,7 +738,7 @@ App.onPageInit('user.password', function (page) {
                 var userInfo = getUserinfo(); 
                 var url = API_URL.URL_RESET_PASSWORD.format(userInfo.userCode,
                         encodeURIComponent(password.old),
-                        encodeURIComponent(password.new)                          
+                        encodeURIComponent(password.new)                 
                     ); 
                 console.log(url);
                 App.showPreloader();
@@ -824,37 +764,10 @@ App.onPageInit('user.password', function (page) {
     });
 });
 
-App.onPageInit('user.recharge.credit', function (page) {  
-    $$('.button_buy_now').on('click', function(event){
-        event.preventDefault();
-        setTimeout(function(){
-            App.modal({
-                //title: LANGUAGE.PROMPT_MSG016,
-                text: LANGUAGE.PROMPT_MSG024,
-                buttons: [
-                    {
-                        text: LANGUAGE.COM_MSG19,
-                        onClick: function() {                            
-                            getCreditBalance(true);                            
-                        }
-                    },
-                    {
-                        text: LANGUAGE.COM_MSG20,
-                        onClick: function() {
-                            
-                        }
-                    },
-                ]
-            });
-        }, 3000);
-        
-    });
-
-});
 
 App.onPageInit('notification', function(page){
     $$('.notification_button').removeClass('new_not');  
-    var deleteAll = $$(page.container).find('.deleteAllNotifications');
+    //var deleteAll = $$(page.container).find('.deleteAllNotifications');
     var notificationContainer = $$(page.container).find('.notificationList');
     //var notificationLi = $$(page.container).find('.notificationList li');
 
@@ -865,9 +778,11 @@ App.onPageInit('notification', function(page){
     virtualNotificationList = App.virtualList(notificationContainer, { 
         items: [],
         height: function (item) {        
-            return 94; //display the image with 50px height
+            return 84; //display the image with 50px height
+
         },
         renderItem: function (index, item) {
+            //console.log(item);
             var ret = '';            
             if (typeof item == 'object') {
                 if (!item.alarm) {
@@ -875,14 +790,15 @@ App.onPageInit('notification', function(page){
                 }else if (item.alarm && typeof(item.alarm) == "string"){
                     item.alarm = toTitleCase(item.alarm);
                 }
-                
                 switch (item.alarm){
+                	
                     case 'Status': case "Config":
-                        var timeCheck = item.CreateDateTime.indexOf('T');
-                        if (timeCheck != -1) {
-                            item.CreateDateTime = moment.utc(item.CreateDateTime).toDate();
-                            item.CreateDateTime = moment(item.CreateDateTime).format(window.COM_TIMEFORMAT);
-                        }
+	                    var timeCheck = item.CreateDateTime.indexOf('T');
+	                    if (timeCheck != -1) {
+	                    	item.CreateDateTime = moment.utc(item.CreateDateTime).toDate();
+                    		item.CreateDateTime = moment(item.CreateDateTime).format(window.COM_TIMEFORMAT);
+	                    }
+	                	//console.log(timeCheck);
                         ret =   '<li class="swipeout" data-id="'+item.listIndex+'" data-alarm="'+item.alarm+'" >'+
                                     '<div class="swipeout-content item-content ">'+                        
                                         '<div class="item-inner">'+
@@ -908,8 +824,7 @@ App.onPageInit('notification', function(page){
                                         '<a href="#" class="swipeout-delete " data-confirm="'+LANGUAGE.PROMPT_MSG010+'" data-confirm-title="'+LANGUAGE.PROMPT_MSG014+'" data-close-on-cancel="true"><i class="f7-icons icon-header-delete"></i></a>'+
                                     '</div>'+
                                 '</li>';
-                        break;  
-
+                        break;               
                     case 'Location':
                         var time = null;
                         if (item.PositionTime) {
@@ -979,10 +894,6 @@ App.onPageInit('notification', function(page){
                                         '<a href="#" class="swipeout-delete " data-confirm="'+LANGUAGE.PROMPT_MSG010+'" data-confirm-title="'+LANGUAGE.PROMPT_MSG014+'" data-close-on-cancel="true"><i class="f7-icons icon-header-delete"></i></a>'+
                                     '</div>'+
                                 '</li>';
-
-                        
-
-                        
                 }
             } 
 
@@ -996,7 +907,7 @@ App.onPageInit('notification', function(page){
     showNotification(notList[user]); 
     getNewNotifications();
 
-    $$(deleteAll).on('click', function(){
+    $$('.deleteAllNotifications').on('click', function(){
         var checked = $$(page.container).find('input').prop('checked');
         if (checked) 
         {   // there are selected notifications
@@ -1069,15 +980,32 @@ App.onPageInit('notification', function(page){
                 if(props && data.alarm == 'Status' ){
                     loadPageStatus(props);                 
                 }else if(props && data.alarm == 'Config' ){
-                	loadPageDeviceConfig(props);
+                    loadPageDeviceConfig(props);
                 }else if (props && parseFloat(data.lat) && parseFloat(data.lat)) { 
                     loadPagePosition(props);
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG023);
                 }
-
             }
-            console.log(props);
+                    
+            
+            
+
+            /*var type = $$(this).data('type');
+            var data = {};            
+            switch (type){
+                case '1':
+                    loadPagePosition(data);
+                    break;
+
+                case '2':
+                    loadPageStatus(data);
+                    break;
+
+                case '3':
+                    loadPageVerification(data);
+                    break;
+            }*/
 
         }            
     });
@@ -1095,9 +1023,9 @@ App.onPageInit('asset.commands.history', function(page){
     virtualCommandsHistoryList = App.virtualList(commandsHystoryList, { 
         items: [],
         height: function (item) {
-            var height = 99;
+            var height = 92;
             if (item.Direct == 1) {
-                height = 79;
+                height = 71;
             }
             return height; //display the image with 50px height
         },
@@ -1105,12 +1033,11 @@ App.onPageInit('asset.commands.history', function(page){
             var ret = '';
             
             var datetime = moment.utc(item.Datetime).toDate();
-            datetime = moment(datetime).format(window.COM_TIMEFORMAT);
+            datetime = moment(datetime).format(window.COM_TIMEFORMAT); 
 
-            
             if (item.Text) {
                 item.Text = item.Text.replace(/</g,"&lt;").replace(/>/g,"&gt;");
-            }        
+            } 
 
             if(item.Direct == 1){
             ret +=  '<li class="item-content with-divider-bottom" >';
@@ -1127,7 +1054,8 @@ App.onPageInit('asset.commands.history', function(page){
             }
             ret +=              '</div>';
             ret +=              '<div class="item-after">' + datetime + '</div>';
-            ret +=          '</div>';           
+            ret +=          '</div>';
+            //ret +=          '<div class="item-subtitle">IMSI: </div>';
             ret +=          '<div class="item-text">' + item.Text + '</div>';            
             ret +=      '</div>';
             ret +=  '</li>';
@@ -1154,81 +1082,105 @@ App.onPageInit('asset.commands.history', function(page){
     });
 });
 
-
-
 App.onPageInit('asset.commands', function(page){
     
-
+    
     var commandListLi = $$(page.container).find('.commandList .item-content');
 
     $$(commandListLi).on('click', function () {
-        var type = $$(this).data('commandtype');
+    	var type = $$(this).data('commandtype');
 
-        var buttonsPos = [                  
-            {
-                text: LANGUAGE.ASSET_COMMANDS_MSG06,  
-                onClick: function () {
-                    requestPositionProtect();
-                },          
-            },
-            {
-                text: LANGUAGE.ASSET_COMMANDS_MSG07,
-                onClick: function () {
-                    requestPositionLive();
-                },  
-            },
-            {
-                text: LANGUAGE.COM_MSG04,
-                color: 'red',
-                onClick: function () {
-                    //App.alert('Cancel clicked');
-                }
-            },
-        ];
-        
-        var msg = '';
+    	var buttonsPos = [			        
+			{
+			    text: LANGUAGE.ASSET_COMMANDS_MSG06,  
+			    onClick: function () {
+			        requestPositionProtect();
+			    },          
+			},
+			{
+			    text: LANGUAGE.ASSET_COMMANDS_MSG07,
+			    onClick: function () {
+			        requestPositionLive();
+			    },  
+			},
+			{
+		        text: LANGUAGE.COM_MSG04,
+		        color: 'red',
+		        onClick: function () {
+		            //App.alert('Cancel clicked');
+		        }
+		    },
+		];
+		/*var buttonsVer = [			        
+			{
+			    text: LANGUAGE.ASSET_COMMANDS_MSG06,  
+			    onClick: function () {
+			        requestVerifyProtect();
+			    },          
+			},
+			{
+			    text: LANGUAGE.ASSET_COMMANDS_MSG07,
+			    onClick: function () {
+			        requestVerifyLive();
+			    },  
+			},
+			{
+		        text: LANGUAGE.COM_MSG04,
+		        color: 'red',
+		        onClick: function () {
+		            //App.alert('Cancel clicked');
+		        }
+		    },
+		];*/
+		var msg = '';
 
-        switch(type){
-            case '1':               
-                requestStatus();
-                break;
+    	switch(type){
+    		case '1':    			
+    			requestStatus();
+    			break;
 
-            case '2':               
-                App.actions(buttonsPos);
-                break;
+    		case '2':    			
+			    App.actions(buttonsPos);
+    			break;
 
-            case '3':               
-                //App.actions(buttonsVer);
+    		case '3':    			
+			    //App.actions(buttonsVer);
                 requestVerify();
-                break;
+    			break;
 
-            case '4':    
-                msg = LANGUAGE.PROMPT_MSG020 +' '+ LANGUAGE.ASSET_COMMANDS_MSG08 + '?';
-                App.confirm(msg, TargetAsset.Name, function () {        
+    		case '4':    
+    			msg = LANGUAGE.PROMPT_MSG020 +' '+ LANGUAGE.ASSET_COMMANDS_MSG08 + '?';
+    			App.confirm(msg, TargetAsset.Name, function () {        
                     requestImmobilise();
-                }); 
-                break;
+                });	
+    			break;
 
-            case '5':   
-                msg = LANGUAGE.PROMPT_MSG020 +' '+ LANGUAGE.ASSET_COMMANDS_MSG09 + '?';
-                App.confirm(msg, TargetAsset.Name, function () {        
+    		case '5':   
+    			msg = LANGUAGE.PROMPT_MSG020 +' '+ LANGUAGE.ASSET_COMMANDS_MSG09 + '?';
+    			App.confirm(msg, TargetAsset.Name, function () {        
                     requestUnimmobilise();
-                });  
-                break;
+                });	 
+    			break;
 
             case '6':
                 requestDeviceSettings();
                 break;
 
 
-            default:
+    		default:
 
-        }
+    	}
 
         /*App.addNotification({
             hold: 3000,
             message: LANGUAGE.COM_MSG03
         });*/
+        
+    });
+
+    var notificationTrigger = $$(page.container).find('input[name="notificationState"]');    
+    notificationTrigger.on('change', function(){        
+        changeAssetNotificationState({'CurrState':!notificationTrigger.prop("checked")});
     });
 
     $$('.getCommandHistory').on('click', function(){
@@ -1241,24 +1193,10 @@ App.onPageInit('asset.commands', function(page){
 
 });
 
-
-
 App.onPageInit('asset.settings', function(page){
-    var sendSetting = $$(page.container).find('.sendSetting');
+    //var sendSetting = $$(page.container).find('.sendSetting');
     //var showBlockControll = $$(page.container).find('.showBlockControll');
-
-    var fitmentOptSelect = $$(page.container).find('[name="FitmentOpt"]');
-    var fitmentOptSelectSet = fitmentOptSelect.data("set");
-    var fitmentOptCustomWrapper = $$(page.container).find('.fitment_opt_custom_wrapper');
-    var fitmentOptSelectedArr = [];
-
-    var VINinputEl = $$(page.container).find('[name="Describe7"');
-
-    var makeEl = $$(page.container).find('input[name="Describe1"]');
-    var modelEl = $$(page.container).find('input[name="Describe2"]');
-    var colorEl = $$(page.container).find('input[name="Describe3"]');
-    var yearEl = $$(page.container).find('input[name="Describe4"]');
-
+    
     /*var paymentType = $$(page.container).find('[name="PaymentType"]');
     var tabs = $$(page.container).find('.tab');
 
@@ -1267,10 +1205,13 @@ App.onPageInit('asset.settings', function(page){
     var cardNumber = $$(page.container).find('.card_number');
     var cardHolder = $$(page.container).find('.card_holder');*/
 
-    //
+    var fitmentOptSelect = $$(page.container).find('[name="FitmentOpt"]');
+    var fitmentOptSelectSet = fitmentOptSelect.data("set");
+    var fitmentOptCustomWrapper = $$(page.container).find('.fitment_opt_custom_wrapper');
+    var fitmentOptSelectedArr = [];
+    
     var selectUnitSpeed = $$('select[name="Unit"]');   
     selectUnitSpeed.val(selectUnitSpeed.data("set"));
-
 
     if (fitmentOptSelectSet) {
         if (fitmentOptSelectSet.substr(-1) == ',') {
@@ -1280,45 +1221,29 @@ App.onPageInit('asset.settings', function(page){
             fitmentOptSelect.find('option[value="' + e + '"]').prop("selected", true);
         });
     }
-    
 
+    fitmentOptSelect.on('change', function(){
+        fitmentOptSelectedArr = [];        
 
-    VINinputEl.on('blur change', function(){ 
-        if ( $$(this).data('prev-val') != this.value ) {            
-            $$(this).data('prev-val', this.value);            
-            checkVinNumber({
-                VIN: this.value,
-                inputs: {
-                    Describe1: makeEl,
-                    Describe2: modelEl,
-                    Describe3: colorEl,
-                    Describe4: yearEl,
-                    Describe7: VINinputEl,
-                }                    
-            });          
-        }
+        $$(this).find('option:checked').each(function(){
+            fitmentOptSelectedArr.push(this.value);           
+        });
+        
+        if (fitmentOptSelectedArr.indexOf('D') == -1) {
+            fitmentOptCustomWrapper.hide();
+        }else{
+            fitmentOptCustomWrapper.css('display','flex');
+        }        
     });
 
-    VINinputEl.on('input ', function(){         
-        this.value = this.value.toUpperCase();
-        if (this.value.length == 17 && $$(this).data('prev-val') != this.value ) {
-            $$(this).data('prev-val', this.value);
-            checkVinNumber({
-                VIN: this.value,
-                inputs: {
-                    Describe1: makeEl,
-                    Describe2: modelEl,
-                    Describe3: colorEl,
-                    Describe4: yearEl,
-                    Describe7: VINinputEl,
-                }         
-            });            
-        }
-    });
 
-    
+    if (fitmentOptSelectSet && fitmentOptSelectSet.indexOf('D') != -1) {
+        fitmentOptCustomWrapper.css('display','flex');
+    }else{
+        fitmentOptCustomWrapper.hide();
+    }
 
-    /*paymentType.on('change', function(){
+    /*paymentType.on('change', function(){        
         var value = this.value;    
         App.showTab('#tab'+value);
     });
@@ -1340,11 +1265,15 @@ App.onPageInit('asset.settings', function(page){
             $(cardNumber).mask("9999 9999 9999 9999");
         }
     });
-    $(expDate).mask("99/99");*/
-
+    $(expDate).mask("99/99");
+    
 
 
     $$('.add_photo').on('click', function (e) {        
+        App.actions(cameraButtons);        
+    }); */
+
+    $$('.add_photo').on('click', function (e) {
 
         var uploadButtons = [
             {
@@ -1370,28 +1299,9 @@ App.onPageInit('asset.settings', function(page){
         App.actions(uploadButtons);
     });
 
-    fitmentOptSelect.on('change', function(){
-        fitmentOptSelectedArr = [];        
-
-        $$(this).find('option:checked').each(function(){
-            fitmentOptSelectedArr.push(this.value);           
-        });
         
-        if (fitmentOptSelectedArr.indexOf('D') == -1) {
-            fitmentOptCustomWrapper.hide();
-        }else{
-            fitmentOptCustomWrapper.css('display','flex');
-        }        
-    });
-
-    if (fitmentOptSelectSet && fitmentOptSelectSet.indexOf('D') != -1) {
-        fitmentOptCustomWrapper.css('display','flex');
-    }else{
-        fitmentOptCustomWrapper.hide();
-    }
+    $$('.sendSetting').on('click', function(){        
         
-    $$(sendSetting).on('click', function(){       
-
         var data = {
             "Code": getUserinfo().code,
             "Id": TargetAsset.Id,
@@ -1399,6 +1309,7 @@ App.onPageInit('asset.settings', function(page){
             "SpeedUnit": $$(page.container).find('select[name="Unit"]').val(),
             "InitMileage": $$(page.container).find('input[name="Odometer"]').val(),
             "InitAccHours": $$(page.container).find('input[name="EngineHours"]').val(),
+            //"InitAccHours": "",
             "TagName": $$(page.container).find('input[name="LicensePlate"]').val(),
             "Attr1": $$(page.container).find('input[name="Describe1"]').val(),
             "Attr2": $$(page.container).find('input[name="Describe2"]').val(),
@@ -1415,9 +1326,7 @@ App.onPageInit('asset.settings', function(page){
         if(imageUploaded){
             data.Icon = imageUploaded;
         }
-        //data.Icon = 'IMEI_0000001700091735.png';
         console.log(data);
-        //return;
         App.showPreloader();
         JSON1.requestPost(API_URL.URL_EDIT_DEVICE,data,function(result){
                 console.log(result);
@@ -1494,8 +1403,6 @@ App.onPageInit('client.details', function (page) {
         }).open(currentImgIndex);
     });
 
-
-
     $$(sendSetting).on('click', function(){
         let requiredFields = $$(page.container).find('[required]');
         if(requiredFields.length){
@@ -1531,7 +1438,6 @@ App.onPageInit('client.details', function (page) {
             Describe4: $$(page.container).find('[name="Describe4"]').val(),
             InstallPosition: $$(page.container).find('[name="InstallPosition"]').val(),
         };
-
         let installPhotosEl = $$(page.container).find('.install-photo-item');
         if(installPhotosEl.length){
             //let photos = [];
@@ -1542,10 +1448,8 @@ App.onPageInit('client.details', function (page) {
             }
             //data.photos = photos;
         }
-
-
-
-
+        console.log(data);
+return;
         JSON1.requestPost(API_URL.URL_SENT_NOTIFY,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') { 
@@ -1582,42 +1486,20 @@ App.onPageInit('client.details', function (page) {
                 
                 App.hidePreloader();
             },
-            function(jqXHR, textStatus){
-                App.hidePreloader();
-                App.alert(LANGUAGE.COM_MSG02);
-            }
+            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         );
     });
 
 });
+
 App.onPageInit('asset.position', function(page){
     showMap(); 
+    //console.log(TargetAsset.IMEI);
     var notificationMenu = [                  
         {
             text: LANGUAGE.COM_MSG31,  
             onClick: function () {
-                changeAssetNotificationState(false,{'CurrState':true});
-            },          
-        },        
-        {
-            text: LANGUAGE.COM_MSG04,
-            color: 'red',
-            onClick: function () {
-                //App.alert('Cancel clicked');
-            }
-        },
-    ];
-    $$('.notificationMenu').on('click',function(){
-        App.actions(notificationMenu);
-    });
-    
-});
-App.onPageInit('asset.status', function(page){
-    var notificationMenu = [                  
-        {
-            text: LANGUAGE.COM_MSG31,  
-            onClick: function () {
-                changeAssetNotificationState(false,{'CurrState':true});
+                changeAssetNotificationState({'CurrState':true});
             },          
         },        
         {
@@ -1633,6 +1515,26 @@ App.onPageInit('asset.status', function(page){
     });
 });
 
+App.onPageInit('asset.status', function(page){
+	var notificationMenu = [                  
+        {
+            text: LANGUAGE.COM_MSG31,  
+            onClick: function () {
+                changeAssetNotificationState({'CurrState':true});
+            },          
+        },        
+        {
+            text: LANGUAGE.COM_MSG04,
+            color: 'red',
+            onClick: function () {
+                //App.alert('Cancel clicked');
+            }
+        },
+    ];
+    $$('.notificationMenu').on('click',function(){
+        App.actions(notificationMenu);
+    });
+});
 App.onPageInit('asset.device.config', function(page){
     var notificationMenu = [                  
         {
@@ -1653,19 +1555,16 @@ App.onPageInit('asset.device.config', function(page){
         App.actions(notificationMenu);
     });
 });
-
-
-
 App.onPageInit('asset.verification', function(page){
-    var container =  $$(page.container).find('.page-content');
+	var container =  $$(page.container).find('.page-content');
     $$(container).on('click', '.verifyAgain', function() {
 
-        checkVerificationStatus();
-    });
+		checkVerificationStatus();
+	});
 });
 
 
-App.onPageInit('edit.photo', function (page) { 
+App.onPageInit('edit.photo', function (page) {
     //page.context.imgSrc = 'resources/images/add_photo_general.png';
     let data = {
         imgFor: $$(page.container).find('[name="imgFor"]').val(),
@@ -1673,10 +1572,10 @@ App.onPageInit('edit.photo', function (page) {
     }
     initCropper(data.imgFor);
     //alert(cropper);
-    
+
     //After the selection or shooting is complete, jump out of the crop page and pass the image path to this page
     //image.src = plus.webview.currentWebview().imgSrc;
-    //image.src = "img/head-default.jpg";    
+    //image.src = "img/head-default.jpg";
 
     $$('.savePhoto').on('click', function(){
         saveImg(data);
@@ -1699,6 +1598,7 @@ function clearUserInfo(){
     //var MinorToken = userInfo.MinorToken;      
     //var MajorToken = userInfo.MajorToken;
     var pushList = getNotificationList();
+    var elemRc = localStorage.elem_rc_flag;
 
     //window.PosMarker = {};
     TargetAsset = {};    
@@ -1707,20 +1607,22 @@ function clearUserInfo(){
 
     $$('.remaining_counter').html('---');
 
-
     if ($$('.page_index .page-content').hasClass('first_login')) {
 
     }else{
-        $$('.page_index .page-content').addClass('first_login');
+    	$$('.page_index .page-content').addClass('first_login');
     }
 
     if (virtualAssetList) {
-        virtualAssetList.deleteAllItems();
+    	virtualAssetList.deleteAllItems();
     }
     
     localStorage.clear(); 
-    
-    
+  
+    if (elemRc) {
+        localStorage.elem_rc_flag = 1;
+    }
+
     if (pushList) {
         localStorage.setItem("COM.QUIKTRAK.LIVE.NOTIFICATIONLIST.INSTALLER", JSON.stringify(pushList));
     }
@@ -1730,17 +1632,16 @@ function clearUserInfo(){
     if (mobileToken) {
         localStorage.PUSH_MOBILE_TOKEN = mobileToken;
     }
-    //localStorage.loginDone = 0;
     
+    if(mobileToken){      
         //JSON1.request(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });   
-    var data = {
-        "MobileToken": mobileToken,
-        "DeviceToken": deviceToken,
-    };
-    JSON1.requestPost(API_URL.URL_GET_LOGOUT, data,function(result){
-          console.log(result);
-    });
-      
+        var data = {
+        	"MobileToken": mobileToken,
+        };
+        JSON1.requestPost(API_URL.URL_GET_LOGOUT, data,function(result){
+              console.log(result);
+        });
+    }   
     $$("input[name='account']").val(userName);    
 
 }
@@ -1754,7 +1655,7 @@ function logout(){
 
 function preLogin(){
     hideKeyboard();
-    //getPlusInfo();
+    getPlusInfo();
     App.showPreloader();
     if  (localStorage.PUSH_DEVICE_TOKEN){             
         login();
@@ -1765,7 +1666,7 @@ function preLogin(){
 
 function reGetPushDetails(){
     
-    getPlusInfo();
+    //getPlusInfo();
     if  (pushConfigRetry <= pushConfigRetryMax){
         pushConfigRetry++;
         if  (localStorage.PUSH_DEVICE_TOKEN){                 
@@ -1783,57 +1684,59 @@ function reGetPushDetails(){
 }
 
 function login(){    
-
     getPlusInfo();
-    //hideKeyboard();
+    hideKeyboard();
     
-        //App.showPreloader(); 
-        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '123' : localStorage.PUSH_MOBILE_TOKEN;
-        //var mobileToken = '123';
-        var appKey = !localStorage.PUSH_APP_KEY? '123' : localStorage.PUSH_APP_KEY;
-        //var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
-        var deviceToken = !localStorage.PUSH_DEVICE_TOKEN ? '123' : localStorage.PUSH_DEVICE_TOKEN;
-        var deviceType = !localStorage.DEVICE_TYPE? 'webapp' : localStorage.DEVICE_TYPE;
-        var account = $$("input[name='account']");
-        var password = $$("input[name='password']"); 
-        
-        var data = {
-            "LoginName":!account.val()? localStorage.ACCOUNT: account.val(),
-            "Password":!password.val()? localStorage.PASSWORD: password.val(),
-            "AppKey": appKey,
-            "MobileToken": mobileToken,
-            "DeviceToken": deviceToken,
-            "DeviceType": deviceType,
-        };
-       // alert(JSON.stringify(data));
-        JSON1.requestPost(API_URL.URL_GET_LOGIN, data,function(result){
-                console.log(result);
-                if(result.MajorCode == '000') {
-                    if(!!account.val()) {
-                        localStorage.ACCOUNT = account.val();
-                        localStorage.PASSWORD = password.val();
-                    }
-                    account.val(null);
-                    password.val(null);
-                    setUserinfo(result.Data);
-                    updateUserData(result.Data);
-                    updateUserCrefits(result.Data.credit);
-                    //localStorage.notificationChecked = 1;
-                    localStorage.loginDone = 1;
-                   
-                      
-                         
-                    App.closeModal();                
-                }else{                
-                    App.alert(LANGUAGE.LOGIN_MSG01);
-                    App.loginScreen();
+    //App.showPreloader();
+    var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '123' : localStorage.PUSH_MOBILE_TOKEN;
+    var appKey = !localStorage.PUSH_APP_KEY? '123' : localStorage.PUSH_APP_KEY;
+    var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
+    var deviceType = !localStorage.DEVICE_TYPE? 'web' : localStorage.DEVICE_TYPE;
+    var account = $$("input[name='account']");
+    var password = $$("input[name='password']"); 
+
+   
+    var data = {
+        "LoginName":!account.val()? localStorage.ACCOUNT: account.val(),
+        "Password":!password.val()? localStorage.PASSWORD: password.val(),
+        "AppKey": appKey,
+        "MobileToken": mobileToken,
+        "DeviceToken": deviceToken,
+        "DeviceType": deviceType,
+    };
+
+    //alert(JSON.stringify(data));
+    
+    JSON1.requestPost(API_URL.URL_GET_LOGIN, data,function(result){
+            console.log(result);
+            //alert(JSON.stringify(result));
+            if(result.MajorCode == '000') {
+                if(!!account.val()) {
+                    localStorage.ACCOUNT = account.val();
+                    localStorage.PASSWORD = password.val();
                 }
-                App.hidePreloader();
-            },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); App.loginScreen();}
-        );     
-    
-        
+                if (result.Data.elemRc) {
+                    localStorage.elem_rc_flag = 1;
+                }
+                account.val(null);
+                password.val(null);
+                setUserinfo(result.Data);
+                updateUserData(result.Data);
+                updateUserCrefits(result.Data.credit);
+                getNewNotifications();
+                initExtend();
+
+                localStorage.loginDone = 1;             
+                 
+                     
+                App.closeModal();                
+            }else{                
+                App.alert(LANGUAGE.LOGIN_MSG01);
+            }
+            App.hidePreloader();
+        },
+        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+    );     
    
 }
 
@@ -1870,6 +1773,12 @@ function hideKeyboard() {
     $$("input").blur();
 }
 
+function updateUserData(data) {
+    $$('.user_name').html(data.firstName+' '+data.lastName);    
+    $$('.user_f_l').html(data.firstName[0]+data.lastName[0]);
+    $$('.user_email').html(data.customerName);
+}
+
 function getCreditBalance(vsMsg){ 
     var userInfo = getUserinfo(); 
     console.log(userInfo);
@@ -1899,12 +1808,6 @@ function updateUserCrefits(credits){
     credits = parseInt(credits);
     $$('body .remaining_counter').html(credits);
       
-}
-
-function updateUserData(data) {
-    $$('.user_name').html(data.firstName+' '+data.lastName);    
-    $$('.user_f_l').html(data.firstName[0]+data.lastName[0]);
-    $$('.user_email').html(data.customerName);
 }
 
 function showAssetList(assetList) {
@@ -2015,30 +1918,28 @@ function toIndex() {
     }); 
 }
 
-function submitSearchForm() {
-    var input = $$('.formSearchDevice input[name="searchInput"');
-   
-    if (input.val()) {
+function submitSearchForm(input) {
+    //var input = $$('.formSearchDevice input[name="searchInput"');    
+    
+    if (input.value) {
        
         input.blur();
 
-        var searchby = input.data('searchby');
-        
+        var searchby = $$(input).data('searchby');
+
         var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
-        var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;    
-        var deviceType = !localStorage.DEVICE_TYPE? 'webapp':localStorage.DEVICE_TYPE;
+        var appKey = !localStorage.PUSH_APP_KEY? '5251762210774' : localStorage.PUSH_APP_KEY;    
+        var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
         var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
 
         var data = {
-            "CustomerToken": getUserinfo().code,
+            "CustomerToken": getUserinfo().code, 
             "MobileToken": mobileToken,
             "AppKey": appKey,
             "Token": deviceToken,        
-            "Type": deviceType,        
+            "Type": deviceType,           
         };
-        data[searchby] = input.val().trim();
-
-    
+        data[searchby] = input.value.trim();
 
         App.showPreloader();
         JSON1.requestPost(API_URL.URL_GET_ASSET_LIST,data,function(result){
@@ -2075,15 +1976,8 @@ function getUserImg(){
     return src;
 }
 
-function loadPageCommands(){
-
-    //API_URL.URL_GET_COMMAND_LIST
-    var data = {
-        "IMEI": TargetAsset.IMEI,
-    };
-
-   
-
+function loadPageCommands(data){
+    
     mainView.router.load({
         url:'resources/templates/asset.commands.html',
         context:{
@@ -2091,27 +1985,39 @@ function loadPageCommands(){
             IMSI: TargetAsset.IMSI,
             Name: TargetAsset.Name,
             Type: TargetAsset.Type,
+            NotificatioState: data.NotificatioState,
         }
     });     
 }
 
-function loadPageUpgrade(){    
+function loadPageUpgrade(){
+    
     var dealerToken = getUserinfo().code;
     var href = API_URL.URL_REPLACE_IMEI.format(dealerToken,TargetAsset.IMEI); 
     
-    if (typeof navigator !== "undefined" && navigator.app) {
-            //plus.runtime.openURL(href);            
+    if (typeof navigator !== "undefined" && navigator.app) {             
             navigator.app.loadUrl(href, {openExternal: true}); 
         } else {
             window.open(href,'_blank');
         }
+}
+function loadPageActivation(planCode){   
+    var userInfo = getUserinfo();
+    var href = API_URL.URL_ACTIVATION.format( TargetAsset.IMEI, planCode, userInfo.code, encodeURIComponent(userInfo.customerName) );     
+
+    if (typeof navigator !== "undefined" && navigator.app) {             
+            navigator.app.loadUrl(href, {openExternal: true}); 
+        } else {
+            window.open(href,'_blank');
+        }
+       
 }
 
 function showActivationModal(permissions){
     App.modal({
         title: '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>',
         text: LANGUAGE.PROMPT_MSG025,
-        //verticalButtons: true,
+        verticalButtons: true,
         buttons: [
             {
                 text: LANGUAGE.COM_MSG32, // protect
@@ -2132,14 +2038,14 @@ function showActivationModal(permissions){
                         showNoActPermissionModal(LANGUAGE.COM_MSG33);
                     }
                 }
-            },
-           /* {
+            },  
+            {
 
                 text: '<span class="color-red">' + LANGUAGE.COM_MSG04 + '</span>',  // live
                 onClick: function() {
                     
                 }
-            },     */         
+            },         
         ]
     });
 }
@@ -2148,17 +2054,6 @@ function showNoActPermissionModal(plan){
     App.alert(LANGUAGE.PROMPT_MSG026 + ' ' + plan, '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>');
 }
 
-function loadPageActivation(planCode){   
-    var userInfo = getUserinfo();
-    var href = API_URL.URL_ACTIVATION.format( TargetAsset.IMEI, planCode, userInfo.code, encodeURIComponent(userInfo.customerName) ); 
-    //"http://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}"
-    if (typeof navigator !== "undefined" && navigator.app) {
-            //plus.runtime.openURL(href);            
-            navigator.app.loadUrl(href, {openExternal: true}); 
-        } else {
-            window.open(href,'_blank');
-        }
-}
 
 
 function loadPageSettings(){
@@ -2168,7 +2063,9 @@ function loadPageSettings(){
     month = month < 10 ? '0' + month : month;
     var day = today.getDate();    
     
-    var todayStr = year+'-'+month+'-'+day;    
+    var todayStr = year+'-'+month+'-'+day;   
+
+    //API_URL.URL_GET_DEVICE_DETAIL
 
     var data = {
         "Code": getUserinfo().code,
@@ -2177,19 +2074,14 @@ function loadPageSettings(){
 
     App.showPreloader();
     JSON1.requestPost(API_URL.URL_GET_DEVICE_DETAIL,data,function(result){
-            console.log(result);
+            //console.log(result);
             if(result.MajorCode == '000') { 
                 var asset = getAssetParametersName(result.Data);
-                console.log(asset);
                 let assetImg = getAssetImg(asset, {'assetEdit':true});
-
+                //console.log(asset);
                 mainView.router.load({
                     url:'resources/templates/asset.settings.html',
                     context:{
-                        /*IMEI: '<span>'+LANGUAGE.HOME_MSG00+'</span>: '+TargetAsset.IMEI,
-                        IMSI: '<span>'+LANGUAGE.HOME_MSG01+'</span>: '+TargetAsset.IMSI,
-                        Type: '<span>'+LANGUAGE.HOME_MSG06+'</span>: '+TargetAsset.Type,
-                        Provider: '<span>'+LANGUAGE.ASSET_SETTINGS_MSG06+'</span>: '+getUserinfo().customerName,*/
                         IMEI: TargetAsset.IMEI,
                         IMSI: TargetAsset.IMSI,
                         Type: TargetAsset.Type,
@@ -2211,189 +2103,46 @@ function loadPageSettings(){
                         FitmentOptCustom: asset.Describe6,
                         AssetImg: assetImg,
                     }
-                });                     
+                });    
+                    
             }else{                
                 App.alert(LANGUAGE.PROMPT_MSG013);
             }
             App.hidePreloader();
         },
         function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
-    );      
+    ); 
+
+     
 }
 
-function getAssetDetails(params){
+var elem_rc =   '<li class="item-content list-panel-all close-panel " data-page="user.recharge.credit" id="menuRecharge" style="display:none;">' +
+                    '<div class="item-media">' +
+                        '<i class="f7-icons icon-other-payment"></i>' +
+                    '</div>' +
+                    '<div class="item-inner">' +
+                        '<div class="item-title">'+ LANGUAGE.MENU_MSG03+ '</div>' +
+                    '</div>' +
+                '</li>';
+$$(elem_rc).insertAfter('#menuSettings');
 
-    App.showPreloader();
-    JSON1.requestPost(API_URL.URL_GET_DEVICE_DETAIL,params.data,function(result){
-            console.log(result);
-            if(result.MajorCode == '000') {
-                var asset = getAssetParametersName(result.Data);
-                console.log(asset);
-                params.assetData = asset;
-                if (params.callback instanceof Function){
-                    params.callback(params)
-                }
-            }else{
-                App.alert(LANGUAGE.PROMPT_MSG013);
-            }
-            App.hidePreloader();
-        },
-        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
-    );
-}
+elem_rc =   '<div class="menu_remainings" style="display:none;">' +
+                LANGUAGE.COM_MSG17+': <span class="remaining_counter">---</span> '+ LANGUAGE.COM_MSG18 +
+            '</div>';
+$$(elem_rc).insertAfter('#menu');
 
-
-function loadPageVerification(data){
-    if (data){
-        if (data.Date) {            
-            var localTime = moment.utc(data.Date).toDate();
-            if (localTime == 'Invalid Date') {
-                var converted = moment(data.Date,'DD/MM/YYYY HH:mm:ss');
-                localTime = moment.utc(converted).toDate();
-            }            
-            data.Date = moment(localTime).format(window.COM_TIMEFORMAT);
-        }
-        mainView.router.load({
-            url:'resources/templates/asset.verification.html',
-            context:{
-                IMEI: data.IMEI,
-                IMSI: data.IMSI,            
-                TaskID: data.TaskID,
-                Product: data.Product,   
-                Service: data.Service,
-                Name: data.Name,
-                Account: data.Account, 
-                Date: data.Date,
-                LoginName: data.LoginName,
-                FirstName: data.FirstName,
-                LastName: data.LastName,
-                PhoneNumber: data.PhoneNumber,
-            }
-        }); 
-        showVerificationStatus();     
-    } 
-
-    
-}
-
-
-
-
-function loadPagePosition(data){    
-    var deirectionCardinal = '';
-    if (data.type) {
-        data.alarm = data.type;
-    }   
-    if (data.lat) {
-        data.Lat = data.lat;
-    }   
-    if (data.lng) {
-        data.Lng = data.lng;
-    }   
-    if (data.speed) {
-        data.Speed = data.speed;
-    }   
-    if (data.Speed) {
-        data.Speed = parseInt(data.Speed);
-    }
-    if (data.direct) {
-        data.Direction = data.direct;
-    }   
-    if (data.Direction) {
-        data.Direction = parseInt(data.Direction);
-        deirectionCardinal = Protocol.Helper.getDirectionCardinal(data.Direction);
-        data.Direction = deirectionCardinal+' ('+data.Direction+'&deg;)';
-    }
-    if (data.imei) {
-        data.Imei = data.imei;
-    }   
-    if (data.name) {
-        data.AssetName = data.name;
-    } 
-    if (data.time) {
-        data.PositionTime = data.time;
-    }
-    if (data.title) {
-        data.PageTitle = data.title;
-    }else if(data.alarm && typeof data.alarm == 'string'){
-        data.PageTitle = data.alarm;
-    }else{
-        data.PageTitle = LANGUAGE.ASSET_POSITION_MSG00;
-    }
-    data.PageTitle = toTitleCase(data.PageTitle);
-    
-
-    var lat = data.Lat;
-    var lng = data.Lng;  
-
-    
-    window.PosMarker[data.Imei] = L.marker([lat, lng], {icon: Protocol.MarkerIcon[0]}); 
-    window.PosMarker[data.Imei].setLatLng([lat, lng]);    
-
-    TargetAsset.Lat = lat;
-    TargetAsset.Lng = lng;
-    TargetAsset.IMEI = data.Imei;
-    TargetAsset.Name = data.AssetName;
-    TargetAsset.IMSI = data.Imsi;
-    
-    checkMapExisting();        
-    mainView.router.load({
-        url:'resources/templates/asset.position.html',
-        context: data,
-        
-    });  
-
-    addressFromLatLng({lat:lat,lng:lng});   
-}
-
-
-
-function checkMapExisting(){
-    if ($$('#map')) {
-        $$('#map').remove();
-        MapTrack = null;
-    }   
-}
-
-function loadPageDeviceConfig(data){
-	var timeCheck = data.CreateDateTime.indexOf('T');
-    if (timeCheck != -1) {
-        data.CreateDateTime = moment.utc(data.CreateDateTime).toDate();
-        data.CreateDateTime = moment(data.CreateDateTime).format(window.COM_TIMEFORMAT);
-    }
-    TargetAsset.IMEI = data.Imei;
-    var deviceParams = data.PARAMS ? isJsonString(data.PARAMS) : ''; 
-    if (deviceParams) {
-    	data.PARAMS = deviceParams;
-    }           
-               
-    mainView.router.load({
-        url:'resources/templates/asset.device.config.html',
-        context: data,
-        
-    });  
-}
-
-function loadPageStatus(data){
-    console.log(data);
-    
-    var timeCheck = data.CreateDateTime.indexOf('T');
-    if (timeCheck != -1) {
-        data.CreateDateTime = moment.utc(data.CreateDateTime).toDate();
-        data.CreateDateTime = moment(data.CreateDateTime).format(window.COM_TIMEFORMAT);
-    }
-    TargetAsset.IMEI = data.Imei;
-    mainView.router.load({
-        url:'resources/templates/asset.status.html',
-        context: data,
-        
-    });     
+function initExtend(){ 
+    if ($$("#menuRecharge").length !== 0 && localStorage.elem_rc_flag == 1) {
+        $$('body').find('#menuRecharge').css('display', 'flex');
+    }    
+    if ($$(".menu_remainings").length !== 0 && localStorage.elem_rc_flag == 1) {
+        $$('body').find('.menu_remainings').css('display', 'block');
+    }     
 }
 
 function loadPageClientDetails(data){
-    console.log(data)
     if (data){
-        if (data.Date) {
+        if (data.Date) {            
             var localTime = moment.utc(data.Date).toDate();
             if (localTime == 'Invalid Date') {
                 var converted = moment(data.Date,'DD/MM/YYYY HH:mm:ss');
@@ -2461,7 +2210,7 @@ function loadSimInfo(){
                 App.alert(LANGUAGE.PROMPT_MSG013);
                 App.hidePreloader();
             }
-           
+            
         },
         function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
     );  
@@ -2496,18 +2245,176 @@ function loadSimInfoPage(params){
     });       
 }
 
+function loadPagePosition(data){	
+    console.log(data);
+    var deirectionCardinal = '';
+    if (data.type) {
+        data.alarm = data.type;
+    }   
+    if (data.lat) {
+        data.Lat = data.lat;
+    }   
+    if (data.lng) {
+        data.Lng = data.lng;
+    }   
+    if (data.speed) {
+        data.Speed = data.speed;
+    }   
+    if (data.Speed) {
+    	data.Speed = parseInt(data.Speed);
+    }
+    if (data.direct) {
+        data.Direction = data.direct;
+    }   
+    if (data.Direction) {
+    	data.Direction = parseInt(data.Direction);
+    	deirectionCardinal = Protocol.Helper.getDirectionCardinal(data.Direction);
+    	data.Direction = deirectionCardinal+' ('+data.Direction+'&deg;)';
+    }
+    if (data.imei) {
+        data.Imei = data.imei;
+    }   
+    if (data.name) {
+        data.AssetName = data.name;
+    } 
+    if (data.time) {
+        data.PositionTime = data.time;
+    }
+    if (data.title) {
+        data.PageTitle = data.title;
+    }else if(data.alarm && typeof data.alarm == 'string'){
+        data.PageTitle = data.alarm;
+    }else{
+        data.PageTitle = LANGUAGE.ASSET_POSITION_MSG00;
+    }
+    data.PageTitle = toTitleCase(data.PageTitle);
+    
+    var lat = data.Lat;
+    var lng = data.Lng;  
+
+    
+    window.PosMarker[data.Imei] = L.marker([lat, lng], {icon:  Protocol.MarkerIcon[0]}); 
+    window.PosMarker[data.Imei].setLatLng([lat, lng]);    
+
+    TargetAsset.Lat = lat;
+    TargetAsset.Lng = lng;
+    TargetAsset.IMEI = data.Imei;
+    TargetAsset.Name = data.AssetName;
+    TargetAsset.IMSI = data.Imsi;
+    
+    mainView.router.load({
+        url:'resources/templates/asset.position.html',
+        context: data,
+        
+    });  
+
+    addressFromLatLng({lat:lat,lng:lng});   
+}
+
+
+
+
+
+function loadPageDeviceConfig(data){
+    var timeCheck = data.CreateDateTime.indexOf('T');
+    if (timeCheck != -1) {
+        data.CreateDateTime = moment.utc(data.CreateDateTime).toDate();
+        data.CreateDateTime = moment(data.CreateDateTime).format(window.COM_TIMEFORMAT);
+    }
+    TargetAsset.IMEI = data.Imei;
+    var deviceParams = data.PARAMS ? isJsonString(data.PARAMS) : ''; 
+    if (deviceParams) {
+        data.PARAMS = deviceParams;
+    }           
+               
+    mainView.router.load({
+        url:'resources/templates/asset.device.config.html',
+        context: data,
+        
+    });  
+}
+function loadPageStatus(data){
+    console.log(data);
+
+    var timeCheck = data.CreateDateTime.indexOf('T');
+	if (timeCheck != -1) {
+	   	data.CreateDateTime = moment.utc(data.CreateDateTime).toDate();
+    	data.CreateDateTime = moment(data.CreateDateTime).format(window.COM_TIMEFORMAT);
+	}
+   	TargetAsset.IMEI = data.Imei;
+    mainView.router.load({
+        url:'resources/templates/asset.status.html',
+        context: data,
+        
+    });     
+}
+
+function getAssetDetails(params){
+
+    App.showPreloader();
+    JSON1.requestPost(API_URL.URL_GET_DEVICE_DETAIL,params.data,function(result){
+            console.log(result);
+            if(result.MajorCode == '000') {
+                var asset = getAssetParametersName(result.Data);
+                console.log(asset);
+                params.assetData = asset;
+                if (params.callback instanceof Function){
+                    params.callback(params)
+                }
+            }else{
+                App.alert(LANGUAGE.PROMPT_MSG013);
+            }
+            App.hidePreloader();
+        },
+        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+    );
+}
+
+function loadPageVerification(data){
+    if (data){
+        if (data.Date) {            
+            var localTime = moment.utc(data.Date).toDate();
+            if (localTime == 'Invalid Date') {
+                var converted = moment(data.Date,'DD/MM/YYYY HH:mm:ss');
+                localTime = moment.utc(converted).toDate();
+            }            
+            data.Date = moment(localTime).format(window.COM_TIMEFORMAT);
+        }
+        mainView.router.load({
+            url:'resources/templates/asset.verification.html',
+            context:{
+                IMEI: data.IMEI,
+                IMSI: data.IMSI,            
+                TaskID: data.TaskID,
+                Product: data.Product,   
+                Service: data.Service,
+                Name: data.Name,
+                Account: data.Account, 
+                Date: data.Date,
+                LoginName: data.LoginName,
+                FirstName: data.FirstName,
+                LastName: data.LastName,
+                PhoneNumber: data.PhoneNumber,
+            }
+        }); 
+        showVerificationStatus();     
+    } 
+
+    
+}  
+
 function showVerificationStatus(){
-    setTimeout(function() {     
-        /*NOT VERIFIED*/    
-        /*var result =  '<div class="result result2">' +
-                            '<div class="content-block content_block_notes">' +
-                                '<span class="color-danger">' + LANGUAGE.ASSET_VIRIFICATION_MSG06 +'</span><br>' +
-                                LANGUAGE.PROMPT_MSG021 +
-                            '</div>' +                      
-                            '<div class="content-block">' +
-                                '<a href="#" class="button button-big button-fill color-green verifyAgain">' + LANGUAGE.ASSET_VIRIFICATION_MSG11 + '</a>' +
-                            '</div>' +
-                        '</div>';*/
+	setTimeout(function() {		
+        /*NOT VERIFIED*/	
+		/*var result = 	'<div class="result result2">' +
+				            '<div class="content-block content_block_notes">' +
+				                '<span class="color-danger">' + LANGUAGE.ASSET_VIRIFICATION_MSG06 +'</span><br>' +
+				                LANGUAGE.PROMPT_MSG021 +
+				            '</div>' +			            
+				            '<div class="content-block">' +
+				                '<a href="#" class="button button-big button-fill color-green verifyAgain">' + LANGUAGE.ASSET_VIRIFICATION_MSG11 + '</a>' +
+				            '</div>' +
+				        '</div>';*/
 
         /*VERIFIED*/
         var result =    '<div class="result result1">' +
@@ -2516,21 +2423,24 @@ function showVerificationStatus(){
                                 '<div class="verify_text verified">' + LANGUAGE.ASSET_VIRIFICATION_MSG05 + '</div>' +
                             '</div>' +
                         '</div>';
-        
-        if ($$('.result').length !== 0) {
-            $$('.result').remove();         
-        }   
+		
+		if ($$('.result').length !== 0) {
+			$$('.result').remove();			
+		}	
 
-        App.showPreloader();
-        setTimeout(function() { 
-            $$(result).insertAfter('.verificationList');
-            App.hidePreloader();
-        }, 1000);
-    }, 500);
+		App.showPreloader();
+		setTimeout(function() {	
+			$$(result).insertAfter('.verificationList');
+			App.hidePreloader();
+		}, 1000);
+	}, 500);
 }
 
 function showMap(){    
     var latlng = [TargetAsset.Lat, TargetAsset.Lng];
+    if (MapTrack) {
+        MapTrack = MapTrack.remove();
+    }
     MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 15 });        
     window.PosMarker[TargetAsset.IMEI].addTo(MapTrack);   
 }
@@ -2551,9 +2461,9 @@ function addressFromLatLng(latlng) {
 
 
 function requestStatus(){
-    if (TargetAsset.IMEI) {
+	if (TargetAsset.IMEI) {
         var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
-        var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
+        var appKey = !localStorage.PUSH_APP_KEY? '5251762210774' : localStorage.PUSH_APP_KEY;
         var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
         var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
 
@@ -2587,13 +2497,13 @@ function requestStatus(){
             },
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         ); 
-    }
+	}
 }
 
 function requestPositionProtect(){
-    if (TargetAsset.IMEI) {
-        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
-        var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
+	if (TargetAsset.IMEI) {
+		var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+        var appKey = !localStorage.PUSH_APP_KEY? '5251762210774' : localStorage.PUSH_APP_KEY;
         var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
         var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
 
@@ -2605,10 +2515,11 @@ function requestPositionProtect(){
             "Token": deviceToken,        
             "Type": deviceType,  
         };              
-        
+        //alert(JSON.stringify(data));
         App.showPreloader();
         JSON1.requestPost(API_URL.URL_GET_PROTECT_POSITION,data,function(result){
                 console.log(result);
+                //alert(JSON.stringify(result));
                 if(result.MajorCode == '000') { 
                     turnNotificationOn();
                     App.addNotification({
@@ -2628,12 +2539,12 @@ function requestPositionProtect(){
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         );    
        
-    }
+	}
 }
 
 function requestPositionLive(){
-    if (TargetAsset.IMEI) {
-        var data = {
+	if (TargetAsset.IMEI) {
+		var data = {
             'IMEI': TargetAsset.IMEI, 
             'MinorToken': getUserinfo().userCode,               
         };        
@@ -2652,7 +2563,6 @@ function requestPositionLive(){
                     var localTime  = moment.utc(props.DateTime).toDate();
                     props.PositionTime = moment(localTime).format(window.COM_TIMEFORMAT);
                     props.Live = 1;
-                    
                     loadPagePosition(props);
                     //App.alert(LANGUAGE.COM_MSG03);
                     //turnNotificationOn();
@@ -2667,7 +2577,7 @@ function requestPositionLive(){
             },
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         );     
-    }
+	}
 }
 
 
@@ -2678,8 +2588,8 @@ function requestVerify(){
         var data = {
             'IMEI': TargetAsset.IMEI,
             'MinorToken': userInfo.userCode,
-        };        
-        
+        };
+
         App.showPreloader();
         JSON1.requestPost(API_URL.URL_GET_VERIFY2,data,function(result){
                 console.log(result);
@@ -2714,43 +2624,43 @@ function requestVerify(){
                     });
 
                 }else if(result.MajorCode == '100'){
-                    var msg = LANGUAGE.ASSET_VIRIFICATION_MSG12;  
+                    var msg = LANGUAGE.ASSET_VIRIFICATION_MSG12;
                     if (result.Data) {
                         switch (result.Data) {
                             case 'OFFLINE':
-                                msg = LANGUAGE.ASSET_VIRIFICATION_MSG13;  
+                                msg = LANGUAGE.ASSET_VIRIFICATION_MSG13;
                                 break;
 
                             case 'SMS_NONE':
-                                msg = LANGUAGE.ASSET_VIRIFICATION_MSG14; 
+                                msg = LANGUAGE.ASSET_VIRIFICATION_MSG14;
                                 break;
 
                             case 'SMS_STATUS':
-                                msg = LANGUAGE.ASSET_VIRIFICATION_MSG15; 
+                                msg = LANGUAGE.ASSET_VIRIFICATION_MSG15;
                                 break;
 
                             case 'SMS_LOCATION':
-                                msg = LANGUAGE.ASSET_VIRIFICATION_MSG16; 
+                                msg = LANGUAGE.ASSET_VIRIFICATION_MSG16;
                                 break;
                         }
 
                     }
-                    App.alert(msg, LANGUAGE.ASSET_VIRIFICATION_MSG06);       
-                    
-                }else{                
+                    App.alert(msg, LANGUAGE.ASSET_VIRIFICATION_MSG06);
+
+                }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
                 App.hidePreloader();
             },
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
-        );     
+        );
     }
 }
 
 function requestImmobilise(){
-    if (TargetAsset.IMEI) {
-        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
-        var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
+	if (TargetAsset.IMEI) {
+		var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+        var appKey = !localStorage.PUSH_APP_KEY? '5251762210774' : localStorage.PUSH_APP_KEY;
         var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
         var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
 
@@ -2761,7 +2671,7 @@ function requestImmobilise(){
             "AppKey": appKey,
             "Token": deviceToken,        
             "Type": deviceType,  
-        };             
+        };               
         
         App.showPreloader();
         JSON1.requestPost(API_URL.URL_SET_IMMOBILISE,data,function(result){
@@ -2785,13 +2695,13 @@ function requestImmobilise(){
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         );    
        
-    }
+	}
 }
 
 function requestUnimmobilise(){
-    if (TargetAsset.IMEI) {
-        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
-        var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
+	if (TargetAsset.IMEI) {
+		var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+        var appKey = !localStorage.PUSH_APP_KEY? '5251762210774' : localStorage.PUSH_APP_KEY;
         var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
         var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
 
@@ -2826,7 +2736,62 @@ function requestUnimmobilise(){
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         );    
        
+	}
+}
+
+
+
+function turnNotificationOn(){  
+    
+    $$('input[name="notificationState"]').prop('checked', true);
+    setAssetNotificationState({'IMEI':TargetAsset.IMEI,'State':1});
+}
+
+function changeAssetNotificationState(device){
+    var currentState = device.CurrState; 
+     var minorToken = getUserinfo().userCode;
+
+    var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+    var appKey = !localStorage.PUSH_APP_KEY? '5251762210774' : localStorage.PUSH_APP_KEY;
+    var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
+    var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
+
+    var data = {
+        "IMEI": TargetAsset.IMEI,
+        "MinorToken": minorToken, 
+        "State": !currentState,  
+        "MobileToken": mobileToken,
+        "AppKey": appKey,
+        "Token": deviceToken,        
+        "Type": deviceType,      
+    };
+    var message = '';
+    if (currentState == 1) {         
+        data.State = 0;
+        message = LANGUAGE.PROMPT_MSG018 + ' IMEI: '+TargetAsset.IMEI;       
+    }else{
+        data.State = 1;
+        message = LANGUAGE.PROMPT_MSG019 + ' IMEI: '+TargetAsset.IMEI;        
     }
+
+    JSON1.requestPost(API_URL.URL_CHANGE_NOTIFICATION_STATUS, data,function(result){
+            console.log(result);
+            if(result.MajorCode == '000') {                 
+                setAssetNotificationState(data);
+                App.addNotification({
+                    hold: 3000,
+                    message: message,
+                });
+                var assetListLi = $$('.assetList').find('li[data-imei="'+data.IMEI+'"]');               
+                if (assetListLi) {
+                	$$(assetListLi).data('notifications', data.State);
+                }
+            }else{                
+                App.alert(LANGUAGE.PROMPT_MSG013);
+            }               
+        },
+        function(){ App.alert(LANGUAGE.COM_MSG02); }
+    ); 
 }
 
 function requestDeviceSettings(){
@@ -2914,20 +2879,26 @@ function getNewNotifications(){
     var MinorToken = !userInfo ? '': userInfo.userCode;
     var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '' : localStorage.PUSH_DEVICE_TOKEN;    
     
+    //alert('MinorToken: '+MinorToken);
+    //alert('deviceToken: '+deviceToken);
+
     if (MinorToken && deviceToken) {
         var container = $$('body');
         if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
         App.showProgressbar(container); 
 
         var url = API_URL.URL_GET_NEW_NOTIFICATIONS.format(MinorToken,encodeURIComponent(deviceToken)); 
-        //localStorage.notificationChecked = 0;
+        notificationChecked = 0;
 
         JSON1.request(url, function(result){
                 App.hideProgressbar();            
-                //localStorage.notificationChecked = 1;
-               
+                notificationChecked = 1;
+                if(window.plus) {
+                    plus.push.clear();
+                }
                 
-                console.log(result);  
+                //alert(JSON.stringify(result));          
+                console.log(result);    
 
                 if (result.MajorCode == '000') {
                     var data = result.Data;  
@@ -2947,77 +2918,11 @@ function getNewNotifications(){
             },
             function(){
                 App.hideProgressbar();
-                //localStorage.notificationChecked = 1;            
+                notificationChecked = 1;            
             }
         ); 
     }        
 }
-
-function turnNotificationOn(){   
-    $$('.assetList [data-imei="'+TargetAsset.IMEI+'"]').data('notifications',1);
-    setAssetNotificationState({'IMEI':TargetAsset.IMEI,'State':1});
-}
-
-function changeAssetNotificationState(device,obj){
-    var currentState = false;
-    if (device) {
-        currentState = device.data('notifications'); 
-    }else{
-        currentState = obj.CurrState;
-    }
-     
-    var minorToken = getUserinfo().userCode;
-
-    var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
-    var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;    
-    var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
-    var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
-
-    var data = {
-        "IMEI": TargetAsset.IMEI,
-        "MinorToken": minorToken, 
-        "State": !currentState,  
-        "MobileToken": mobileToken,
-        "AppKey": appKey,
-        "Token": deviceToken,        
-        "Type": deviceType,  
-    };     
-        
-   // App.alert(JSON.stringify(data));
-
-    var message = '';
-    if (currentState == 1) {         
-        data.State = 0;
-        message = LANGUAGE.PROMPT_MSG018 + ' IMEI: '+TargetAsset.IMEI;       
-    }else{
-        data.State = 1;
-        message = LANGUAGE.PROMPT_MSG019 + ' IMEI: '+TargetAsset.IMEI;        
-    }
-
-    JSON1.requestPost(API_URL.URL_CHANGE_NOTIFICATION_STATUS, data,function(result){
-            console.log(result);
-            if(result.MajorCode == '000') {     
-                if (device) {
-                    device.data('notifications',data.State);
-                }                 
-                setAssetNotificationState(data);
-                App.addNotification({
-                    hold: 3000,
-                    message: message,
-                });
-                var assetListLi = $$('.assetList').find('li[data-imei="'+data.IMEI+'"]');               
-                if (assetListLi) {
-                    $$(assetListLi).data('notifications', data.State);
-                }
-            }else{                
-                App.alert(LANGUAGE.PROMPT_MSG013);
-            }               
-        },
-        function(){ App.alert(LANGUAGE.COM_MSG02); }
-    ); 
-}
-
-
 
 function getAssetNotificationState(){
     var ret = {};var str = localStorage.getItem("COM.QUIKTRAK.LIVE.NOTIFICATION.STATES");if(str) {ret = JSON.parse(str);}return ret;
@@ -3109,11 +3014,11 @@ function setNotificationList(list){
                 } 
                 if (msg.time) {
                     msg.PositionTime = msg.time;
-                }   
+                }    
                 if (msg.CreateDateTime) {
-                    localTime = moment.utc(msg.CreateDateTime).toDate();
+                	localTime = moment.utc(msg.CreateDateTime).toDate();
                     msg.CreateDateTime = moment(localTime).format(window.COM_TIMEFORMAT);
-                }                   
+                }                
                 list[i] = msg;      
 
                 /*var popped = pushList[user].pop();
@@ -3133,33 +3038,6 @@ function setNotificationList(list){
     }
     localStorage.setItem("COM.QUIKTRAK.LIVE.NOTIFICATIONLIST.INSTALLER", JSON.stringify(pushList));
 }
-
-/*function processClickOnPushNotification(msgJ){
-    if (Array.isArray(msgJ)) {
-        var msg = null;
-        if (msgJ[0].payload) {
-            msg = isJsonString(msgJ[0].payload);
-            if (!msg) {                  
-                msg = msgJ[0].payload;     
-            }
-        }else{
-            msg = isJsonString(msgJ[0]);
-            if (!msg) {                  
-                msg = msgJ[0];     
-            }
-        }        
-        if (msg) {
-            var activePage = mainView.activePage;    
-            if ( typeof(activePage) == 'undefined' || (activePage && activePage.name != "notification")) { 
-                $$('.notification_button').removeClass('new_not');                          
-                mainView.router.loadPage('resources/templates/notification.html');       
-            }else{
-                mainView.router.refreshPage();
-            }                
-        }  
-    }          
-}*/
-         
 
 function processClickOnPushNotification(msgJ){    
     if (Array.isArray(msgJ)) {      
@@ -3220,7 +3098,7 @@ function processClickOnPushNotification(msgJ){
                 if(typeof(msg.alarm) == 'string' && msg.alarm.toLowerCase() == "status" ){
                     loadPageStatus(msg);                 
                 }else if(typeof(msg.alarm) == 'string' && msg.alarm.toLowerCase() == "config" ){
-                	loadPageDeviceConfig(msg); 
+                    loadPageDeviceConfig(msg); 
                 }else if (parseFloat(msg.Lat) && parseFloat(msg.Lng)) { 
                     loadPagePosition(msg);
                 }else{
@@ -3299,9 +3177,9 @@ function showMsgNotification(arrMsgJ){
     if (msg && msg.title || msg && msg.AssetName) {
         var message = '';
         if (msg.title) {
-        	message += msg.name + '</br>' + msg.title;
+            message += msg.name + '</br>' + msg.title;
         }else{
-        	message += msg.AssetName + '</br>' + msg.alarm;
+            message += msg.AssetName + '</br>' + msg.alarm;
         }           
         App.addNotification({
             hold: 5000,
@@ -3311,7 +3189,7 @@ function showMsgNotification(arrMsgJ){
                 text: LANGUAGE.COM_MSG16,
                 close: false,         
             },
-            onClick: function () {             	
+            onClick: function () {              
                 processClickOnPushNotification([msg]);
             },                          
         }); 
@@ -3322,8 +3200,6 @@ function showMsgNotification(arrMsgJ){
         mainView.router.loadPage('resources/templates/notification.html');       
     }    */
 }
-
-
 
 function processMessage(msg){
     App.closeNotification('.notifications');
@@ -3340,7 +3216,7 @@ function processMessage(msg){
         }                              
         loadPageStatus(msg);    
     }else if (data.alarm == 'config') {
-    	if (msg.CreateDateTime) {
+        if (msg.CreateDateTime) {
             /*msg.CreateDateTime = moment.utc(msg.CreateDateTime).toDate();
             msg.CreateDateTime = moment(msg.CreateDateTime).format(window.COM_TIMEFORMAT);*/
             msg.CreateDateTime = msg.CreateDateTime.replace("T", " ");
@@ -3413,7 +3289,7 @@ function getAssetParametersName(data){
         FitmentOpt: data[index++],
         Describe6: data[index++],
     };        
-
+    
     return device;
 }
 
@@ -3474,6 +3350,8 @@ function getAssetImg(params, imgFor){
     return assetImg;
 }
 
+
+
 /* EDIT PHOTO */
 
 var cropper = null;
@@ -3506,9 +3384,9 @@ function saveImg(params={}) {
 
 
 
-   /* if (TargetAsset.IMEI) {
-        $$('.assets_list li[data-imei="' + TargetAsset.IMEI + '"] .item-media img').attr('src', resImg);
-    }*/
+    /* if (TargetAsset.IMEI) {
+         $$('.assets_list li[data-imei="' + TargetAsset.IMEI + '"] .item-media img').attr('src', resImg);
+     }*/
 
     var assetImg = {
         data: resImg,
@@ -3533,10 +3411,9 @@ function saveImg(params={}) {
             result = typeof(result) == 'string' ? eval("(" + result + ")") : result;
             if (result.MajorCode == "000") {
                 /*App.alert('Result Data:'+ result.Data);*/
-               // TargetAsset.IMEI = result.Data;
+                // TargetAsset.IMEI = result.Data;
                 if(params.imgFor === 'installPhoto'){
-                    $$('.install-photo-block .row').append(`<div class="col-50 install-photo-item"><img src="${resImg}" data-name="${API_DOMIAN9}Attachment/images/${result.Data}" alt=""><i class="f7-icons icon-other-delete-text-input color-red removePhoto"></i></div>`);
-                    //App.alert(API_URL.URL_PHOTO_UPLOAD+'/'+result.Data);
+                    $$('.install-photo-block .row').append(`<div class="col-50 tablet-25 install-photo-item"><img src="${resImg}" data-name="${API_DOMIAN9}Attachment/images/${result.Data}" alt=""><i class="f7-icons icon-other-delete-text color-red removePhoto"></i></div>`);
                 }else{
                     $$('.add_photo img.user-img').attr('src', resImg).addClass('user-img-shadow rounded').data('name', result.Data);
                 }
@@ -3547,7 +3424,6 @@ function saveImg(params={}) {
             mainView.router.back();
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            App.alert(JSON.stringify(XMLHttpRequest))
             App.hidePreloader();
             App.alert(LANGUAGE.COM_MSG02);
         }
@@ -3586,200 +3462,3 @@ function getImage(source, imgFor, imei) {
             options);
     }
 }
-/*
-function getImage(source) {
-
-    if (!navigator.camera) {
-        alert("Camera API not supported", "Error");
-
-    } else {
-        var options = {
-            quality: 50,
-            destinationType: Camera.DestinationType.DATA_URL,
-            sourceType: source, // 0:Photo Library, 1=Camera, 2=Saved Album
-            encodingType: 0 // 0=JPG 1=PNG
-        };
-
-        navigator.camera.getPicture(
-            function(imgData) {
-                //$('.media-object', this.$el).attr('src', "data:image/jpeg;base64,"+imgData);
-                mainView.router.load({
-                    url: 'resources/templates/edit.photo.html',
-                    context: {
-                        imgSrc: "data:image/jpeg;base64," + imgData
-                    }
-                });
-
-            },
-            function() {
-                //alert('Error taking picture', 'Error');
-            },
-            options);
-    }
-
-}*/
-
-
-
-function openBarCodeReader(input){
-    //console.log(input);
-    if(window.device && cordova.plugins && cordova.plugins.barcodeScanner) {
-        cordova.plugins.barcodeScanner.scan(
-            function (result) {
-                  /*alert("We got a barcode\n" +
-                        "Result: " + result.text + "\n" +
-                        "Format: " + result.format + "\n" +
-                        "Cancelled: " + result.cancelled);*/
-                if (result && result.text) {
-                    input.val(result.text);
-                    input.change();  // fix to trigger onchange / oninput event listener
-                }
-                
-            },
-            function (error) {
-                alert("Scanning failed: " + error);
-            },
-            {
-                  //preferFrontCamera : true, // iOS and Android
-                  showFlipCameraButton : true, // iOS and Android
-                  showTorchButton : true, // iOS and Android
-                  torchOn: true, // Android, launch with the torch switched on (if available)
-                  //saveHistory: true, // Android, save scan history (default false)
-                  prompt : "Place a barcode inside the scan area", // Android
-                  resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
-                  //formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-                  //orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
-                  //disableAnimations : true, // iOS
-                  //disableSuccessBeep: false // iOS and Android
-            }
-        );
-    }else{
-        App.alert('Your device does not support this function');
-    }
-}
-
-
-
-function checkVinNumber(params){
-        if (params && params.VIN) {
-            var vinLength = params.VIN.length;
-            console.log(vinLength);
-            if (vinLength == 18){
-                params.VIN = params.VIN.slice(1);
-                getVehicleDetailsByVin(params);
-            } else if(vinLength > 18 || vinLength < 17){
-                App.modal({
-                    title: '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>',
-                    text: '<div class="custom-modal-text">' + LANGUAGE.PROMPT_MSG030 + ':</div>',
-                    afterText: `
-                <div class="list-block list-block-modal m-0 no-hairlines ">          
-                    <ul>                               
-                        <li>
-                            <div class="item-content pl-0">                                    
-                                <div class="item-inner pr-0">                                      
-                                    <div class="item-input item-input-field">
-                                        <input type="text" placeholder="${ LANGUAGE.ASSET_SETTINGS_MSG19 }" name="VIN-check" value="${ params.VIN }" >
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                `,
-                    buttons: [{
-                        text: LANGUAGE.COM_MSG04,
-                    },
-                        {
-                            text: LANGUAGE.COM_MSG34,
-                            bold: true,
-                            onClick: function(modal, e) {
-                                params.VIN = $$(modal).find('input[name="VIN-check"]').val();
-                                params.inputs.Describe7.data('prev-val',params.VIN);
-                                params.inputs.Describe7.val(params.VIN);
-                                getVehicleDetailsByVin(params);
-                            }
-                        },
-                    ]
-                });
-            }else{
-                getVehicleDetailsByVin(params);
-            }
-        }
-    }
-
-function getVehicleDetailsByVin(params) {
-    if (params && params.VIN) {
-        var container = $$('body');
-        if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
-        App.showProgressbar(container);
-
-        $.ajax({
-            type: "GET",
-            url: API_URL.URL_GET_DETAILS_BY_VIN+params.VIN,
-            dataType: 'json',
-            async: true,
-            cache: false,
-
-            success: function(result){
-                App.hideProgressbar();
-                console.log(result);
-                if (result) {
-                    var vehicleDetailsArr = [];
-
-                    if (result.make) {
-                        vehicleDetailsArr.push({
-                            name: LANGUAGE.ASSET_SETTINGS_MSG21,
-                            value: result.make,
-                            inputName: 'Describe1',
-                        });
-                    }
-                    if (result.model) {
-                        vehicleDetailsArr.push({
-                            name: LANGUAGE.ASSET_SETTINGS_MSG22,
-                            value: result.model,
-                            inputName: 'Describe2',
-                        });
-                    }
-                    if (result.color) {
-                        vehicleDetailsArr.push({
-                            name: LANGUAGE.ASSET_SETTINGS_MSG23,
-                            value: result.color,
-                            inputName: 'Describe3',
-                        });
-                    }
-                    if (result.year) {
-                        vehicleDetailsArr.push({
-                            name: LANGUAGE.ASSET_SETTINGS_MSG24,
-                            value: result.year,
-                            inputName: 'Describe4',
-                        });
-                    }
-
-                    if (vehicleDetailsArr.length) {
-                        var message = LANGUAGE.PROMPT_MSG028;
-                        for (var i = vehicleDetailsArr.length - 1; i >= 0; i--) {
-                            message += '</br><b>' + vehicleDetailsArr[i].name + ': ' + vehicleDetailsArr[i].value + '</b>';
-                        }
-                        message += '</br>' + LANGUAGE.PROMPT_MSG029;
-
-                        App.confirm(message, function () {
-                            for (var i = vehicleDetailsArr.length - 1; i >= 0; i--) {
-                                params.inputs[vehicleDetailsArr[i].inputName].val(vehicleDetailsArr[i].value);
-                            }
-                        });
-                    }
-                }
-
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown){
-                App.hideProgressbar();
-                console.log(XMLHttpRequest);
-                console.log(textStatus);
-                console.log(errorThrown);
-                App.alert(LANGUAGE.PROMPT_MSG027);
-
-            }
-        });
-    }
-}
-
