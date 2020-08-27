@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
   id="com.sinopacific.installergps" 
-  version="1.1.13"
-  android-versionCode="88"
-  ios-CFBundleVersion="88"
+  version="1.1.14"
+  android-versionCode="89"
+  ios-CFBundleVersion="89"
   xmlns="http://www.w3.org/ns/widgets" 
   xmlns:cdv="http://cordova.apache.org/ns/1.0"    
   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -67,8 +67,7 @@
     <preference name="phonegap-version" value="cli-9.0.0" />
     <preference name="android-build-tool" value="gradle" />
 
-    <plugin name="kaiquecruz-phonegap-plugin-barcodescanner-custom" source="npm" />
-
+    
     
     
     <plugin name="phonegap-plugin-push" source="npm" spec="2.3.0">
@@ -98,6 +97,9 @@
     
     <plugin name="uk.co.workingedge.phonegap.plugin.istablet" source="npm" spec="1.2.0"  />
     <plugin name="cordova-plugin-screen-orientation" source="npm" spec="3.0.2"  />
+
+    <plugin name="kaiquecruz-phonegap-plugin-barcodescanner-custom" source="npm" />
+
 
     <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
         <string>Camera will be used to scan barcodes and to take photo of assets</string>

@@ -293,6 +293,8 @@ API_URL.URL_GET_PROTECT_POSITION = API_DOMIAN1 + "Client/ProtectPostion2";
 API_URL.URL_GET_STATUS = API_DOMIAN1 + "Client/Status2";
 API_URL.URL_SET_IMMOBILISE = API_DOMIAN1 + "Client/Immobilise2";
 API_URL.URL_SET_UNIMMOBILISE = API_DOMIAN1 + "Client/Unimobilise2";
+API_URL.URL_SET_ACCVOLTAGE_ON = API_DOMIAN1 + "Client/AccVoltageOn";
+API_URL.URL_SET_ACCVOLTAGE_OFF = API_DOMIAN1 + "Client/AccVoltageOff";
 API_URL.URL_GET_LIVE_POSITION = API_DOMIAN1 + "Client/LivePostion";
 API_URL.URL_GET_VERIFY2 = API_DOMIAN1 + "Client/Verfiy2";
 API_URL.URL_SENT_NOTIFY = API_DOMIAN1 + "Client/SentNotify";
@@ -1239,6 +1241,35 @@ App.onPageInit('asset.commands', function(page){
                 requestDeviceSettings();
                 break;
 
+          case'7':
+              App.modal({
+                  title: TargetAsset.Name,
+                  text: LANGUAGE.ASSET_COMMANDS_MSG11,
+                  verticalButtons: true,
+                  buttons: [
+                      {
+                          text: LANGUAGE.COM_MSG38,
+                          bold: true,
+                          onClick: function () {
+                              requestAccVoltage('on')
+                          }
+                      },
+                      {
+                          text: LANGUAGE.COM_MSG39,
+                          bold: true,
+                          onClick: function () {
+                              requestAccVoltage('off')
+                          }
+                      },
+                      {
+                          text: LANGUAGE.COM_MSG04,
+                      },
+                  ]
+              });
+            break;
+          /*case'8':
+            requestAccVoltage('off')
+            break;*/
 
             default:
 
@@ -1624,14 +1655,21 @@ App.onPageInit('client.details', function (page) {
             //data.photos = photos;
         }
 
-
+        var additionalParams = {
+            setIgnByVol: $$(page.container).find('[name="ignitionStatusByVoltage"]').prop('checked')
+        }
+        if(additionalParams.setIgnByVol){
+            additionalParams.setIgnByVolState = 'on';
+        }
+        /*console.log(additionalParams)
+        return*/
 
 
         JSON1.requestPost(API_URL.URL_SENT_NOTIFY,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
 
-                    loadPageVerification(result.Data);
+                    loadPageVerification(result.Data, additionalParams);
 
                 }else if(result.MajorCode == '100'){
                     var msg = LANGUAGE.ASSET_VIRIFICATION_MSG12;
@@ -2335,7 +2373,7 @@ function getAssetDetails(params){
 }
 
 
-function loadPageVerification(data){
+function loadPageVerification(data, additionalParams){
     if (data){
         if (data.Date) {
             var localTime = moment.utc(data.Date).toDate();
@@ -2363,7 +2401,12 @@ function loadPageVerification(data){
             }
         });
         showVerificationStatus();
+        if(additionalParams && additionalParams.setIgnByVol){
+            requestAccVoltage(additionalParams.setIgnByVolState);
+        }
+
     }
+
 
 
 }
@@ -2916,6 +2959,51 @@ function requestUnimmobilise(){
                 App.hidePreloader();
             },
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        );
+
+    }
+}
+
+function requestAccVoltage(state = 'on'){
+    if (TargetAsset.IMEI) {
+        var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+        var appKey = !localStorage.PUSH_APP_KEY? '5741760618261' : localStorage.PUSH_APP_KEY;
+        var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '123' : localStorage.PUSH_DEVICE_TOKEN;
+        var deviceType = !localStorage.DEVICE_TYPE? 'web':localStorage.DEVICE_TYPE;
+
+        var data = {
+            'IMEI': TargetAsset.IMEI,
+            'MinorToken': getUserinfo().userCode,
+            "MobileToken": mobileToken,
+            "AppKey": appKey,
+            "Token": deviceToken,
+            "Type": deviceType,
+        };
+        var url = API_URL.URL_SET_ACCVOLTAGE_ON;
+        if(state === 'off'){
+            url = API_URL.URL_SET_ACCVOLTAGE_OFF;
+        }
+
+        App.showPreloader();
+        JSON1.requestPost(url,data,function(result){
+              console.log(result);
+              if(result.MajorCode == '000') {
+                  turnNotificationOn();
+                  App.addNotification({
+                      hold: 3000,
+                      message: LANGUAGE.COM_MSG03
+                  });
+                  getCreditBalance();
+              }else if(result.MinorCode == '1006'){
+                  App.confirm(LANGUAGE.PROMPT_MSG011, function () {     // "PROMPT_MSG011":"The balance is insufficient, please renew",
+                      loadRechargeCreditPage();
+                  });
+              }else{
+                  App.alert(LANGUAGE.PROMPT_MSG013);
+              }
+              App.hidePreloader();
+          },
+          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
         );
 
     }

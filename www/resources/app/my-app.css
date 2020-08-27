@@ -109,7 +109,12 @@ select{
 .layout-dark.list-block input{
 	color: #fff;
 }
-
+.display-flex{
+	display: -webkit-box!important;
+	display: -ms-flexbox!important;
+	display: -webkit-flex!important;
+	display: flex!important;
+}
 /* .address-row4{
 	max-height: initial;
 	-webkit-line-clamp: 4;

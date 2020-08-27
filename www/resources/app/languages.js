@@ -38,6 +38,8 @@ window.LanguagePackages= {
 		"COM_MSG35": "km",
 		"COM_MSG36": "h",
 		"COM_MSG37": "Error",
+		"COM_MSG38": "Turn ON",
+		"COM_MSG39": "Turn OFF",
 
 		"PROMPT_MSG001": "In this section, you can find the device by <b>IMEI</b>, <b>IMSI</b>, or <b>Name</b>. Select a specific tab and start the search.",
 		"PROMPT_MSG002": "Buy more credits to send commands to the devices",
@@ -120,6 +122,8 @@ window.LanguagePackages= {
 		"ASSET_COMMANDS_MSG08": "Immobilise",
 		"ASSET_COMMANDS_MSG09": "Unimmobilise",
 		"ASSET_COMMANDS_MSG10": "Check Settings",
+		"ASSET_COMMANDS_MSG11": "Set ignition status by Voltage",
+		"ASSET_COMMANDS_MSG12": "",
 
 		"ASSET_COMMANDS_HISTORY_MSG00": "Commands History",
 		"ASSET_COMMANDS_HISTORY_MSG01": "There was no messages in selected period",
