@@ -122,7 +122,7 @@ window.LanguagePackages= {
 		"ASSET_COMMANDS_MSG08": "Immobilise",
 		"ASSET_COMMANDS_MSG09": "Unimmobilise",
 		"ASSET_COMMANDS_MSG10": "Check Settings",
-		"ASSET_COMMANDS_MSG11": "Set ignition status by Voltage",
+		"ASSET_COMMANDS_MSG11": "Set Ignition status by Voltage",
 		"ASSET_COMMANDS_MSG12": "",
 
 		"ASSET_COMMANDS_HISTORY_MSG00": "Commands History",
