@@ -310,6 +310,7 @@ API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN3 +"Device/Alarms?MinorToken={0}&d
 API_URL.URL_ACTIVATION = "http://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}&DealerName={3}";
 API_URL.URL_REPLACE_IMEI = "http://app.quikprotect.co/activation2/upgrade?DealerToken={0}&imeis={1}";
 API_URL.URL_REPLACE_IMSI = API_DOMIAN6 + "ReplaceSim";
+API_URL.URL_DEACTIVATE = API_DOMIAN6 + "DeActivate";
 //API_URL.URL_GET_DETAILS_BY_VIN = "http://ss.sinopacific.com.ua/vin/v1/{0}";
 API_URL.URL_GET_DETAILS_BY_VIN = "http://ss.sinopacific.com.ua/vin/v1/";
 
@@ -596,69 +597,99 @@ $$('body').on('click', '.assetList .item-inner', function () {
     }
 
 
-    var commands =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-other-commands color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.HOME_MSG03 +
-                        '</div>'+
-                    '</div>';
-
-    var commandsHistory =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-header-history-command-screen color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.ASSET_COMMANDS_HISTORY_MSG00 +
-                        '</div>'+
-                    '</div>';
-
-    var simInfo =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-other-info color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.ASSET_SIM_INFO_MSG00 +
-                        '</div>'+
-                    '</div>';
-
-    var settings =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-other-service-details color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.HOME_MSG04 +
-                        '</div>'+
-                    '</div>';
-
-    var upgrade =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-replace-imei color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.HOME_MSG08 +
-                        '</div>'+
-                    '</div>';
-
-    var activation =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
-                            '<i class="f7-icons icon-other-activation color-blue "></i>'+
-                        '</div>'+
-                        '<div class="action_button_block action_button_text">'+
-                            LANGUAGE.HOME_MSG09 +
-                        '</div>'+
-                    '</div>';
-
-    var simReplace =  '<div class="action_button_wrapper">'+
+    /*var settings =  '<div class="action_button_wrapper">'+
       '<div class="action_button_block action_button_media">'+
-      '<i class="f7-icons icon-sim-card-replace color-blue "></i>'+
+      '<i class="f7-icons icon-other-service-details color-blue "></i>'+
       '</div>'+
       '<div class="action_button_block action_button_text">'+
-      LANGUAGE.HOME_MSG11 +
+      LANGUAGE.HOME_MSG04 +
       '</div>'+
       '</div>';
 
+    var simInfo =  '<div class="action_button_wrapper">'+
+      '<div class="action_button_block action_button_media">'+
+      '<i class="f7-icons icon-other-info color-blue "></i>'+
+      '</div>'+
+      '<div class="action_button_block action_button_text">'+
+      LANGUAGE.ASSET_SIM_INFO_MSG00 +
+      '</div>'+
+      '</div>';*/
+
+    var assetDetSimStat =  `<div class="row" >
+                        <div class="action_button_wrapper col-50 buttonAssetDetails">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-other-service-details color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.HOME_MSG04}
+                          </div>
+                        </div>
+                        <div class="action_button_wrapper col-50 buttonSimStatus">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-other-info color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.ASSET_SIM_INFO_MSG00}
+                          </div>
+                        </div>
+                    </div>`;
+
+    var commands =  `<div class="row" >
+                        <div class="action_button_wrapper col-50 buttonCommands ${ !userPermissions.SendCommands ? 'disabled' : '' }">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-other-commands color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.HOME_MSG03}
+                          </div>
+                        </div>
+                        <div class="action_button_wrapper col-50 buttonCommandsHistory">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-header-history-command-screen color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.ASSET_COMMANDS_HISTORY_MSG00}
+                          </div>
+                        </div>
+                    </div>`;
+
+    var replace =  `<div class="row" >
+                        <div class="action_button_wrapper col-50 buttonReplaceIMEI ${ !userPermissions.ReplaceIMEI ? 'disabled' : '' }">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-replace-imei  color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.HOME_MSG08}
+                          </div>
+                        </div>
+                        <div class="action_button_wrapper col-50 buttonReplaceSIM ${ !userPermissions.ReplaceSIM ? 'disabled' : '' }">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-sim-card-replace color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.HOME_MSG11}
+                          </div>
+                        </div>
+                    </div>`;
+
+    var activation =  `<div class="row" >
+                        <div class="action_button_wrapper col-50 buttonActivate ${ !userPermissions.ActivateDevice ? 'disabled' : '' }">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-other-activation  color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.HOME_MSG09}
+                          </div>
+                        </div>
+                        <div class="action_button_wrapper col-50 buttonDeativate ${ !userPermissions.DeactivateDevice || !userPermissions.SuspendSIM ? 'disabled' : '' }">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-deactivation color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.HOME_MSG12}
+                          </div>
+                        </div>
+                    </div>`;
 
     var notification =  '<div class="action_button_wrapper">'+
                             '<div class="action_button_block action_button_media">'+
@@ -681,57 +712,57 @@ $$('body').on('click', '.assetList .item-inner', function () {
         },
 
         {
-            text: settings,
-            onClick: function () {
-                loadPageSettings();
+            text: assetDetSimStat,
+            onClick: function (actionSheet, e) {
+                let targetEl = $$(e.target).closest('.action_button_wrapper');
+                if(targetEl.hasClass('buttonAssetDetails')){
+                    loadPageSettings();
+                }else if(targetEl.hasClass('buttonSimStatus')){
+                    loadSimInfo()
+                }
             },
         },
-        {
-            text: commands,
-            onClick: function () {
-                loadPageCommands();
-            },
-        },
-        {
-            text: commandsHistory,
-            onClick: function () {
-                loadCommandHistoryPage({
-                    IMSI: TargetAsset.IMSI,
-                    LastDay: 7,
-                });
-            },
-        },
-        {
+        /*{
             text: simInfo,
             onClick: function () {
                 loadSimInfo();
             },
-        },
-    ];
-
-    if (userPermissions && userPermissions.ActLive || userPermissions.ActProtect) {
-        buttons.push(
-            {
-                text: activation,
-                onClick: function () {
-                    showActivationModal(userPermissions);
-                },
-            }
-        );
-    }
-
-    buttons.push(
+        },*/
         {
-            text: upgrade,
-            onClick: function () {
-                loadPageUpgrade();
+            text: activation,
+            onClick: function (actionSheet, e) {
+                let targetEl = $$(e.target).closest('.action_button_wrapper');
+                if(targetEl.hasClass('buttonActivate')){
+                    showActivationModal();
+                }else if(targetEl.hasClass('buttonDeativate')){
+                    showDeactivationModal();
+                }
             },
         },
         {
-              text: simReplace,
-              onClick: function () {
-                  loadSimReplace();
-              },
+            text: commands,
+            onClick: function (actionSheet, e) {
+                let targetEl = $$(e.target).closest('.action_button_wrapper');
+                if(targetEl.hasClass('buttonCommands')){
+                    loadPageCommands();
+                }else if(targetEl.hasClass('buttonCommandsHistory')){
+                    loadCommandHistoryPage({
+                        IMSI: TargetAsset.IMSI,
+                        LastDay: 7,
+                    });
+                }
+            },
+        },
+        {
+            text: replace,
+            onClick: function (actionSheet, e) {
+                let targetEl = $$(e.target).closest('.action_button_wrapper');
+                if(targetEl.hasClass('buttonReplaceIMEI')){
+                    loadPageUpgrade();
+                }else if(targetEl.hasClass('buttonReplaceSIM')){
+                    loadSimReplace();
+                }
+            },
         },
         {
             text: notification,
@@ -739,7 +770,7 @@ $$('body').on('click', '.assetList .item-inner', function () {
                 changeAssetNotificationState(parrent);
             },
         }
-    );
+    ];
 
     App.actions(buttons);
 });
@@ -1934,6 +1965,7 @@ function login(){
                     }
                     account.val(null);
                     password.val(null);
+                    //result.Data.Permissions = 247;
                     setUserinfo(result.Data);
                     updateUserData(result.Data);
                     updateUserCrefits(result.Data.credit);
@@ -2226,7 +2258,7 @@ function loadPageUpgrade(){
         }
 }
 
-function showActivationModal(permissions){
+function showActivationModal(){
     App.modal({
         title: '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>',
         text: LANGUAGE.PROMPT_MSG025,
@@ -2235,21 +2267,21 @@ function showActivationModal(permissions){
             {
                 text: LANGUAGE.COM_MSG32, // protect
                 onClick: function() {
-                    if (permissions && permissions.ActProtect) {
+                    //if (permissions && permissions.ActProtect) {
                         loadPageActivation('0000000000000'); // protect plam
-                    }else{
+                    /*}else{
                         showNoActPermissionModal(LANGUAGE.COM_MSG32);
-                    }
+                    }*/
                 }
             },
             {
                 text: LANGUAGE.COM_MSG33,  // live
                 onClick: function() {
-                    if (permissions && permissions.ActLive) {
+                    //if (permissions && permissions.ActLive) {
                         loadPageActivation('1C783FA4TRAK'); //annual live track plan
-                    }else{
+                    /*}else{
                         showNoActPermissionModal(LANGUAGE.COM_MSG33);
-                    }
+                    }*/
                 }
             },
            /* {
@@ -2263,8 +2295,56 @@ function showActivationModal(permissions){
     });
 }
 
+function showDeactivationModal() {
+    App.modal({
+        title: '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>',
+        text: LANGUAGE.PROMPT_MSG035 + ' - <b>' + TargetAsset.IMEI + '</b>. ' + LANGUAGE.PROMPT_MSG036,
+        //verticalButtons: true,
+        buttons: [
+            {
+                text: LANGUAGE.COM_MSG04,
+            },
+            {
+                text: LANGUAGE.COM_MSG40,
+                onClick: function() {
+                    deactivateDevice(TargetAsset.IMEI);
+                }
+            },
+
+        ]
+    });
+}
+
 function showNoActPermissionModal(plan){
     App.alert(LANGUAGE.PROMPT_MSG026 + ' ' + plan, '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>');
+}
+
+function deactivateDevice(imei) {
+    if (imei) {
+        var userInfo = getUserinfo();
+        var data = {
+          MinorToken: userInfo.userCode,
+          MajorToken: userInfo.code,
+          IMEI: imei
+        };
+
+        App.showPreloader();
+        JSON1.requestPost(API_URL.URL_DEACTIVATE, data, function(result){
+              console.log(result);
+              if(result.MajorCode === '000') {
+                  App.alert(LANGUAGE.PROMPT_MSG037);
+
+              }else if(result.MajorCode === '100' && result.MinorCode === '1003'){
+                  App.alert(LANGUAGE.PROMPT_MSG038);
+
+              }else{
+                  App.alert(LANGUAGE.PROMPT_MSG013);
+              }
+              App.hidePreloader();
+          },
+          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        );
+    }
 }
 
 function loadPageActivation(planCode){
@@ -2305,6 +2385,8 @@ function loadPageSettings(){
         "Id": TargetAsset.Id,
     };
 
+    var userPermissions = Protocol.Helper.getPermissions(getUserinfo().Permissions);
+
     App.showPreloader();
     JSON1.requestPost(API_URL.URL_GET_DEVICE_DETAIL,data,function(result){
             console.log(result);
@@ -2340,6 +2422,8 @@ function loadPageSettings(){
                         FitmentOpt: asset.FitmentOpt,
                         FitmentOptCustom: asset.Describe6,
                         AssetImg: assetImg,
+
+                        isAllowedToEditAsset: userPermissions.EditAsset
                     }
                 });
             }else{

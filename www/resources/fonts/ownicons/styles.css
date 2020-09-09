@@ -191,3 +191,6 @@
 .icon-sim-card-replace:before {
   content: "\5a";
 }
+.icon-deactivation:before {
+  content: "\59";
+}

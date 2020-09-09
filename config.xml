@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
   id="com.sinopacific.installergps" 
-  version="1.1.14"
+  version="1.1.15"
   android-versionCode="89"
   ios-CFBundleVersion="89"
   xmlns="http://www.w3.org/ns/widgets" 
@@ -56,7 +56,7 @@
     <preference name="load-url-timeout" value="140000" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="Orientation" value="default" />
-    <preference name="android-minSdkVersion" value="19" />
+    <preference name="android-minSdkVersion" value="22" />
     <!-- <preference name="android-maxSdkVersion" value="27" /> -->
     <preference name="android-targetSdkVersion" value="29" />
     <preference name="multiDexEnabled" value="true" />    

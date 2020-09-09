@@ -50,22 +50,31 @@ CustomerInfo.TimeZone = moment().utcOffset() / 60;
 Protocol = {
     MarkerIcon: [
         L.icon({
-            iconUrl: 'resources/images/marker.svg',                       
-            iconSize:     [60, 60], // size of the icon                        
-            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location                        
+            iconUrl: 'resources/images/marker.svg',
+            iconSize:     [60, 60], // size of the icon
+            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
         }),
         L.icon({
-            iconUrl: 'resources/images/marker2.svg',                       
-            iconSize:     [60, 60], // size of the icon                        
-            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location                        
+            iconUrl: 'resources/images/marker2.svg',
+            iconSize:     [60, 60], // size of the icon
+            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
         })
     ],
     PermissionsEnum: {
-        "ActLive" : 1,
-        "ActProtect": 8,
+       /* "ActLive" : 1,
+        "ActProtect": 8,*/
+       SendCommands: 1,
+       ReplaceSIM: 2,
+       ReplaceIMEI: 4,
+       EditAsset: 8,
+       InstallationNotice: 16,
+       ActivateDevice: 32,
+       DeactivateDevice: 64,
+       SuspendSIM: 128,
     },
+
     PositionTypes: {
         "NONE": 0,
         "GPS": 1,
@@ -269,19 +278,19 @@ Protocol = {
             return ret;
         },
         getPermissions: function(permissionCode){
-            var ret = {};   
+            var ret = {};
 
-            if (permissionCode) {                
+            if (permissionCode) {
                 permissionCode = parseInt(permissionCode);
             }
-            $.each(Protocol.PermissionsEnum, function(index, value) {                    
-                if ((permissionCode & value) > 0) {                        
+            $.each(Protocol.PermissionsEnum, function(index, value) {
+                if ((permissionCode & value) > 0) {
                     ret[index] = true;
-                }else{                       
+                }else{
                     ret[index] = false;
-                }                  
+                }
             });
-            
+
 
             return ret;
         },
@@ -290,117 +299,117 @@ Protocol = {
             JSON.request(url, function(result){ replyFunc(result.display_name);});*/
             var coords = LANGUAGE.COM_MSG09 + ': ' + latlng.lat + ', ' + LANGUAGE.COM_MSG10 + ': ' + latlng.lng;
             $.ajax({
-                   type: "GET",                    
+                   type: "GET",
                     url: "https://nominatim.sinopacific.com.ua/reverse.php?format=json&lat={0}&lon={1}&zoom=18&addressdetails=1".format(latlng.lat, latlng.lng),
                dataType: "json",
-                  async: true, 
+                  async: true,
                   cache: false,
-                success: function (result) {                     
-                    if (result.display_name) {                        
+                success: function (result) {
+                    if (result.display_name) {
                         replyFunc(result.display_name);
                     }else{
                         replyFunc(coords);
                     }
                 },
-                error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                error: function(XMLHttpRequest, textStatus, errorThrown){
                     $.ajax({
                            type: "GET",
-                            url: "https://nominatim.openstreetmap.org/reverse?format=json&lat={0}&lon={1}&zoom=18&addressdetails=1".format(latlng.lat, latlng.lng),                
+                            url: "https://nominatim.openstreetmap.org/reverse?format=json&lat={0}&lon={1}&zoom=18&addressdetails=1".format(latlng.lat, latlng.lng),
                        dataType: "json",
-                          async: true, 
+                          async: true,
                           cache: false,
-                        success: function (result) { 
-                            if (result.display_name) {                        
+                        success: function (result) {
+                            if (result.display_name) {
                                 replyFunc(result.display_name);
                             }else{
                                 replyFunc(coords);
                             }
                         },
-                        error: function(XMLHttpRequest, textStatus, errorThrown){                            
+                        error: function(XMLHttpRequest, textStatus, errorThrown){
                             replyFunc(coords);
                         }
-                    }); 
+                    });
                 }
             });
         },
-        getLatLngByGeocoder: function(address,replyFunc){            
+        getLatLngByGeocoder: function(address,replyFunc){
             var url = "https://nominatim.openstreetmap.org/search?q={0}&format=json&polygon=1&addressdetails=1".format(address);
-                /*JSON.request(url, function(result){                    
+                /*JSON.request(url, function(result){
                     var res = new L.LatLng(result[0].lat, result[0].lon);
                     replyFunc(res);
                 });*/
             var res = null;
             $.ajax({
                    type: "GET",
-                    url: url,                
+                    url: url,
                dataType: "json",
-                  async: true, 
+                  async: true,
                   cache: false,
-                success: function (result) {                     
+                success: function (result) {
                     if (result.length > 0) {
-                        if (result[0].lat && result[0].lon) { 
-                            res = new L.LatLng(result[0].lat, result[0].lon);                       
+                        if (result[0].lat && result[0].lon) {
+                            res = new L.LatLng(result[0].lat, result[0].lon);
                             replyFunc(res);
                         }else{
                             replyFunc(res);
                         }
                     }else{
                         replyFunc(res);
-                    } 
+                    }
                 },
-                error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                error: function(XMLHttpRequest, textStatus, errorThrown){
                     url = "https://nominatim.sinopacific.com.ua/?q={0}&format=json&polygon=1&addressdetails=1".format(address);
                             $.ajax({
                            type: "GET",
-                            url: url,                
+                            url: url,
                        dataType: "json",
-                          async: true, 
+                          async: true,
                           cache: false,
-                        success: function (result) {                     
+                        success: function (result) {
                             if (result.length > 0) {
-                                if (result[0].lat && result[0].lon) { 
-                                    res = new L.LatLng(result[0].lat, result[0].lon);                       
+                                if (result[0].lat && result[0].lon) {
+                                    res = new L.LatLng(result[0].lat, result[0].lon);
                                     replyFunc(res);
                                 }else{
                                     replyFunc(res);
                                 }
                             }else{
                                 replyFunc(res);
-                            }   
+                            }
                         },
-                        error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                        error: function(XMLHttpRequest, textStatus, errorThrown){
                             replyFunc(res);
                         }
                     });
                 }
             });
-        },    
+        },
         createMap: function(option){
             /*var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { name: 'osm', attribution: '' });
-            var map = L.map(option.target, { zoomControl: false, center: option.latLng, zoom: option.zoom }); 
+            var map = L.map(option.target, { zoomControl: false, center: option.latLng, zoom: option.zoom });
             map.addLayer(osm);
             L.control.scale().addTo(map);
             L.control.zoom({ position: 'bottomright' }).addTo(map);
             return map;*/
-            var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { name: 'osm', attribution: '' });            
+            var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { name: 'osm', attribution: '' });
             var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
                 maxZoom: 22,
                 subdomains:['mt0','mt1','mt2','mt3']
-            });           
+            });
             var googleSatelitte = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
                 maxZoom: 20,
                 subdomains:['mt0','mt1','mt2','mt3']
-            });              
-            
-            var map = L.map(option.target, { zoomControl: false, center: option.latLng, zoom: option.zoom, layers: [googleStreets] }); 
-                        
+            });
+
+            var map = L.map(option.target, { zoomControl: false, center: option.latLng, zoom: option.zoom, layers: [googleStreets] });
+
             var layers = {
                 "<span class='mapSwitcherWrapper googleSwitcherWrapper'><img class='layer-icon' src='resources/images/googleRoad.png' alt='' /> <p>Map</p></span>": googleStreets,
                 "<span class='mapSwitcherWrapper satelliteSwitcherWrapper'><img class='layer-icon' src='resources/images/googleSatellite.png' alt='' />  <p>Satellite</p></span>": googleSatelitte,
                 "<span class='mapSwitcherWrapper openstreetSwitcherWrapper'><img class='layer-icon' src='resources/images/openStreet.png' alt='' /> <p>OpenStreet</p></span>": osm,
             };
 
-            L.control.layers(layers).addTo(map);            
+            L.control.layers(layers).addTo(map);
 
             return map;
         },
@@ -414,16 +423,16 @@ Protocol = {
             if (asset) {
                 var ret = {};
                 var dateTimeSecond = 24* 600 * 60 * 1000;
-               
-                if(asset.posInfo.positionTime !== null)                
-                    dateTimeSecond = Math.abs(moment(moment(asset.posInfo.positionTime.toDate()).add(CustomerInfo.TimeZone, 'hours').toDate()).diff(moment(moment(moment().toDate()).add((moment().utcOffset()/60),'hours').toDate()), 'milliseconds'));            
-                
+
+                if(asset.posInfo.positionTime !== null)
+                    dateTimeSecond = Math.abs(moment(moment(asset.posInfo.positionTime.toDate()).add(CustomerInfo.TimeZone, 'hours').toDate()).diff(moment(moment(moment().toDate()).add((moment().utcOffset()/60),'hours').toDate()), 'milliseconds'));
+
                 /*if(asset.posInfo.positionTime !== null&&Math.abs(moment(moment(asset.posInfo.positionTime.toDate()).add(CustomerInfo.TimeZone, 'hours').toDate()).diff(moment(moment(moment().toDate()).add((moment().utcOffset()/60)).toDate()), 'milliseconds'),'hours') > 20 * 60 * 1000)
                 {
                     asset.posInfo.speed=0;
                 }*/
                 if(asset.posInfo.lat===0||asset.posInfo.lng===0||(asset.posInfo.positionTime !== null&&Math.abs(moment(moment(asset.posInfo.positionTime.toDate()).add(CustomerInfo.TimeZone).toDate(),'hours').diff(moment(moment(moment().toDate()).add((moment().utcOffset()/60)).toDate()), 'milliseconds'),'hours') > 40 * 60 * 1000))
-                {            
+                {
                     asset.posInfo.isRealTime="False";
                     asset.posInfo.isLocated="False";
                     asset.posInfo.speed=0;
@@ -433,7 +442,7 @@ Protocol = {
                 ret.stats = true;
                 if(asset.posInfo.positionTime === null) {
                     ret.stats = false;
-                    
+
                 }else{
                     if (asset.haveFeature("Speed")){
                         if(asset.haveFeature("Acc") && (Protocol.PositionStatus.ACC & asset.posInfo.status) === 0){
@@ -447,8 +456,8 @@ Protocol = {
                         if(typeof asset.posInfo.alt == "undefined"){
                             ret.temperature.value = LANGUAGE.COM_MSG11;
                         }else{
-                            ret.temperature.value = asset.posInfo.alt + '&nbsp;°C'; 
-                        }                   
+                            ret.temperature.value = asset.posInfo.alt + '&nbsp;°C';
+                        }
                     }
                     if(asset.haveFeature("FuelSensor")){
                         ret.fuel = {};
@@ -456,7 +465,7 @@ Protocol = {
                             ret.fuel.value = LANGUAGE.COM_MSG11;
                         }else{
                             ret.fuel.value = parseInt(((parseFloat(asset.posInfo.fuel) - asset._FIELD_FLOAT2) / (asset._FIELD_FLOAT1 - asset._FIELD_FLOAT2)) * 100) + '&nbsp;%';
-                        }                      
+                        }
                     }
                     if(asset.haveFeature("Voltage")){
                         ret.voltage = {};
@@ -464,20 +473,20 @@ Protocol = {
                             ret.voltage.value = LANGUAGE.COM_MSG11;
                         }else{
                             ret.voltage.value = Math.round(asset.posInfo.alt*10)/10 + '&nbsp;V';
-                        } 
+                        }
                     }
-                    if(asset.haveFeature("Mileage")) {                    
+                    if(asset.haveFeature("Mileage")) {
                         ret.milage = {};
-                        ret.milage.value = (Protocol.Helper.getMileageValue(asset.Unit, asset.posInfo.mileage) + parseInt(asset.InitMilage) + parseInt(asset._FIELD_FLOAT7)) + '&nbsp;' + Protocol.Helper.getMileageUnit(asset.Unit);     
+                        ret.milage.value = (Protocol.Helper.getMileageValue(asset.Unit, asset.posInfo.mileage) + parseInt(asset.InitMilage) + parseInt(asset._FIELD_FLOAT7)) + '&nbsp;' + Protocol.Helper.getMileageUnit(asset.Unit);
                     }
                     if(asset.haveFeature("Acc")){
                         ret.acc = {};
-                        //if((Protocol.PositionStatus.ACC & asset.posInfo.status) > 0 && asset.posInfo.isLocated=="True"){ 
-                        //if((Protocol.PositionStatus.ACC & this.posInfo.status) > 0)                
+                        //if((Protocol.PositionStatus.ACC & asset.posInfo.status) > 0 && asset.posInfo.isLocated=="True"){
+                        //if((Protocol.PositionStatus.ACC & this.posInfo.status) > 0)
                         if((Protocol.PositionStatus.ACC & asset.posInfo.status) > 0){
                             ret.acc.value = 'ON';
                         }else{
-                            ret.acc.value = 'OFF';            
+                            ret.acc.value = 'OFF';
                         }
                     }
                     if(asset.haveFeature("Acc2")){
@@ -485,7 +494,7 @@ Protocol = {
                         if((Protocol.PositionStatus.ACC2 & asset.posInfo.status) > 0){
                             ret.acc2.value = 'ON';
                         }else{
-                            ret.acc2.value = 'OFF';            
+                            ret.acc2.value = 'OFF';
                         }
                     }
                     if(asset.haveFeature("Battery")){
@@ -494,11 +503,11 @@ Protocol = {
                             ret.battery.value = parseInt(asset.posInfo.Battery) + '&nbsp;%';
                         }else{
                             ret.battery.value = LANGUAGE.COM_MSG11; // no data
-                        }                  
+                        }
                     }
                     if(asset.haveFeature("Alt")){
                         ret.altitude = {};
-                        ret.altitude.value = asset.posInfo.alt + '&nbsp;ft';                   
+                        ret.altitude.value = asset.posInfo.alt + '&nbsp;ft';
                     }
                     /*if(asset.haveFeature("RFIDCard")){
                         ret.driver = {};
@@ -507,80 +516,80 @@ Protocol = {
                             for(var i= 0; i< ContactList.length; i++){
                                 if(asset.posInfo.rfid == ContactList[i].Number){
                                     hasFound = true;
-                                    ret.driver.value = ContactList[i].FirstName + " " + ContactList[i].SurName;                                                       
+                                    ret.driver.value = ContactList[i].FirstName + " " + ContactList[i].SurName;
                                     break;
                                 }
                             }
                             if(!hasFound){
-                                ret.driver.value = asset.posInfo.rfid;                            
-                            }                                   
+                                ret.driver.value = asset.posInfo.rfid;
+                            }
                         }else{
                             ret.driver.value = LANGUAGE.COM_MSG11;
-                        }       
+                        }
                     }else if(asset.haveFeature("Driver")){
-                        ret.driver = {};    
-                        var name = '';              
+                        ret.driver = {};
+                        var name = '';
                         if(asset.contactCode !== null && asset.contactCode !== ""){
                             for(var j = 0; j< ContactList.length; j++){
                                 if(asset.contactCode == ContactList[j].Code){
-                                    name += ContactList[j].FirstName + " " + ContactList[j].SurName;                     
+                                    name += ContactList[j].FirstName + " " + ContactList[j].SurName;
                                     break;
                                 }
-                            }             
+                            }
                         }
-                        ret.driver.value = name; 
-                    }              */          
-                    
-                    ret.GPS = {};  
+                        ret.driver.value = name;
+                    }              */
+
+                    ret.GPS = {};
                     ret.GPS.state = 'state-1';
                     ret.GSM = {};
-                    ret.GSM.state = 'state-1';  
+                    ret.GSM.state = 'state-1';
                     if(asset.posInfo.lat===0||asset.posInfo.lng===0||dateTimeSecond > 40 * 60 * 1000){
                         ret.GPS.state = 'state-0';
-                    } 
+                    }
                     if(dateTimeSecond > 5 * 60 * 60 * 1000){
                         ret.GSM.state = 'state-0';
-                    }                
+                    }
                     ret.status = {};
                     if(parseInt(asset.posInfo.speed) > 0){
                         ret.status.value = LANGUAGE.ASSET_STATUS_MSG05;
                         ret.status.state = 'state-1';
-                        ret.GSM.state = 'state-1';                    
+                        ret.GSM.state = 'state-1';
                     }
                     else if(parseInt(asset.posInfo.speed) === 0){
                         ret.status.value = LANGUAGE.ASSET_STATUS_MSG04;
                         ret.status.state = 'state-0';
-                        ret.GSM.state = 'state-1';                    
+                        ret.GSM.state = 'state-1';
                     }
 
                     if(dateTimeSecond > 72 * 60 * 60 * 1000){
-                        ret.GSM.state = 'state-3';               
+                        ret.GSM.state = 'state-3';
                     }
                     else if(dateTimeSecond > 24 * 60 * 60 * 1000){
-                        ret.GSM.state = 'state-2';                   
+                        ret.GSM.state = 'state-2';
                     }
-                    else if(dateTimeSecond > 12 * 60 * 60 * 1000){               
-                        ret.GSM.state = 'state-0';  
+                    else if(dateTimeSecond > 12 * 60 * 60 * 1000){
+                        ret.GSM.state = 'state-0';
                     }else{
-                        ret.GSM.state = 'state-1';              
+                        ret.GSM.state = 'state-1';
                     }
 
-                    if(dateTimeSecond > 48 * 60 * 60 * 1000){                                        
-                        ret.GPS.state = 'state-0';    
+                    if(dateTimeSecond > 48 * 60 * 60 * 1000){
+                        ret.GPS.state = 'state-0';
                     }
-                    else if(asset.haveFeature("Acc") && (Protocol.PositionStatus.ACC & asset.posInfo.status) === 0 && asset.posInfo.speed === 0) {                
+                    else if(asset.haveFeature("Acc") && (Protocol.PositionStatus.ACC & asset.posInfo.status) === 0 && asset.posInfo.speed === 0) {
                         ret.GPS.state = 'state-1';
                     }
-                    else if(asset.posInfo.speed > 0){               
+                    else if(asset.posInfo.speed > 0){
                         ret.GPS.state = 'state-1';
                     }else if(asset.posInfo.speed === 0){
                         ret.GPS.state = 'state-1';
                     }
-                    
-                }  
+
+                }
             }
-                
-   
+
+
             return ret;
         }
     }
@@ -614,13 +623,13 @@ Protocol.Common = JClass({
         this._FIELD_FLOAT2 = arg._FIELD_FLOAT2;
         this._FIELD_FLOAT3 = arg._FIELD_FLOAT3;
         this.initDeviceInfoEx(arg);*/
-                             
+
         this.Id = arg.Id;
         this.IMEI = arg.IMEI;
         this.Name = arg.Name;
         this.TagName = arg.TagName;
         this.Icon = arg.Icon;
-        this.Unit = arg.Unit; 
+        this.Unit = arg.Unit;
         this.InitMilage = arg.InitMilage;
         this.InitAcconHours = arg.InitAcconHours;
         this.State = arg.State;
@@ -638,8 +647,8 @@ Protocol.Common = JClass({
         this._FIELD_FLOAT2 = arg._FIELD_FLOAT2;
         this._FIELD_FLOAT7 = arg._FIELD_FLOAT7;
         this.AlarmOptions = arg.AlarmOptions;
-               
-    
+
+
     },
     initDeviceInfoEx:function(){},
     initPosInfo: function (ary) {
@@ -686,7 +695,7 @@ Protocol.Common = JClass({
         posInfo.originalStatus = ary[22];
         this.initPosInfoEx(ary, posInfo);
         this.posInfo = posInfo;
-        
+
         return posInfo;
     },
     initPosInfoEx:function(){},
@@ -753,8 +762,8 @@ Protocol.Common = JClass({
         return event;
     },
     initEventInfoEx: function(){},
-    haveFeature: function(feature){        
-        return (Protocol.ProductFeatures[feature] & this.PRDTFeatures) > 0;        
+    haveFeature: function(feature){
+        return (Protocol.ProductFeatures[feature] & this.PRDTFeatures) > 0;
     }
 });
 Protocol.ClassManager = {

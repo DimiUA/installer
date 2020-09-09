@@ -40,6 +40,7 @@ window.LanguagePackages= {
 		"COM_MSG37": "Error",
 		"COM_MSG38": "Turn ON",
 		"COM_MSG39": "Turn OFF",
+		"COM_MSG40": "Deactivate",
 
 		"PROMPT_MSG001": "In this section, you can find the device by <b>IMEI</b>, <b>IMSI</b>, or <b>Name</b>. Select a specific tab and start the search.",
 		"PROMPT_MSG002": "Buy more credits to send commands to the devices",
@@ -75,6 +76,10 @@ window.LanguagePackages= {
 		"PROMPT_MSG032": "Please, fill in field",
 		"PROMPT_MSG033": "Validation",
 		"PROMPT_MSG034": "An issue has been detected, please try again later or contact our support team",
+		"PROMPT_MSG035": "You are going to deactivate device",
+		"PROMPT_MSG036": "Please, confirm it",
+		"PROMPT_MSG037": "Device will be deactivated",
+		"PROMPT_MSG038": "Access restricted",
 
 		"LOGIN_MSG01": "The login(email) or password you entered is incorrect.",
 		"LOGIN_MSG02": "Username / Email",
@@ -98,6 +103,7 @@ window.LanguagePackages= {
 		"HOME_MSG09": "Activation",
 		"HOME_MSG10": "Customer",
 		"HOME_MSG11": "Replace SIM",
+		"HOME_MSG12": "Deactivation",
 		"USER_PROFILE_MSG01": "First Name",
 		"USER_PROFILE_MSG02": "Last Name",
 		"USER_PROFILE_MSG03": "E-mail",
