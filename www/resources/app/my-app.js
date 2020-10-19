@@ -924,7 +924,7 @@ App.onPageInit('user.password', function (page) {
                         encodeURIComponent(password.old),
                         encodeURIComponent(password.new)
                     );
-                console.log(url);
+                //console.log(url);
                 App.showPreloader();
                 JSON1.request(url, function(result){
                         console.log(result);
@@ -1483,6 +1483,7 @@ App.onPageInit('customer.settings', function(page){
           function(result){
               console.log(result);
               if(result.MajorCode == '000') {
+                  mainView.router.back();
               }else{
                   App.alert(LANGUAGE.PROMPT_MSG013);
               }
