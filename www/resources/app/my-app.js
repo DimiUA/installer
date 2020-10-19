@@ -272,14 +272,16 @@ var mainView = App.addView('.view-main', {
 });
 
 var API_DOMIAN1 = "https://api.m2mglobaltech.com/Installer/V1/";
-var API_DOMIAN2 = "http://quiktrak.co/webapp/QuikProtect.Api2/";
+var API_DOMIAN2 = "https://quiktrak.co/webapp/QuikProtect.Api2/";
 var API_DOMIAN3 = "https://api.m2mglobaltech.com/QuikTrak/V1/";
 var API_DOMIAN4 = "https://api.m2mglobaltech.com/QuikProtect/V1/Client/";
 var API_DOMIAN5 = "https://m2mdata.co/api/Service/";
-var API_DOMIAN6 = "http://api.m2mglobaltech.com/Common/V1/Activation/";
-
+var API_DOMIAN6 = "https://api.m2mglobaltech.com/Common/V1/Activation/";
+var API_DOMIAN7 = "https://api.m2mglobaltech.com/";
+//https://api.m2mglobaltech.com/quikdata/V1/XXXX
 var API_DOMIAN9 = "https://upload.quiktrak.co/";
-
+//https://api.m2mglobaltech.com/QuikProtect/V1/Client/
+//  AccountEdit
 var API_URL = {};
 //API_URL.URL_GET_LOGIN = API_DOMIAN1 + "Client/Login";
 API_URL.URL_GET_LOGIN = API_DOMIAN1 + "Client/Login2";
@@ -288,6 +290,7 @@ API_URL.URL_GET_ASSET_LIST = API_DOMIAN1 + "Client/GetAssetList";
 API_URL.URL_GET_CREDIT = API_DOMIAN1 + "Client/GetCredit";
 API_URL.URL_GET_DEVICE_DETAIL = API_DOMIAN1 + "Client/GetAssetDetail";
 API_URL.URL_CHANGE_NOTIFICATION_STATUS = API_DOMIAN1 + "Client/Notification";
+API_URL.URL_GET_CUSTOMER_DETAIL = API_DOMIAN1 + "Client/GetCustomerInfoByIMEI?code={0}&imei={1}";
 
 API_URL.URL_GET_PROTECT_POSITION = API_DOMIAN1 + "Client/ProtectPostion2";
 API_URL.URL_GET_STATUS = API_DOMIAN1 + "Client/Status2";
@@ -301,18 +304,21 @@ API_URL.URL_SENT_NOTIFY = API_DOMIAN1 + "Client/SentNotify";
 API_URL.URL_EDIT_DEVICE = API_DOMIAN1 + "Client/EditAsset";
 API_URL.URL_GET_DEVICE_SETTINGS = API_DOMIAN1 + "Client/Config";
 API_URL.URL_PHOTO_UPLOAD = API_DOMIAN9 + "image/Upload";
-
+API_URL.URL_FORCE_RECONNECT = API_DOMIAN7 + "quikdata/v1/sms/UpdateLocByimei?code={0}&imei={1}";
+API_URL.URL_EDIT_CUSTOMER_ACCOUNT = API_DOMIAN7 + "QuikProtect/V1/Client/AccountEdit?MajorToken={0}&MinorToken={1}&FirstName={2}&SurName={3}&Mobile={4}&Email={5}&Address0={6}&Address1={7}&Address2={8}&Address3={9}&Address4={10}&TimeZone={11}";
 
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN3 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
 API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN3 +"Device/Alarms?MinorToken={0}&deviceToken={1}";
 
-API_URL.URL_ACTIVATION = "http://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}&DealerName={3}";
-API_URL.URL_REPLACE_IMEI = "http://app.quikprotect.co/activation2/upgrade?DealerToken={0}&imeis={1}";
+API_URL.URL_ACTIVATION = "https://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}&DealerName={3}";
+API_URL.URL_REPLACE_IMEI = "https://app.quikprotect.co/activation2/upgrade?DealerToken={0}&imeis={1}";
+API_URL.URL_SUPPORT = "https://support.quiktrak.eu/?service={0}&name={1}&phone={2}&accountName={3}&email={4}&imei={5}&assetName={6}";
+//?service=3&name=Simon&loginName=demoadmin&phone=447914631978
 API_URL.URL_REPLACE_IMSI = API_DOMIAN6 + "ReplaceSim";
 API_URL.URL_DEACTIVATE = API_DOMIAN6 + "DeActivate";
 //API_URL.URL_GET_DETAILS_BY_VIN = "http://ss.sinopacific.com.ua/vin/v1/{0}";
-API_URL.URL_GET_DETAILS_BY_VIN = "http://ss.sinopacific.com.ua/vin/v1/";
+API_URL.URL_GET_DETAILS_BY_VIN = "https://ss.sinopacific.com.ua/vin/v1/";
 
 API_URL.URL_GET_COMMAND_HISTORY = API_DOMIAN1 + "Client/GetCommandHisMessages";
 API_URL.URL_GET_SIM_INFO = API_DOMIAN5 + "GetSimInfo";
@@ -321,7 +327,7 @@ API_URL.URL_GET_SIM_LIST = API_DOMIAN5 + "GetDeviceList";
 API_URL.URL_REFRESH_TOKEN = API_DOMIAN3 + "User/RefreshToken";
 
 //http://api.m2mglobaltech.com/Common/V1/Activation/ReplaceSim?IMEI=1&SIM==2&APN=3&minortoken=5
-
+//https://api.m2mglobaltech.com/Installer/V1/Client/GetCustomerInfoByIMEI?imei
 
 var html = Template7.templates.template_Login_Screen();
 $$(document.body).append(html);
@@ -615,7 +621,7 @@ $$('body').on('click', '.assetList .item-inner', function () {
       '</div>'+
       '</div>';*/
 
-    var assetDetSimStat =  `<div class="row" >
+    var assetDetCustomerDet =  `<div class="row" >
                         <div class="action_button_wrapper col-50 buttonAssetDetails">
                           <div class="action_button_block action_button_media">
                             <i class="f7-icons icon-other-service-details color-blue "></i>
@@ -624,12 +630,31 @@ $$('body').on('click', '.assetList .item-inner', function () {
                               ${LANGUAGE.HOME_MSG04}
                           </div>
                         </div>
+                        <div class="action_button_wrapper col-50 buttonCustomerDetails">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-sim-info-customer color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.ASSET_SETTINGS_MSG07}
+                          </div>
+                        </div>
+                    </div>`;
+
+    var simStatForceRec =  `<div class="row" >                        
                         <div class="action_button_wrapper col-50 buttonSimStatus">
                           <div class="action_button_block action_button_media">
                             <i class="f7-icons icon-other-info color-blue "></i>
                           </div>
                           <div class="action_button_block action_button_text">
                               ${LANGUAGE.ASSET_SIM_INFO_MSG00}
+                          </div>
+                        </div>
+                        <div class="action_button_wrapper col-50 buttonForceReconnect">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-reconnect color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.ASSET_SETTINGS_MSG59}
                           </div>
                         </div>
                     </div>`;
@@ -691,7 +716,7 @@ $$('body').on('click', '.assetList .item-inner', function () {
                         </div>
                     </div>`;
 
-    var notification =  '<div class="action_button_wrapper">'+
+    /*var notification =  '<div class="action_button_wrapper">'+
                             '<div class="action_button_block action_button_media">'+
                                 '<i class="f7-icons icon-header-notification color-blue "></i>'+
                             '</div>'+
@@ -702,7 +727,28 @@ $$('body').on('click', '.assetList .item-inner', function () {
                                 '<input type="checkbox" name="checkbox-alarm" '+notificationsCheck+'>'+
                                 '<div class="checkbox"></div>'+
                             '</span>'+
-                        '</div>';
+                        '</div>';*/
+    var notificationSupport =  `<div class="row" >
+            <div class="action_button_wrapper col-50 buttonNotifications">
+              <div class="action_button_block action_button_media">
+                <i class="f7-icons icon-header-notification color-blue "></i>
+              </div>
+              <div class="action_button_block action_button_text">      
+                  <span class="label-switch actionButton-label" style="margin-left: 3px">
+                    <input type="checkbox" name="checkbox-alarm" ${notificationsCheck}>
+                    <div class="checkbox"></div>
+                  </span>         
+              </div>              
+            </div>
+            <div class="action_button_wrapper col-50 buttonSupport">
+              <div class="action_button_block action_button_media">
+                <i class="f7-icons icon-other-info color-blue "></i>
+              </div>
+              <div class="action_button_block action_button_text">
+                  ${LANGUAGE.HOME_MSG13}
+              </div>
+            </div>
+          </div>`;
 
     var buttons = [
         {
@@ -712,13 +758,26 @@ $$('body').on('click', '.assetList .item-inner', function () {
         },
 
         {
-            text: assetDetSimStat,
+            text: assetDetCustomerDet,
             onClick: function (actionSheet, e) {
                 let targetEl = $$(e.target).closest('.action_button_wrapper');
                 if(targetEl.hasClass('buttonAssetDetails')){
                     loadPageSettings();
-                }else if(targetEl.hasClass('buttonSimStatus')){
-                    loadSimInfo()
+                }else if(targetEl.hasClass('buttonCustomerDetails')){
+                    loadPageCustomer();
+                    //loadSimInfo()
+                }
+            },
+        },
+        {
+            text: simStatForceRec,
+            onClick: function (actionSheet, e) {
+                let targetEl = $$(e.target).closest('.action_button_wrapper');
+                if(targetEl.hasClass('buttonSimStatus')){
+                    loadSimInfo();
+                }else if(targetEl.hasClass('buttonForceReconnect')){
+                    sendForceReconnect();
+                    //loadSimInfo()
                 }
             },
         },
@@ -765,11 +824,24 @@ $$('body').on('click', '.assetList .item-inner', function () {
             },
         },
         {
+            text: notificationSupport,
+            onClick: function (actionSheet, e) {
+                let targetEl = $$(e.target).closest('.action_button_wrapper');
+                if(targetEl.hasClass('buttonNotifications')){
+                    changeAssetNotificationState(parrent);
+                    //loadPageUpgrade();
+                }else if(targetEl.hasClass('buttonSupport')){
+                    goForSupport()
+                    //loadSimReplace();
+                }
+            },
+        },
+        /*{
             text: notification,
             onClick: function () {
                 changeAssetNotificationState(parrent);
             },
-        }
+        }*/
     ];
 
     App.actions(buttons);
@@ -1386,8 +1458,43 @@ App.onPageInit('asset.sim.replace', function(page){
     });
 });
 
-App.onPageInit('asset.settings', function(page){
+
+App.onPageInit('customer.settings', function(page){
     var sendSetting = $$(page.container).find('.sendSetting');
+
+    sendSetting.on('click', function () {
+        var url = API_URL.URL_EDIT_CUSTOMER_ACCOUNT.format(
+          encodeURIComponent($$(page.container).find('[name="MajorToken"]').val()),
+          encodeURIComponent($$(page.container).find('[name="MinorToken"]').val()),
+          encodeURIComponent($$(page.container).find('[name="FirstName"]').val()),
+          encodeURIComponent($$(page.container).find('[name="LastName"]').val()),
+          encodeURIComponent($$(page.container).find('[name="Mobile"]').val()),
+          encodeURIComponent($$(page.container).find('[name="Email"]').val()),
+          encodeURIComponent($$(page.container).find('[name="Address0"]').val()),
+          encodeURIComponent($$(page.container).find('[name="Address1"]').val()),
+          encodeURIComponent($$(page.container).find('[name="Address2"]').val()),
+          encodeURIComponent($$(page.container).find('[name="Address3"]').val()),
+          encodeURIComponent($$(page.container).find('[name="Address4"]').val()),
+          encodeURIComponent($$(page.container).find('[name="TimeZone"]').val())
+        )
+        console.log(url)
+        App.showPreloader();
+        JSON1.request(url,
+          function(result){
+              console.log(result);
+              if(result.MajorCode == '000') {
+              }else{
+                  App.alert(LANGUAGE.PROMPT_MSG013);
+              }
+              App.hidePreloader();
+          },
+          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        );
+    })
+    //
+});
+App.onPageInit('asset.settings', function(page){
+
     //var showBlockControll = $$(page.container).find('.showBlockControll');
 
     var fitmentOptSelect = $$(page.container).find('[name="FitmentOpt"]');
@@ -2091,13 +2198,22 @@ function loadRechargeCreditPage(){
         'currency' : 'AUD'
     };*/
 
-    var buttons = {
+    /*var buttons = {
         'button100' : 'CZ3NVD89LSBBW',
         'button500' : 'EKWPMLLMKUTV8',
         'button1000' : '9R2RY5C5GDFY8',
         'currency' : 'USD'
+    };*/
+    var buttons = {
+        'button100' : 'UCC4Y44AJE76Y',
+        'button500' : 'JSBWFD3AGHER2',
+        'button1000' : 'EZZ22Z5F67K98',
+        'currency' : 'USD'
     };
 
+    //https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UCC4Y44AJE76Y
+//https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JSBWFD3AGHER2
+    //https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EZZ22Z5F67K98
 
     /*var button100  = 'MAA5PL592FVTY';
     var button500  = 'U6NVCJVTPUTV2';
@@ -2370,6 +2486,66 @@ function loadSimReplace() {
     });
 }
 
+function getCustomerDetails(params) {
+    var url = API_URL.URL_GET_CUSTOMER_DETAIL.format(getUserinfo().code, TargetAsset.IMEI )
+    App.showPreloader();
+    JSON1.request(url,
+      function(result){
+          console.log(result);
+          if(result.MajorCode == '000') {
+              if (params.callback instanceof Function){
+                  params.callback(result.Data)
+              }
+          }else{
+              App.alert(LANGUAGE.PROMPT_MSG013);
+          }
+          App.hidePreloader();
+      },
+      function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+    );
+}
+
+function loadPageCustomer() {
+
+    getCustomerDetails({
+        data: {
+            code: getUserinfo().code,
+            imei: TargetAsset.IMEI,
+        },
+        callback: function(params){
+            var TimeZoneList = Protocol.Helper.getTimezoneList();
+            var TimeZoneSelectedText = TimeZoneList[TimeZoneList.findIndex( el => el.Value == params.timeZone)].Name;
+            var CountryList = Protocol.Helper.getCountrys();
+            var CountryListSelectedText = CountryList[CountryList.findIndex( el => el.CountryCode == params.CountryCode)].Country;
+
+            mainView.router.load({
+                url: 'resources/templates/customer.settings.html',
+                context: {
+                    Address0: params.Address0,
+                    Address1: params.Address1,
+                    Address2: params.Address2,
+                    Address3: params.Address3,
+                    Address4: params.Address4,
+                    CountryCode: params.CountryCode,
+                    CustomerName: params.customerName,
+                    Email: params.email,
+                    FirstName: params.firstName,
+                    LastName: params.lastName,
+                    Mobile: params.mobile,
+                    Phone: params.phone,
+                    TimeZone: params.timeZone,
+                    code: params.code,
+                    userCode: params.userCode,
+
+                    TimeZoneList: TimeZoneList,
+                    TimeZoneSelectedText: TimeZoneSelectedText,
+                    CountryList: CountryList,
+                    CountryListSelectedText: CountryListSelectedText,
+                }
+            });
+        }
+    })
+}
 
 function loadPageSettings(){
     var today = new Date();
@@ -2496,7 +2672,58 @@ function loadPageVerification(data, additionalParams){
 }
 
 
+function sendForceReconnect() {
+    var url = API_URL.URL_FORCE_RECONNECT.format(getUserinfo().code, TargetAsset.IMEI )
+    App.showPreloader();
+    JSON1.request(url,
+      function(result){
+          console.log(result);
+          if(result.MajorCode == '000') {
+              App.addNotification({
+                  hold: 3000,
+                  message: LANGUAGE.COM_MSG03
+              });
+          }else{
+              App.alert(LANGUAGE.PROMPT_MSG013+'<br>'+JSON.stringify(result.Data));
+          }
+          App.hidePreloader();
+      },
+      function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+    );
+}
 
+function goForSupport() {
+    /*var href = API_URL.URL_SUPPORT;
+    if (typeof navigator !== "undefined" && navigator.app) {
+        navigator.app.loadUrl(href, { openExternal: true });
+    } else {
+        window.open(href, '_blank');
+    }*/
+    getCustomerDetails({
+        data: {
+            code: getUserinfo().code,
+            imei: TargetAsset.IMEI,
+        },
+        callback: function (params) {
+            //?service={0}&name={1}&phone={2}&accountName={3}&email={4}&imei={5}";
+            var href = API_URL.URL_SUPPORT.format(
+              3,
+              params.firstName + ' ' + params.lastName,
+              params.mobile ? params.mobile : (params.phone) ? params.phone : '',
+              params.customerName,
+              params.email,
+              TargetAsset.IMEI,
+              TargetAsset.Name
+            );
+
+            if (typeof navigator !== "undefined" && navigator.app) {
+                navigator.app.loadUrl(href, { openExternal: true });
+            } else {
+                window.open(href, '_blank');
+            }
+        }
+    })
+}
 
 function loadPagePosition(data){
     var deirectionCardinal = '';

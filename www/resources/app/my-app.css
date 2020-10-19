@@ -1294,3 +1294,14 @@ select{
 	max-height: 80%;
 	overflow: auto;
 }
+
+.list-block.media-list .smart-select .item-after{
+	max-width: 100%;
+	padding-left: 0;
+	margin-bottom: 4px;
+	min-height: 36px;
+	font-size: 16px;
+}
+.smart-select-page .list-block .item-content .item-inner .item-title{
+	white-space: initial;
+}

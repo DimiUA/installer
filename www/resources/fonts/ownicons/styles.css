@@ -194,3 +194,6 @@
 .icon-deactivation:before {
   content: "\59";
 }
+.icon-reconnect:before {
+  content: "\30";
+}
