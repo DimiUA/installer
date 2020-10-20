@@ -305,7 +305,7 @@ API_URL.URL_EDIT_DEVICE = API_DOMIAN1 + "Client/EditAsset";
 API_URL.URL_GET_DEVICE_SETTINGS = API_DOMIAN1 + "Client/Config";
 API_URL.URL_PHOTO_UPLOAD = API_DOMIAN9 + "image/Upload";
 API_URL.URL_FORCE_RECONNECT = API_DOMIAN7 + "quikdata/v1/sms/UpdateLocByimei?code={0}&imei={1}";
-API_URL.URL_EDIT_CUSTOMER_ACCOUNT = API_DOMIAN7 + "QuikProtect/V1/Client/AccountEdit?MajorToken={0}&MinorToken={1}&FirstName={2}&SurName={3}&Mobile={4}&Email={5}&Address0={6}&Address1={7}&Address2={8}&Address3={9}&Address4={10}&TimeZone={11}";
+API_URL.URL_EDIT_CUSTOMER_ACCOUNT = API_DOMIAN7 + "QuikProtect/V1/Client/AccountEdit?MajorToken={0}&MinorToken={1}&FirstName={2}&SurName={3}&Mobile={4}&Email={5}&Address0={6}&Address1={7}&Address2={8}&Address3={9}&Address4={10}&TimeZone={11}&countryCode={12}&accountName={13}";
 
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN3 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
@@ -1475,7 +1475,9 @@ App.onPageInit('customer.settings', function(page){
           encodeURIComponent($$(page.container).find('[name="Address2"]').val()),
           encodeURIComponent($$(page.container).find('[name="Address3"]').val()),
           encodeURIComponent($$(page.container).find('[name="Address4"]').val()),
-          encodeURIComponent($$(page.container).find('[name="TimeZone"]').val())
+          encodeURIComponent($$(page.container).find('[name="TimeZone"]').val()),
+          encodeURIComponent($$(page.container).find('[name="CountryCode"]').val()),
+          encodeURIComponent($$(page.container).find('[name="CustomerName"]').val())
         )
         console.log(url)
         App.showPreloader();
@@ -1484,8 +1486,10 @@ App.onPageInit('customer.settings', function(page){
               console.log(result);
               if(result.MajorCode == '000') {
                   mainView.router.back();
+              }else if(result.MajorCode === '100' && result.MinorCode === '1002'){
+                  App.alert(LANGUAGE.PROMPT_MSG039);
               }else{
-                  App.alert(LANGUAGE.PROMPT_MSG013);
+                  App.alert(LANGUAGE.PROMPT_MSG034);
               }
               App.hidePreloader();
           },

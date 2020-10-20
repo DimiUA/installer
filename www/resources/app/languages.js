@@ -80,6 +80,7 @@ window.LanguagePackages= {
 		"PROMPT_MSG036": "Please, confirm it",
 		"PROMPT_MSG037": "Device will be deactivated",
 		"PROMPT_MSG038": "Access restricted",
+		"PROMPT_MSG039": "Email address incorrect or already in use",
 
 		"LOGIN_MSG01": "The login(email) or password you entered is incorrect.",
 		"LOGIN_MSG02": "Username / Email",

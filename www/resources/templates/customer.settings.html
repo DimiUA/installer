@@ -17,7 +17,7 @@
     <div class="content-block-title border_top showBlockControll ripple">{{@global.LANGUAGE.ASSET_SETTINGS_MSG64}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>
     <div class="list-block media-list no-hairlines-between no-hairlines sliding active">
         <ul >
-            <li class="item-content disabled">
+            <li class="item-content">
                 <div class="item-media"> <i class="f7-icons icon-sim-info-customer"></i></div>
                 <div class="item-inner">
                     <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG08}}</div>
@@ -77,8 +77,8 @@
     <div class="content-block-title border_top showBlockControll ripple">{{@global.LANGUAGE.ASSET_SETTINGS_MSG60}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>
       <div class="list-block media-list no-hairlines-between no-hairlines sliding active">
           <ul >
-              <!--<li>
-                  <a href="#" class="item-link smart-select " data-searchbar="true">
+              <li>
+                  <a href="#" class="item-link smart-select " data-searchbar="true" data-back-on-select="true">
                       <select name="CountryCode">
                           {{#each CountryList}}
                           <option value="{{CountryCode}}">{{Country}}</option>
@@ -92,9 +92,9 @@
                           </div>
                       </div>
                   </a>
-              </li>-->
+              </li>
               <li class="item-content  ">
-                  <div class="item-media"><i class="f7-icons icon-status-pin"></i></div>
+                  <div class="item-media"><!--<i class="f7-icons icon-status-pin"></i>--></div>
                   <div class="item-inner">
                       <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG14}}</div>
                       <div class="item-input">
