@@ -197,3 +197,6 @@
 .icon-reconnect:before {
   content: "\30";
 }
+.icon-support:before {
+  content: "\31";
+}

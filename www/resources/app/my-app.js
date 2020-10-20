@@ -742,7 +742,7 @@ $$('body').on('click', '.assetList .item-inner', function () {
             </div>
             <div class="action_button_wrapper col-50 buttonSupport">
               <div class="action_button_block action_button_media">
-                <i class="f7-icons icon-other-info color-blue "></i>
+                <i class="f7-icons icon-support color-blue "></i>
               </div>
               <div class="action_button_block action_button_text">
                   ${LANGUAGE.HOME_MSG13}
