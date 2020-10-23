@@ -1501,6 +1501,7 @@ App.onPageInit('customer.settings', function(page){
 App.onPageInit('asset.settings', function(page){
 
     //var showBlockControll = $$(page.container).find('.showBlockControll');
+    var sendSetting = $$('body').find('.sendAssetSetting');
 
     var fitmentOptSelect = $$(page.container).find('[name="FitmentOpt"]');
     var fitmentOptSelectSet = fitmentOptSelect.data("set");
@@ -2245,7 +2246,7 @@ function loadRechargeCreditPage(){
         context:{
             userCode: MinorToken,
             dealerNumber: 21,    // 2 - means GPS Secure Agent
-            other: 'GPS-Secure-Agent-app',
+            other: 'GPS-Installer-app',
             button100: buttons.button100,
             button500: buttons.button500,
             button1000: buttons.button1000,
