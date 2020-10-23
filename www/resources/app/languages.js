@@ -41,6 +41,7 @@ window.LanguagePackages= {
 		"COM_MSG38": "Turn ON",
 		"COM_MSG39": "Turn OFF",
 		"COM_MSG40": "Deactivate",
+		"COM_MSG41": "Loc8",
 
 		"PROMPT_MSG001": "In this section, you can find the device by <b>IMEI</b>, <b>IMSI</b>, or <b>Name</b>. Select a specific tab and start the search.",
 		"PROMPT_MSG002": "Buy more credits to send commands to the devices",

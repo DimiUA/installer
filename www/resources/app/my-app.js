@@ -311,7 +311,7 @@ API_URL.URL_EDIT_ACCOUNT = API_DOMIAN3 + "User/Edit?MajorToken={0}&MinorToken={1
 API_URL.URL_RESET_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
 API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN3 +"Device/Alarms?MinorToken={0}&deviceToken={1}";
 
-API_URL.URL_ACTIVATION = "https://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}&DealerName={3}";
+API_URL.URL_ACTIVATION = "https://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}&DealerName={3}&SolutionType={4}";
 API_URL.URL_REPLACE_IMEI = "https://app.quikprotect.co/activation2/upgrade?DealerToken={0}&imeis={1}";
 API_URL.URL_SUPPORT = "https://support.quiktrak.eu/?service={0}&name={1}&phone={2}&accountName={3}&email={4}&imei={5}&assetName={6}";
 //?service=3&name=Simon&loginName=demoadmin&phone=447914631978
@@ -2384,15 +2384,25 @@ function showActivationModal(){
     App.modal({
         title: '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="resources/images/logo-dark.png" alt=""/></div>',
         text: LANGUAGE.PROMPT_MSG025,
-        //verticalButtons: true,
+        verticalButtons: true,
         buttons: [
             {
                 text: LANGUAGE.COM_MSG32, // protect
                 onClick: function() {
                     //if (permissions && permissions.ActProtect) {
-                        loadPageActivation('0000000000000'); // protect plam
+                        loadPageActivation('0000000000000', 'Protect'); // protect plam
                     /*}else{
                         showNoActPermissionModal(LANGUAGE.COM_MSG32);
+                    }*/
+                }
+            },
+            {
+                text: LANGUAGE.COM_MSG41,  // loc8
+                onClick: function() {
+                    //if (permissions && permissions.ActLive) {
+                    loadPageActivation('4Y6Z8YPFC8P4Y', 'Loc8'); //annual live track plan
+                    /*}else{
+                        showNoActPermissionModal(LANGUAGE.COM_MSG33);
                     }*/
                 }
             },
@@ -2400,19 +2410,20 @@ function showActivationModal(){
                 text: LANGUAGE.COM_MSG33,  // live
                 onClick: function() {
                     //if (permissions && permissions.ActLive) {
-                        loadPageActivation('1C783FA4TRAK'); //annual live track plan
+                        loadPageActivation('5f87b4fc-d25b-4', 'Track'); //annual live track plan
                     /*}else{
                         showNoActPermissionModal(LANGUAGE.COM_MSG33);
                     }*/
                 }
             },
-           /* {
+
+            {
 
                 text: '<span class="color-red">' + LANGUAGE.COM_MSG04 + '</span>',  // live
                 onClick: function() {
 
                 }
-            },     */
+            },
         ]
     });
 }
@@ -2469,10 +2480,10 @@ function deactivateDevice(imei) {
     }
 }
 
-function loadPageActivation(planCode){
+function loadPageActivation(planCode, solutionType){
     var userInfo = getUserinfo();
-    var href = API_URL.URL_ACTIVATION.format( TargetAsset.IMEI, planCode, userInfo.code, encodeURIComponent(userInfo.customerName) );
-    //"http://app.quikprotect.co/activation2/?imei={0}&ServiceProfile={1}&DealerToken={2}"
+    var href = API_URL.URL_ACTIVATION.format( TargetAsset.IMEI, planCode, userInfo.code, encodeURIComponent(userInfo.customerName), solutionType );
+
     if (typeof navigator !== "undefined" && navigator.app) {
             //plus.runtime.openURL(href);
             navigator.app.loadUrl(href, {openExternal: true});
