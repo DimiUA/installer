@@ -92,6 +92,13 @@ select{
 .pr-0{
 	padding-right: 0!important;
 }
+.pv-8{
+	padding-left: 8px;
+	padding-right: 8px;
+}
+.font-size-14{
+	font-size: 14px;
+}
 .bg-color-page{
 	/* background-color: #333; */
 }

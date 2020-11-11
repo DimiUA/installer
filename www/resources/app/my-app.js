@@ -323,6 +323,8 @@ API_URL.URL_GET_DETAILS_BY_VIN = "https://ss.sinopacific.com.ua/vin/v1/";
 API_URL.URL_GET_COMMAND_HISTORY = API_DOMIAN1 + "Client/GetCommandHisMessages";
 API_URL.URL_GET_SIM_INFO = API_DOMIAN5 + "GetSimInfo";
 API_URL.URL_GET_SIM_LIST = API_DOMIAN5 + "GetDeviceList";
+API_URL.URL_SIM_SUSPEND = API_DOMIAN5 + "Suspend?MajorToken={0}&imsi={1}";
+API_URL.URL_SIM_RESUME = API_DOMIAN5 + "Resume?MajorToken={0}&imsi={1}";
 
 API_URL.URL_REFRESH_TOKEN = API_DOMIAN3 + "User/RefreshToken";
 
@@ -1952,6 +1954,64 @@ App.onPageInit('edit.photo', function (page) {
     });
 });
 
+App.onPageInit('asset.sim.info', function(page){
+
+    var container =  $$(page.container).find('.page-content');
+
+    $$(container).on('click', '.activateSim', function() {
+
+        var url = API_URL.URL_SIM_RESUME.format(
+          encodeURIComponent(getUserinfo().code),
+          encodeURIComponent(TargetAsset.IMSI),
+        )
+        App.showPreloader();
+        JSON1.request(url, function(result){
+              console.log(result);
+              App.hidePreloader();
+              if(result.MajorCode == '000') {
+                  App.addNotification({
+                      hold: 3000,
+                      message: LANGUAGE.COM_MSG03
+                  });
+                  loadSimInfo()
+              }else if(result.Data){
+                  App.alert(typeof(result.Data) === 'string' ? result.Data : JSON.stringify(result.Data) );
+              }else{
+                  App.alert(LANGUAGE.PROMPT_MSG013);
+              }
+          },
+          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        );
+    });
+
+    $$(container).on('click', '.suspendSim', function() {
+        var url = API_URL.URL_SIM_SUSPEND.format(
+          encodeURIComponent(getUserinfo().code),
+          encodeURIComponent(TargetAsset.IMSI),
+        )
+        App.showPreloader();
+        JSON1.request(url, function(result){
+              console.log(result);
+              App.hidePreloader();
+              if(result.MajorCode == '000') {
+                  App.addNotification({
+                      hold: 3000,
+                      message: LANGUAGE.COM_MSG03
+                  });
+                  loadSimInfo()
+              }else if(result.Data){
+                  App.alert(typeof(result.Data) === 'string' ? result.Data : JSON.stringify(result.Data) );
+              }else{
+                  App.alert(LANGUAGE.PROMPT_MSG013);
+              }
+
+          },
+          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        );
+    });
+
+});
+
 function clearUserInfo(){
 
     var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
@@ -2953,9 +3013,18 @@ function getAdditionalSimInfo(params){
 
 function loadSimInfoPage(params){
     /*params.Imei = TargetAsset.IMEI;*/
+
+    params.Permissions = Protocol.Helper.getPermissions(getUserinfo().Permissions);
+    //console.log(mainView);
+    //console.log(mainView.activePage.name);
+    let reload = false;
+    if(mainView.history && mainView.history.length && mainView.history[mainView.history.length -1 ].includes('asset.sim.info') ){
+        reload = true
+    }
     mainView.router.load({
         url:'resources/templates/asset.sim.info.html',
-        context: params
+        context: params,
+        reload: reload,
     });
 }
 

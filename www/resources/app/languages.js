@@ -154,6 +154,8 @@ window.LanguagePackages= {
 		"ASSET_SIM_INFO_MSG08": "State",
 		"ASSET_SIM_INFO_MSG09": "APN",
 		"ASSET_SIM_INFO_MSG10": "New IMSI / ICCID",
+		"ASSET_SIM_INFO_MSG11": "Activate Sim",
+		"ASSET_SIM_INFO_MSG12": "Suspend Sim",
 
 		"ASSET_SETTINGS_MSG00": "Asset Details",
 		"ASSET_SETTINGS_MSG01": "Fee",
