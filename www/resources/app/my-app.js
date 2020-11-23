@@ -325,9 +325,11 @@ API_URL.URL_GET_SIM_INFO = API_DOMIAN5 + "GetSimInfo";
 API_URL.URL_GET_SIM_LIST = API_DOMIAN5 + "GetDeviceList";
 API_URL.URL_SIM_SUSPEND = API_DOMIAN5 + "Suspend?MajorToken={0}&imsi={1}";
 API_URL.URL_SIM_RESUME = API_DOMIAN5 + "Resume?MajorToken={0}&imsi={1}";
+API_URL.URL_SIM_ACTIVATE = API_DOMIAN5 + "Activate?MajorToken={0}&imsi={1}";
 
 API_URL.URL_REFRESH_TOKEN = API_DOMIAN3 + "User/RefreshToken";
 
+//https://m2mdata.co/api/Service/Activate
 //http://api.m2mglobaltech.com/Common/V1/Activation/ReplaceSim?IMEI=1&SIM==2&APN=3&minortoken=5
 //https://api.m2mglobaltech.com/Installer/V1/Client/GetCustomerInfoByIMEI?imei
 
@@ -1960,6 +1962,32 @@ App.onPageInit('asset.sim.info', function(page){
 
     $$(container).on('click', '.activateSim', function() {
 
+        var url = API_URL.URL_SIM_ACTIVATE.format(
+          encodeURIComponent(getUserinfo().code),
+          encodeURIComponent(TargetAsset.IMSI),
+        )
+        App.showPreloader();
+        JSON1.request(url, function(result){
+              console.log(result);
+              App.hidePreloader();
+              if(result.MajorCode == '000') {
+                  App.addNotification({
+                      hold: 3000,
+                      message: LANGUAGE.COM_MSG03
+                  });
+                  loadSimInfo()
+              }else if(result.Data){
+                  App.alert(typeof(result.Data) === 'string' ? result.Data : JSON.stringify(result.Data) );
+              }else{
+                  App.alert(LANGUAGE.PROMPT_MSG013);
+              }
+          },
+          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        );
+    });
+
+    $$(container).on('click', '.resumeSim', function() {
+
         var url = API_URL.URL_SIM_RESUME.format(
           encodeURIComponent(getUserinfo().code),
           encodeURIComponent(TargetAsset.IMSI),
@@ -3015,6 +3043,9 @@ function loadSimInfoPage(params){
     /*params.Imei = TargetAsset.IMEI;*/
 
     params.Permissions = Protocol.Helper.getPermissions(getUserinfo().Permissions);
+
+
+    params.isStateSuspended = !!(params.State && params.State.toLowerCase() === 'suspended');
     //console.log(mainView);
     //console.log(mainView.activePage.name);
     let reload = false;
