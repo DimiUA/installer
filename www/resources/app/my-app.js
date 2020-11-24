@@ -386,6 +386,28 @@ if (inBrowser) {
         logout();
     }
 }
+$$('body').on('click', '.test', function(){
+    App.showPreloader();
+    JSON1.request('test.php', {asd:'aa'},function(result){
+          console.log(result);
+          /*if(result.MajorCode == '000') {
+              $$('.page-content').removeClass('first_login');
+              showAssetList(result.Data);
+              if (result.Data.length === 0) {
+                  App.addNotification({
+                      hold: 3000,
+                      message: LANGUAGE.PROMPT_MSG006
+                  });
+              }
+          }else{
+              App.alert(LANGUAGE.PROMPT_MSG013);
+          }*/
+          App.hidePreloader();
+      },
+      function(jqXHR, textStatus){ console.log(textStatus); App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); })
+})
+
+
 
 
 $$('.login-form').on('submit', function (e) {
@@ -887,7 +909,8 @@ App.onPageInit('user.profile', function (page) {
                 $$(page.container).find('input[name="Email"]').val()
         );
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.request(url, function(result){
                 console.log(result);
                 if (result.MajorCode == '000') {
@@ -905,9 +928,10 @@ App.onPageInit('user.profile', function (page) {
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
-                App.hidePreloader();
+                //App.hidePreloader();
+              hideProgressBar();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
     });
 });
@@ -929,7 +953,8 @@ App.onPageInit('user.password', function (page) {
                         encodeURIComponent(password.new)
                     );
                 //console.log(url);
-                App.showPreloader();
+                //App.showPreloader();
+                showProgressBar()
                 JSON1.request(url, function(result){
                         console.log(result);
                         if (result.MajorCode == '000') {
@@ -939,9 +964,10 @@ App.onPageInit('user.password', function (page) {
                         }else{
                             App.alert(LANGUAGE.PROMPT_MSG005);
                         }
-                        App.hidePreloader();
+                        //App.hidePreloader();
+                      hideProgressBar();
                     },
-                    function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+                    function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
                 );
             }else{
                 App.alert(LANGUAGE.COM_MSG14);  //Passwords do not match
@@ -1428,7 +1454,8 @@ App.onPageInit('asset.sim.replace', function(page){
 
         console.log(data);
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         $.ajax({
             type: "GET",
             url: API_URL.URL_REPLACE_IMSI,
@@ -1438,7 +1465,8 @@ App.onPageInit('asset.sim.replace', function(page){
             cache: false,
 
             success: function(result){
-                App.hidePreloader();
+                //App.hidePreloader();
+                hideProgressBar();
                 if(result && result.MajorCode === '000'){
                     localStorage.SimReplaceAPN = data.APN;
                     mainView.router.back();
@@ -1451,7 +1479,8 @@ App.onPageInit('asset.sim.replace', function(page){
             },
 
             error: function(XMLHttpRequest, textStatus, errorThrown){
-                App.hidePreloader();
+                //App.hidePreloader();
+                hideProgressBar();
                 console.log(XMLHttpRequest);
                 console.log(textStatus);
                 console.log(errorThrown);
@@ -1484,7 +1513,8 @@ App.onPageInit('customer.settings', function(page){
           encodeURIComponent($$(page.container).find('[name="CustomerName"]').val())
         )
         console.log(url)
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.request(url,
           function(result){
               console.log(result);
@@ -1495,9 +1525,10 @@ App.onPageInit('customer.settings', function(page){
               }else{
                   App.alert(LANGUAGE.PROMPT_MSG034);
               }
-              App.hidePreloader();
+              //App.hidePreloader();
+              hideProgressBar();
           },
-          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+          function(){hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
     })
     //
@@ -1678,7 +1709,8 @@ App.onPageInit('asset.settings', function(page){
         //data.Icon = 'IMEI_0000001700091735.png';
         console.log(data);
         //return;
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(API_URL.URL_EDIT_DEVICE,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
@@ -1688,9 +1720,10 @@ App.onPageInit('asset.settings', function(page){
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
-                App.hidePreloader();
+                //App.hidePreloader();
+              hideProgressBar();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
     });
 });
@@ -1848,9 +1881,11 @@ App.onPageInit('client.details', function (page) {
                 }
 
                 App.hidePreloader();
+              hideProgressBar();
             },
             function(jqXHR, textStatus){
                 App.hidePreloader();
+                hideProgressBar();
                 App.alert(LANGUAGE.COM_MSG02);
             }
         );
@@ -1966,10 +2001,12 @@ App.onPageInit('asset.sim.info', function(page){
           encodeURIComponent(getUserinfo().code),
           encodeURIComponent(TargetAsset.IMSI),
         )
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.request(url, function(result){
               console.log(result);
-              App.hidePreloader();
+              //App.hidePreloader();
+              hideProgressBar();
               if(result.MajorCode == '000') {
                   App.addNotification({
                       hold: 3000,
@@ -1982,7 +2019,7 @@ App.onPageInit('asset.sim.info', function(page){
                   App.alert(LANGUAGE.PROMPT_MSG013);
               }
           },
-          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+          function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
     });
 
@@ -1992,10 +2029,12 @@ App.onPageInit('asset.sim.info', function(page){
           encodeURIComponent(getUserinfo().code),
           encodeURIComponent(TargetAsset.IMSI),
         )
-        App.showPreloader();
+       // App.showPreloader();
+        showProgressBar()
         JSON1.request(url, function(result){
               console.log(result);
-              App.hidePreloader();
+              //App.hidePreloader();
+              hideProgressBar();
               if(result.MajorCode == '000') {
                   App.addNotification({
                       hold: 3000,
@@ -2008,7 +2047,7 @@ App.onPageInit('asset.sim.info', function(page){
                   App.alert(LANGUAGE.PROMPT_MSG013);
               }
           },
-          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+          function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
     });
 
@@ -2017,10 +2056,12 @@ App.onPageInit('asset.sim.info', function(page){
           encodeURIComponent(getUserinfo().code),
           encodeURIComponent(TargetAsset.IMSI),
         )
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.request(url, function(result){
               console.log(result);
-              App.hidePreloader();
+              //App.hidePreloader();
+              hideProgressBar();
               if(result.MajorCode == '000') {
                   App.addNotification({
                       hold: 3000,
@@ -2034,7 +2075,7 @@ App.onPageInit('asset.sim.info', function(page){
               }
 
           },
-          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+          function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
     });
 
@@ -2106,7 +2147,8 @@ function logout(){
 function preLogin(){
     hideKeyboard();
     //getPlusInfo();
-    App.showPreloader();
+    //App.showPreloader();
+    showProgressBar()
     if  (localStorage.PUSH_DEVICE_TOKEN){
         login();
     }else{
@@ -2180,9 +2222,10 @@ function login(){
                     App.alert(LANGUAGE.LOGIN_MSG01);
                     App.loginScreen();
                 }
-                App.hidePreloader();
+                //App.hidePreloader();
+              hideProgressBar();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); App.loginScreen();}
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); App.loginScreen();}
         );
 
 
@@ -2229,7 +2272,8 @@ function getCreditBalance(vsMsg){
         "MinorToken": userInfo.userCode
     };
     if (vsMsg) {
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
     }
     JSON1.requestPost(API_URL.URL_GET_CREDIT,data,function(result){
             console.log(result);
@@ -2240,11 +2284,12 @@ function getCreditBalance(vsMsg){
             }
             if (vsMsg) {
                 App.alert(LANGUAGE.COM_MSG21+': '+result.Data.Credit);
-                App.hidePreloader();
+                //App.hidePreloader();
+                hideProgressBar();
             }
 
         },
-        function(){ App.hidePreloader();}
+        function(){ hideProgressBar();}
     );
 }
 function updateUserCrefits(credits){
@@ -2401,7 +2446,8 @@ function submitSearchForm() {
 
 
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(API_URL.URL_GET_ASSET_LIST,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
@@ -2416,9 +2462,10 @@ function submitSearchForm() {
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
-                App.hidePreloader();
+              hideProgressBar()
+
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
 
     }else{
@@ -2427,6 +2474,17 @@ function submitSearchForm() {
             message: LANGUAGE.PROMPT_MSG008
         });
     }
+}
+
+function showProgressBar(){
+    var container = $$('body');
+    if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+    App.showProgressbar(container);
+}
+function hideProgressBar(){
+    setTimeout(function (){
+        App.hideProgressbar();
+    },100)
 }
 
 function getUserImg(){
@@ -2549,7 +2607,8 @@ function deactivateDevice(imei) {
           IMEI: imei
         };
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(API_URL.URL_DEACTIVATE, data, function(result){
               console.log(result);
               if(result.MajorCode === '000') {
@@ -2561,9 +2620,10 @@ function deactivateDevice(imei) {
               }else{
                   App.alert(LANGUAGE.PROMPT_MSG013);
               }
-              App.hidePreloader();
+              //App.hidePreloader();
+              hideProgressBar()
           },
-          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+          function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
     }
 }
@@ -2593,7 +2653,8 @@ function loadSimReplace() {
 
 function getCustomerDetails(params) {
     var url = API_URL.URL_GET_CUSTOMER_DETAIL.format(getUserinfo().code, TargetAsset.IMEI )
-    App.showPreloader();
+    //App.showPreloader();
+    showProgressBar()
     JSON1.request(url,
       function(result){
           console.log(result);
@@ -2604,9 +2665,10 @@ function getCustomerDetails(params) {
           }else{
               App.alert(LANGUAGE.PROMPT_MSG013);
           }
-          App.hidePreloader();
+          //App.hidePreloader();
+          hideProgressBar()
       },
-      function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+      function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
     );
 }
 
@@ -2619,7 +2681,8 @@ function loadPageCustomer() {
         },
         callback: function(params){
             var TimeZoneList = Protocol.Helper.getTimezoneList();
-            var TimeZoneSelectedText = TimeZoneList[TimeZoneList.findIndex( el => el.Value == params.timeZone)].Name;
+            var TimeZoneSelectedObj = typeof(params.timeZone) === "number" ? TimeZoneList[TimeZoneList.findIndex( el => parseInt(el.Value) === params.timeZone)] : TimeZoneList[TimeZoneList.findIndex( el => el.Value == params.timeZone)];
+            var TimeZoneSelectedText = TimeZoneSelectedObj ? TimeZoneSelectedObj.Name : '';
             var CountryList = Protocol.Helper.getCountrys();
             var CountryListSelectedText = CountryList[CountryList.findIndex( el => el.CountryCode == params.CountryCode)].Country;
 
@@ -2668,7 +2731,8 @@ function loadPageSettings(){
 
     var userPermissions = Protocol.Helper.getPermissions(getUserinfo().Permissions);
 
-    App.showPreloader();
+    //App.showPreloader();
+    showProgressBar()
     JSON1.requestPost(API_URL.URL_GET_DEVICE_DETAIL,data,function(result){
             console.log(result);
             if(result.MajorCode == '000') {
@@ -2710,15 +2774,17 @@ function loadPageSettings(){
             }else{
                 App.alert(LANGUAGE.PROMPT_MSG013);
             }
-            App.hidePreloader();
+            //App.hidePreloader();
+          hideProgressBar()
         },
-        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
     );
 }
 
 function getAssetDetails(params){
 
-    App.showPreloader();
+    //App.showPreloader();
+    showProgressBar()
     JSON1.requestPost(API_URL.URL_GET_DEVICE_DETAIL,params.data,function(result){
             console.log(result);
             if(result.MajorCode == '000') {
@@ -2731,9 +2797,10 @@ function getAssetDetails(params){
             }else{
                 App.alert(LANGUAGE.PROMPT_MSG013);
             }
-            App.hidePreloader();
+            //App.hidePreloader();
+          hideProgressBar()
         },
-        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
     );
 }
 
@@ -2779,7 +2846,8 @@ function loadPageVerification(data, additionalParams){
 
 function sendForceReconnect() {
     var url = API_URL.URL_FORCE_RECONNECT.format(getUserinfo().code, TargetAsset.IMEI )
-    App.showPreloader();
+    //App.showPreloader();
+    showProgressBar()
     JSON1.request(url,
       function(result){
           console.log(result);
@@ -2791,9 +2859,10 @@ function sendForceReconnect() {
           }else{
               App.alert(LANGUAGE.PROMPT_MSG013+'<br>'+JSON.stringify(result.Data));
           }
-          App.hidePreloader();
+          //App.hidePreloader();
+          hideProgressBar()
       },
-      function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+      function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
     );
 }
 
@@ -3003,18 +3072,20 @@ function loadSimInfo(){
         MajorToken: getUserinfo().code,
         DeviceId: TargetAsset.IMSI,
     };
-    App.showPreloader();
+    //App.showPreloader();
+    showProgressBar()
     JSON1.requestPost(API_URL.URL_GET_SIM_INFO,data,function(result){
             console.log(result);
             if(result.MajorCode == '000') {
                 getAdditionalSimInfo(result.Data);
             }else{
                 App.alert(LANGUAGE.PROMPT_MSG013);
-                App.hidePreloader();
+                //App.hidePreloader();
+                hideProgressBar();
             }
 
         },
-        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
     );
 }
 
@@ -3033,9 +3104,10 @@ function getAdditionalSimInfo(params){
                 //App.alert(LANGUAGE.PROMPT_MSG013);
                 loadSimInfoPage(params);
             }
-            App.hidePreloader();
+            //App.hidePreloader();
+          hideProgressBar();
         },
-        function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+        function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
     );
 }
 
@@ -3129,7 +3201,8 @@ function requestStatus(){
             "Type": deviceType,
         };
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(API_URL.URL_GET_STATUS,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
@@ -3146,9 +3219,10 @@ function requestStatus(){
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
-                App.hidePreloader();
+                //App.hidePreloader();
+              hideProgressBar();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
     }
 }
@@ -3169,7 +3243,8 @@ function requestPositionProtect(){
             "Type": deviceType,
         };
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(API_URL.URL_GET_PROTECT_POSITION,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
@@ -3186,9 +3261,10 @@ function requestPositionProtect(){
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
-                App.hidePreloader();
+                //App.hidePreloader();
+              hideProgressBar();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
 
     }
@@ -3201,7 +3277,8 @@ function requestPositionLive(){
             'MinorToken': getUserinfo().userCode,
         };
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(API_URL.URL_GET_LIVE_POSITION,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
@@ -3226,9 +3303,10 @@ function requestPositionLive(){
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
-                App.hidePreloader();
+                //App.hidePreloader();
+              hideProgressBar();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
     }
 }
@@ -3243,7 +3321,8 @@ function requestVerify(){
             'MinorToken': userInfo.userCode,
         };
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(API_URL.URL_GET_VERIFY2,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
@@ -3303,9 +3382,10 @@ function requestVerify(){
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
-                App.hidePreloader();
+                //App.hidePreloader();
+              hideProgressBar();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
     }
 }
@@ -3326,7 +3406,8 @@ function requestImmobilise(){
             "Type": deviceType,
         };
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(API_URL.URL_SET_IMMOBILISE,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
@@ -3343,9 +3424,10 @@ function requestImmobilise(){
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
-                App.hidePreloader();
+                //App.hidePreloader();
+              hideProgressBar();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
 
     }
@@ -3367,7 +3449,8 @@ function requestUnimmobilise(){
             "Type": deviceType,
         };
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(API_URL.URL_SET_UNIMMOBILISE,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
@@ -3384,9 +3467,10 @@ function requestUnimmobilise(){
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
-                App.hidePreloader();
+                //App.hidePreloader();
+              hideProgressBar();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
 
     }
@@ -3412,7 +3496,8 @@ function requestAccVoltage(state = 'on'){
             url = API_URL.URL_SET_ACCVOLTAGE_OFF;
         }
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(url,data,function(result){
               console.log(result);
               if(result.MajorCode == '000') {
@@ -3429,9 +3514,10 @@ function requestAccVoltage(state = 'on'){
               }else{
                   App.alert(LANGUAGE.PROMPT_MSG013);
               }
-              App.hidePreloader();
+              //App.hidePreloader();
+              hideProgressBar();
           },
-          function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+          function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
 
     }
@@ -3453,7 +3539,8 @@ function requestDeviceSettings(){
             "Type": deviceType,
         };
 
-        App.showPreloader();
+        //App.showPreloader();
+        showProgressBar()
         JSON1.requestPost(API_URL.URL_GET_DEVICE_SETTINGS,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {
@@ -3470,9 +3557,10 @@ function requestDeviceSettings(){
                 }else{
                     App.alert(LANGUAGE.PROMPT_MSG013);
                 }
-                App.hidePreloader();
+                //App.hidePreloader();
+              hideProgressBar();
             },
-            function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
         );
 
     }
@@ -4126,7 +4214,8 @@ function saveImg(params={}) {
         assetImg.id += '_install_'+ new Date().getTime();
     }
 
-    App.showPreloader();
+    //App.showPreloader();
+    showProgressBar()
     $.ajax({
         type: 'POST',
         url: API_URL.URL_PHOTO_UPLOAD,
@@ -4135,7 +4224,8 @@ function saveImg(params={}) {
         cache: false,
         crossDomain: true,
         success: function(result) {
-            App.hidePreloader();
+            //App.hidePreloader();
+            hideProgressBar();
             //var res = JSON.stringify(result);
             //alert(res);
             result = typeof(result) == 'string' ? eval("(" + result + ")") : result;
@@ -4156,7 +4246,8 @@ function saveImg(params={}) {
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             App.alert(JSON.stringify(XMLHttpRequest))
-            App.hidePreloader();
+            //App.hidePreloader();
+            hideProgressBar();
             App.alert(LANGUAGE.COM_MSG02);
         }
     });
