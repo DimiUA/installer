@@ -3072,20 +3072,24 @@ function loadSimInfo(){
         MajorToken: getUserinfo().code,
         DeviceId: TargetAsset.IMSI,
     };
-    //App.showPreloader();
-    showProgressBar()
+    App.showIndicator();
+    //showProgressBar()
     JSON1.requestPost(API_URL.URL_GET_SIM_INFO,data,function(result){
             console.log(result);
             if(result.MajorCode == '000') {
                 getAdditionalSimInfo(result.Data);
             }else{
                 App.alert(LANGUAGE.PROMPT_MSG013);
-                //App.hidePreloader();
-                hideProgressBar();
+                App.hideIndicator();
+                //hideProgressBar();
             }
 
         },
-        function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
+        function(){
+            App.hideIndicator();
+            //hideProgressBar();
+            App.alert(LANGUAGE.COM_MSG02);
+        }
     );
 }
 
@@ -3105,9 +3109,14 @@ function getAdditionalSimInfo(params){
                 loadSimInfoPage(params);
             }
             //App.hidePreloader();
-          hideProgressBar();
+          //hideProgressBar();
+          App.hideIndicator();
         },
-        function(){ hideProgressBar(); App.alert(LANGUAGE.COM_MSG02); }
+        function(){
+            App.hideIndicator();
+            //hideProgressBar();
+            App.alert(LANGUAGE.COM_MSG02);
+        }
     );
 }
 
