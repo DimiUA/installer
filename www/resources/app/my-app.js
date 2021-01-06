@@ -2536,7 +2536,7 @@ function showActivationModal(){
                 text: LANGUAGE.COM_MSG32, // protect
                 onClick: function() {
                     //if (permissions && permissions.ActProtect) {
-                        loadPageActivation('0000000000000', 'Protect'); // protect plam
+                        loadPageActivation('5f87b4fc-d25b-4', 'QProtect'); // protect plam
                     /*}else{
                         showNoActPermissionModal(LANGUAGE.COM_MSG32);
                     }*/
@@ -2546,7 +2546,7 @@ function showActivationModal(){
                 text: LANGUAGE.COM_MSG41,  // loc8
                 onClick: function() {
                     //if (permissions && permissions.ActLive) {
-                    loadPageActivation('4Y6Z8YPFC8P4Y', 'Loc8'); //annual live track plan
+                    loadPageActivation('5f87b4fc-d25b-4', 'Loc8'); //annual live track plan
                     /*}else{
                         showNoActPermissionModal(LANGUAGE.COM_MSG33);
                     }*/

@@ -32,7 +32,7 @@ window.LanguagePackages= {
 		"COM_MSG29": "Northwest",
 		"COM_MSG30": "Unknown",
 		"COM_MSG31": "Disable Notifications",
-		"COM_MSG32": "Protect",
+		"COM_MSG32": "QProtect",
 		"COM_MSG33": "Live",
 		"COM_MSG34": "Confirm",
 		"COM_MSG35": "km",
