@@ -242,6 +242,7 @@ var MapTrack = null;
 window.PosMarker = {};
 var virtualNotificationList = null;
 var virtualCommandsHistoryList = null;
+var virtualAlarmHistoryList = null;
 var App = new Framework7({
     swipePanel: 'left',
     swipeBackPage: false,
@@ -328,6 +329,10 @@ API_URL.URL_SIM_RESUME = API_DOMIAN5 + "Resume?MajorToken={0}&imsi={1}";
 API_URL.URL_SIM_ACTIVATE = API_DOMIAN5 + "Activate?MajorToken={0}&imsi={1}";
 
 API_URL.URL_REFRESH_TOKEN = API_DOMIAN3 + "User/RefreshToken";
+
+API_URL.URL_GET_ALARM_HISTORY = API_DOMIAN1 + "Client/GetAlarms?asId={0}&begin={1}&end={2}";
+
+//https://api.m2mglobaltech.com/Installer/V1/Client/GetAlarms
 
 //https://m2mdata.co/api/Service/Activate
 //http://api.m2mglobaltech.com/Common/V1/Activation/ReplaceSim?IMEI=1&SIM==2&APN=3&minortoken=5
@@ -696,7 +701,7 @@ $$('body').on('click', '.assetList .item-inner', function () {
                         </div>
                         <div class="action_button_wrapper col-50 buttonCommandsHistory">
                           <div class="action_button_block action_button_media">
-                            <i class="f7-icons icon-header-history-command-screen color-blue "></i>
+                            <i class="f7-icons icon-calendar color-blue "></i>
                           </div>
                           <div class="action_button_block action_button_text">
                               ${LANGUAGE.ASSET_COMMANDS_HISTORY_MSG00}
@@ -754,7 +759,15 @@ $$('body').on('click', '.assetList .item-inner', function () {
                                 '<div class="checkbox"></div>'+
                             '</span>'+
                         '</div>';*/
-    var notificationSupport =  `<div class="row" >
+    var notificationAndAlarmHistory =  `<div class="row" >            
+            <div class="action_button_wrapper col-50 buttonAlarmHistory">
+              <div class="action_button_block action_button_media">
+                <i class="f7-icons icon-calendar color-blue "></i>
+              </div>
+              <div class="action_button_block action_button_text">
+                  ${LANGUAGE.ASSET_ALARM_HISTORY_MSG00}
+              </div>
+            </div>
             <div class="action_button_wrapper col-50 buttonNotifications">
               <div class="action_button_block action_button_media">
                 <i class="f7-icons icon-header-notification color-blue "></i>
@@ -766,7 +779,10 @@ $$('body').on('click', '.assetList .item-inner', function () {
                   </span>         
               </div>              
             </div>
-            <div class="action_button_wrapper col-50 buttonSupport">
+          </div>`;
+
+    var support =  `
+            <div class="action_button_wrapper buttonSupport">
               <div class="action_button_block action_button_media">
                 <i class="f7-icons icon-support color-blue "></i>
               </div>
@@ -774,7 +790,7 @@ $$('body').on('click', '.assetList .item-inner', function () {
                   ${LANGUAGE.HOME_MSG13}
               </div>
             </div>
-          </div>`;
+          `;
 
     var buttons = [
         {
@@ -849,7 +865,7 @@ $$('body').on('click', '.assetList .item-inner', function () {
                 }
             },
         },
-        {
+        /*{
             text: notificationSupport,
             onClick: function (actionSheet, e) {
                 let targetEl = $$(e.target).closest('.action_button_wrapper');
@@ -861,13 +877,29 @@ $$('body').on('click', '.assetList .item-inner', function () {
                     //loadSimReplace();
                 }
             },
-        },
-        /*{
-            text: notification,
-            onClick: function () {
-                changeAssetNotificationState(parrent);
+        },*/
+        {
+            text: notificationAndAlarmHistory,
+            onClick: function (actionSheet, e) {
+                let targetEl = $$(e.target).closest('.action_button_wrapper');
+                if(targetEl.hasClass('buttonNotifications')){
+                    changeAssetNotificationState(parrent);
+                }else if(targetEl.hasClass('buttonAlarmHistory')){
+                    loadAlarmHistoryPage({
+                        Id: TargetAsset.Id,
+                        LastDay: 7,
+                    });
+                }
             },
-        }*/
+        },
+
+
+        {
+            text: support,
+            onClick: function () {
+                goForSupport()
+            },
+        }
     ];
 
     App.actions(buttons);
@@ -1236,6 +1268,72 @@ App.onPageInit('notification', function(page){
         }
     });
 
+});
+
+
+App.onPageInit('asset.alarm.history', function(page){
+
+    if (virtualAlarmHistoryList) {
+        virtualAlarmHistoryList.destroy();
+    }
+
+    var alarmHystoryList = $$(page.container).find('.alarmHistoryList');
+
+    virtualAlarmHistoryList = App.virtualList(alarmHystoryList, {
+        items: [],
+        height: function (item) {
+            var height = 72;
+            return height; //display the image with 50px height
+        },
+        renderItem: function (index, item) {
+            var ret = '';
+
+            var datetime = moment.utc(item.AlarmTime, window.COM_TIMEFORMAT).toDate();
+            datetime = moment(datetime).format(window.COM_TIMEFORMAT);
+
+            ret = `<li class="item-content" data-index="${ index }">
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title">${ Protocol.PositionAlertsTranslations[item.AlarmType] }</div>
+                                <div class="item-after">${ datetime }</div>
+                            </div>                        
+                            <div class="item-text">${ TargetAsset.Name }</div>
+                        </div>
+                    </li>`;
+            return  ret;
+        }
+    });
+
+    var selectLastDay = $$('select[name="LastDaySelect"]');
+    selectLastDay.val(selectLastDay.data("set"));
+
+    var Id = $$(page.container).find('[name="Id"]').val();
+    var LastDay = $$(page.container).find('[name="LastDay"]').val();
+
+    if (Id && LastDay) {
+        requestAlarmHistory({
+            AssetID: Id,
+            beginTime: moment().subtract(LastDay, 'days').format('YYYY-MM-DD'),
+            endTime: moment().format('YYYY-MM-DD'),
+        });
+    }
+
+    selectLastDay.on('change', function(){
+        requestAlarmHistory({
+            AssetID: Id,
+            beginTime: moment().subtract(this.value, 'days').format('YYYY-MM-DD'),
+            endTime: moment().format('YYYY-MM-DD'),
+        });
+    });
+
+    alarmHystoryList.on('click', '.item-content', function (e){
+        let data = virtualAlarmHistoryList.items[$$(this).data('index')];
+        data.alarm = Protocol.PositionAlertsTranslations[data.AlarmType];
+        data.Imei = TargetAsset.IMEI;
+        data.AssetName = TargetAsset.Name;
+        data.PositionTime = data.AlarmTime;
+        loadPagePosition(data);
+    });
 });
 
 App.onPageInit('asset.commands.history', function(page){
@@ -3057,6 +3155,16 @@ function loadPageClientDetails(data){
 
 }
 
+function loadAlarmHistoryPage(params){
+    mainView.router.load({
+        url:'resources/templates/asset.alarm.history.html',
+        context:{
+            LastDay: params && params.LastDay ? params.LastDay : 3,
+            Id: params && params.Id ? params.Id : TargetAsset.Id,
+        }
+    });
+}
+
 function loadCommandHistoryPage(params){
     mainView.router.load({
         url:'resources/templates/asset.commands.history.html',
@@ -3573,6 +3681,42 @@ function requestDeviceSettings(){
         );
 
     }
+}
+
+function requestAlarmHistory(params){
+    if (!params && params.AssetID && params.beginTime && params.endTime) {
+        return
+    }
+    let url = API_URL.URL_GET_ALARM_HISTORY.format(params.AssetID, params.beginTime, params.endTime);
+
+    var container = $$('body');
+    if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+    App.showProgressbar(container);
+    JSON1.request(url, function(result){
+          console.log(result);
+          if(result.MajorCode == '000') {
+              if (result.Data && result.Data.length > 0 && virtualAlarmHistoryList) {
+                  //if ( virtualAlarmHistoryList.items.length > 0) {
+                  virtualAlarmHistoryList.replaceAllItems(result.Data);
+                  /*}else{
+                      virtualAlarmHistoryList.appendItems(result.Data);
+                  }    */
+              }else{
+                  App.addNotification({
+                      hold: 3000,
+                      message: LANGUAGE.ASSET_ALARM_HISTORY_MSG01
+                  });
+                  if (virtualAlarmHistoryList) {
+                      virtualAlarmHistoryList.deleteAllItems();
+                  }
+              }
+          }else{
+              App.alert(LANGUAGE.PROMPT_MSG013);
+          }
+
+          App.hideProgressbar();
+      },
+      function(jqXHR, textStatus){ console.log(textStatus); App.hideProgressbar(); App.alert(LANGUAGE.COM_MSG02); })
 }
 
 function requestCommandHistory(params){
