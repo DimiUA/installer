@@ -646,6 +646,22 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.screenorientation"
         ]
+    },
+    {
+        "file": "plugins/phonegap-plugin-mobile-accessibility/www/mobile-accessibility.js",
+        "id": "phonegap-plugin-mobile-accessibility.mobile-accessibility",
+        "pluginId": "phonegap-plugin-mobile-accessibility",
+        "clobbers": [
+            "window.MobileAccessibility"
+        ]
+    },
+    {
+        "file": "plugins/phonegap-plugin-mobile-accessibility/www/MobileAccessibilityNotifications.js",
+        "id": "phonegap-plugin-mobile-accessibility.MobileAccessibilityNotifications",
+        "pluginId": "phonegap-plugin-mobile-accessibility",
+        "clobbers": [
+            "MobileAccessibilityNotifications"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -676,7 +692,10 @@ module.exports.metadata =
     "cordova-plugin-android-permissions": "1.0.2",
     "cordova-plugin-ignore-lint-translation": "0.0.1",
     "uk.co.workingedge.phonegap.plugin.istablet": "1.2.0",
-    "cordova-plugin-screen-orientation": "3.0.2"
+    "cordova-plugin-screen-orientation": "3.0.2",
+    "phonegap-plugin-mobile-accessibility": "1.0.5-dev",
+    "cordova-plugin-wkwebview-engine": "1.2.2",
+    "cordova-plugin-wkwebview-file-xhr": "2.1.4"
 }
 // BOTTOM OF METADATA
 });

@@ -179,3 +179,12 @@
 .icon-other-activation:before {
   content: "\55";
 }
+.icon-other-password-eye:before {
+  content: "\56";
+}
+.icon-scan:before {
+  content: "\57";
+}
+.icon-export:before {
+  content: "\58";
+}

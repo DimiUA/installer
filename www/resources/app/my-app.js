@@ -15,6 +15,8 @@ $hub = null;
 window.NULL = null;
 window.COM_TIMEFORMAT = 'YYYY-MM-DD HH:mm:ss';
 window.COM_TIMEFORMAT2 = 'YYYY-MM-DDTHH:mm:ss';
+var historyPage = 1;
+var newHistoryArray = [];
 TargetAsset = {};
 function setUserinfo(user){localStorage.setItem("COM.QUIKTRAK.INSTALLER.USERINFO", JSON.stringify(user));}
 function getUserinfo(){var ret = {};var str = localStorage.getItem("COM.QUIKTRAK.INSTALLER.USERINFO");if(str) {ret = JSON.parse(str);} return ret;}
@@ -1347,14 +1349,66 @@ App.onPageInit('asset.commands.history', function(page){
     virtualCommandsHistoryList = App.virtualList(commandsHystoryList, {
         items: [],
         height: function (item) {
-            var height = 99;
-            if (item.Direct == 1) {
-                height = 79;
-            }
+            var height = 68.67;
+            /*if (item.Direction == 1) {
+                height = 68.67;
+            }*/
             return height; //display the image with 50px height
         },
         renderItem: function (index, item) {
-            var ret = '';
+			let html = ''; let state = "";
+			var datetime = moment.utc(item.CreateTime).toDate();
+            datetime = moment(datetime).format(window.COM_TIMEFORMAT);
+			
+			if (item.Message) {
+				item.Message = item.Message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+			}
+
+			switch(item.State){
+				case 0:
+					state = 'Error'
+					stateColor = 'grey'
+				break;
+				case 1:
+					state = 'Sent'
+					stateColor = 'red'
+				break;
+				case 2:
+					state = 'Submitted'
+					stateColor = 'green'
+				break;
+				case 3:
+					state = 'Delivered'
+					stateColor = 'green'
+				break;
+				case 4:
+					state = 'Received'
+					stateColor = 'blue'
+				break;
+			}
+
+				html += '<li class="item-content" >';
+			if(item.Direction == 1){
+				html += '<div class="item-inner item-inner-commands-history item-inner-commands-history-1">';
+			}else{
+				html += '<div class="item-inner item-inner-commands-history">';
+			}
+				html += '<div class="item-title-row">';
+				html += '<div class="item-title">';
+				if (item.Direction == 2) {
+					html += '<i class="material-icons md-36 history-status-' + stateColor + '">send</i>';
+				} else {
+					html += '<i class="material-icons md-36 history-status-' + stateColor + '">email</i>';
+				}
+				html += '<div class="history-status color-status-' + stateColor + '">' + state + '</div></div>';
+				html += '<div class="item-after">' + datetime + '</div>';
+				html += '</div>';
+				html += '<div class="item-text">' + item.Message + '</div>';
+				html += '</div>';
+				html += '</li>';
+
+			return html;
+            /*var ret = '';
 
             var datetime = moment.utc(item.Datetime).toDate();
             datetime = moment(datetime).format(window.COM_TIMEFORMAT);
@@ -1383,7 +1437,7 @@ App.onPageInit('asset.commands.history', function(page){
             ret +=          '<div class="item-text">' + item.Text + '</div>';
             ret +=      '</div>';
             ret +=  '</li>';
-            return  ret;
+            return  ret;*/
         }
     });
 
@@ -1393,7 +1447,18 @@ App.onPageInit('asset.commands.history', function(page){
     var IMSI = $$(page.container).find('[name="IMSI"]').val();
     var LastDay = $$(page.container).find('[name="LastDay"]').val();
 
-    if (IMSI && LastDay) {
+	historyPage = 1;
+	newHistoryArray = [];
+	if (IMSI) {
+		requestNewCommandHistory(IMSI);
+	}else{
+		App.addNotification({
+            hold: 3000,
+            message: LANGUAGE.ASSET_COMMANDS_HISTORY_MSG01
+        });
+	}
+	
+    /*~~~if (IMSI && LastDay) {
         requestCommandHistory({IMSI: IMSI, LastDay: LastDay});
     }
 
@@ -1403,9 +1468,84 @@ App.onPageInit('asset.commands.history', function(page){
 
     selectLastDay.on('change', function(){
         requestCommandHistory({IMSI: IMSI, LastDay: this.value});
-    });
+    });*/
 });
 
+function requestNewCommandHistory(IMSI) {                   
+    //let userInfo = self.$app.methods.getFromStorage('userInfo');
+    let accessNewToken = '00000000-0000-0000-0000-000000000000';//userInfo.accessNewToken;
+        
+        var settings = {
+          "url": "https://test4.m2mdata.co/JT/SMS/History",
+          "method": "POST",
+          "timeout": 0,
+          "headers": {
+            "token": accessNewToken,
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          "data": {
+            "IMSI": IMSI,
+            "PAGE": historyPage,
+            "pagesize": "20",
+          }
+        };
+		
+		//var container = $$('body');
+        //if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+        
+		App.showProgressbar();
+        
+        $.ajax(settings).done(function (response) {  
+			console.log('his', response)
+          if (response.MajorCode == '000') {
+            if (response.Data.length) {
+                let historyArray = response.Data
+                    if(historyPage > 1){
+                        newHistoryArray = newHistoryArray.concat(historyArray);
+                    }else{
+                        newHistoryArray = historyArray;													
+                    }
+                        let incr = historyPage + 1;
+                        
+                        historyPage = incr
+                               
+						console.log('pre',newHistoryArray)                 
+                        requestNewCommandHistory(IMSI);		
+                }else{
+                    if(newHistoryArray.length > 0){
+                        newHistoryArray.sort(function(a,b){
+                            var c = new Date(a.CreateTime);
+                            var d = new Date(b.CreateTime);
+                            return d-c;
+                        });
+						
+						console.log('new',newHistoryArray)
+						virtualCommandsHistoryList.replaceAllItems(newHistoryArray);
+                    }else{
+						App.addNotification({
+                            hold: 3000,
+                            message: LANGUAGE.ASSET_COMMANDS_HISTORY_MSG01
+                        });
+                        if (virtualCommandsHistoryList) {
+                            virtualCommandsHistoryList.deleteAllItems();
+                        }
+                    }
+                }
+            }else{
+                App.addNotification({
+                    hold: 3000,
+                    message: LANGUAGE.ASSET_COMMANDS_HISTORY_MSG01
+                });
+                if (virtualCommandsHistoryList) {
+                    virtualCommandsHistoryList.deleteAllItems();
+                } 
+            }				
+            App.hideProgressbar();
+        }).fail(e => {
+			 App.hideProgressbar(); 
+			 App.alert(LANGUAGE.COM_MSG02); 
+		});
+}
 
 
 App.onPageInit('asset.commands', function(page){
@@ -3730,6 +3870,8 @@ function requestCommandHistory(params){
         var container = $$('body');
         if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
         App.showProgressbar(container);
+		
+		
         JSON1.requestPost(API_URL.URL_GET_COMMAND_HISTORY,data,function(result){
                 console.log(result);
                 if(result.MajorCode == '000') {

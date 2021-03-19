@@ -182,3 +182,12 @@
 .icon-other-password-eye:before {
   content: "\56";
 }
+.icon-scan:before {
+  content: "\57";
+}
+.icon-export:before {
+  content: "\58";
+}
+.icon-sim-card-replace:before {
+  content: "\5a";
+}

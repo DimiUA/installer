@@ -161,9 +161,9 @@ window.LanguagePackages= {
 		"ASSET_COMMANDS_MSG12": "",
 
 		"ASSET_COMMANDS_HISTORY_MSG00": "Commands History",
-		"ASSET_COMMANDS_HISTORY_MSG01": "There was no messages in selected period",
+		"ASSET_COMMANDS_HISTORY_MSG01": "There are no history for this SIM",
 		"ASSET_COMMANDS_HISTORY_MSG02": "Commands History",
-		"ASSET_COMMANDS_HISTORY_MSG03": "In this section, you can see sent and received messages to IMSI SIM, and select time period of history",
+		"ASSET_COMMANDS_HISTORY_MSG03": "In this section, you can see sent and received messages to IMSI SIM.",
 		"ASSET_COMMANDS_HISTORY_MSG04": "Day",
 		"ASSET_COMMANDS_HISTORY_MSG05": "Days",
 		//"ASSET_COMMANDS_HISTORY_MSG06": "History Period",

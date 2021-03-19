@@ -81,6 +81,15 @@
         },
         "cordova-plugin-screen-orientation": {
             "PACKAGE_NAME": "com.sinopacific.installergps"
+        },
+        "phonegap-plugin-mobile-accessibility": {
+            "PACKAGE_NAME": "com.sinopacific.installergps"
+        },
+        "cordova-plugin-wkwebview-engine": {
+            "PACKAGE_NAME": "com.sinopacific.installergps"
+        },
+        "cordova-plugin-wkwebview-file-xhr": {
+            "PACKAGE_NAME": "com.sinopacific.installergps"
         }
     },
     "dependent_plugins": {

@@ -1,0 +1,161 @@
+<div class="page bg-color-page page_settings" data-page="customer.settings">
+	<div class="navbar">
+        <div class="navbar-inner">
+            <div class="left">
+                <a href="#" class="back link "> <i class="f7-icons icon-header-arrow-back"></i></a>
+            </div>
+            <div class="left navbar_title">{{@global.LANGUAGE.ASSET_SETTINGS_MSG07}}</div>
+            <div class="right">
+                <a href="#" class="link sendSetting " ><i class="f7-icons icon-header-apply"></i></a>
+            </div>
+        </div>
+    </div>
+	<div class="page-content " >
+      <input type="hidden" name="MajorToken" value="{{code}}">
+      <input type="hidden" name="MinorToken" value="{{userCode}}">
+
+    <div class="content-block-title border_top showBlockControll ripple">{{@global.LANGUAGE.ASSET_SETTINGS_MSG64}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>
+    <div class="list-block media-list no-hairlines-between no-hairlines sliding active">
+        <ul >
+            <li class="item-content">
+                <div class="item-media"> <i class="f7-icons icon-sim-info-customer"></i></div>
+                <div class="item-inner">
+                    <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG08}}</div>
+                    <div class="item-input">
+                        <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG08}}" name="CustomerName" value="{{CustomerName}}" maxlength="200" class="">
+                    </div>
+                </div>
+            </li>
+            <li class="item-content  ">
+                <div class="item-media"> <!--<i class="f7-icons icon-other-asset-details"></i>--></div>
+                <div class="item-inner">
+                    <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG10}}</div>
+                    <div class="item-input">
+                        <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG10}}" name="FirstName" value="{{FirstName}}" maxlength="200" class="">
+                    </div>
+                </div>
+            </li>
+            <li class="item-content  ">
+                <div class="item-media"> <!--<i class="f7-icons icon-other-asset-details"></i>--></div>
+                <div class="item-inner">
+                    <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG11}}</div>
+                    <div class="item-input">
+                        <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG11}}" name="LastName" value="{{LastName}}" maxlength="200" class="">
+                    </div>
+                </div>
+            </li>
+            <li class="item-content  ">
+                <div class="item-media"> <i class="f7-icons icon-other-email"></i></div>
+                <div class="item-inner">
+                    <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG15}}</div>
+                    <div class="item-input">
+                        <input type="email" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG11}}" name="Email" value="{{Email}}" maxlength="200" class="">
+                    </div>
+                </div>
+            </li>
+            <li class="item-content  ">
+                <div class="item-media"><i class="f7-icons icon-other-phone"></i></div>
+                <div class="item-inner">
+                    <div class="item-title label">{{@global.LANGUAGE.USER_PROFILE_MSG04}}</div>
+                    <div class="item-input">
+                        <input type="tel" placeholder="{{@global.LANGUAGE.USER_PROFILE_MSG04}}" name="Mobile" value="{{Mobile}}" maxlength="200" class="only_numbers">
+                    </div>
+                </div>
+            </li>
+
+            <!--<li class="item-content  ">
+                <div class="item-media"><i class="f7-icons icon-other-mobile-phone"></i></div>
+                <div class="item-inner">
+                    <div class="item-title label">{{@global.LANGUAGE.USER_PROFILE_MSG05}}</div>
+                    <div class="item-input">
+                        <input type="tel" placeholder="{{@global.LANGUAGE.USER_PROFILE_MSG05}}" name="Phone" value="{{Phone}}" maxlength="200" class="only_numbers">
+                    </div>
+                </div>
+            </li>-->
+        </ul>
+    </div>
+    <div class="content-block-title border_top showBlockControll ripple">{{@global.LANGUAGE.ASSET_SETTINGS_MSG60}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div>
+      <div class="list-block media-list no-hairlines-between no-hairlines sliding active">
+          <ul >
+              <li>
+                  <a href="#" class="item-link smart-select " data-searchbar="true" data-back-on-select="true">
+                      <select name="CountryCode">
+                          {{#each CountryList}}
+                          <option value="{{CountryCode}}">{{Country}}</option>
+                          {{/each}}
+                      </select>
+                      <div class="item-content">
+                          <div class="item-media"><i class="f7-icons icon-status-pin"></i></div>
+                          <div class="item-inner">
+                              <div class="item-title">{{@global.LANGUAGE.ASSET_SETTINGS_MSG66}}</div>
+                              <div class="item-after smart-select-value">{{CountryListSelectedText}}</div>
+                          </div>
+                      </div>
+                  </a>
+              </li>
+              <li class="item-content  ">
+                  <div class="item-media"><!--<i class="f7-icons icon-status-pin"></i>--></div>
+                  <div class="item-inner">
+                      <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG14}}</div>
+                      <div class="item-input">
+                          <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG14}}" name="Address0" value="{{Address0}}" maxlength="200" class="">
+                      </div>
+                  </div>
+              </li>
+              <li class="item-content  ">
+                  <div class="item-media"> </div>
+                  <div class="item-inner">
+                      <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG14}} 2</div>
+                      <div class="item-input">
+                          <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG14}}" name="Address1" value="{{Address1}}" maxlength="200" class="">
+                      </div>
+                  </div>
+              </li>
+              <li class="item-content  ">
+                  <div class="item-media"> <!--<i class="f7-icons icon-other-asset-details"></i>--></div>
+                  <div class="item-inner">
+                      <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG63}}</div>
+                      <div class="item-input">
+                          <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG63}}" name="Address2" value="{{Address2}}" maxlength="200" class="">
+                      </div>
+                  </div>
+              </li>
+              <li class="item-content  ">
+                  <div class="item-media"> <!--<i class="f7-icons icon-other-asset-details"></i>--></div>
+                  <div class="item-inner">
+                      <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG62}}</div>
+                      <div class="item-input">
+                          <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG62}}" name="Address3" value="{{Address3}}" maxlength="200" class="">
+                      </div>
+                  </div>
+              </li>
+              <li class="item-content  ">
+                  <div class="item-media"> <!--<i class="f7-icons icon-other-asset-details"></i>--></div>
+                  <div class="item-inner">
+                      <div class="item-title label">{{@global.LANGUAGE.ASSET_SETTINGS_MSG61}}</div>
+                      <div class="item-input">
+                          <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG61}}" name="Address4" value="{{Address4}}" maxlength="200" class="">
+                      </div>
+                  </div>
+              </li>
+              <li>
+                  <a href="#" class="item-link smart-select " data-searchbar="true" data-back-on-select="true">
+                      <select name="TimeZone">
+                          {{#each TimeZoneList}}
+                          <option value="{{Value}}">{{Name}}</option>
+                          {{/each}}
+                      </select>
+                      <div class="item-content">
+                          <div class="item-media"></div>
+                          <div class="item-inner">
+                              <div class="item-title">{{@global.LANGUAGE.ASSET_SETTINGS_MSG65}}</div>
+                              <div class="item-after smart-select-value">{{TimeZoneSelectedText}}</div>
+                          </div>
+                      </div>
+                  </a>
+              </li>
+          </ul>
+      </div>
+    </div>
+</div>
+

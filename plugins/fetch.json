@@ -216,5 +216,29 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "phonegap-plugin-mobile-accessibility": {
+        "source": {
+            "type": "registry",
+            "id": "phonegap-plugin-mobile-accessibility@~1.0.5"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-wkwebview-engine": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-wkwebview-engine@~1.2.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-wkwebview-file-xhr": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-wkwebview-file-xhr@~2.1.4"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

@@ -4,13 +4,13 @@
             <div class="left">
                 <a href="#" class="back link "> <i class="f7-icons icon-header-arrow-back"></i></a>
             </div>
-            <div class="left navbar_title">{{@global.LANGUAGE.CLIENT_DETAILS_MSG12}}</div>     
+            <div class="left navbar_title">{{@global.LANGUAGE.CLIENT_DETAILS_MSG12}}</div>
             <div class="right">
                 <a href="#" class="link sendClientDetails" ><i class="f7-icons icon-header-apply"></i></a>
-            </div>      
+            </div>
         </div>
     </div>
-	<div class="page-content " >  
+	<div class="page-content " >
         <input type="text" hidden name="ContactCode" value="{{ContactCode}}">
         <input type="text" hidden name="IMEI" value="{{IMEI}}">
         <input type="text" hidden name="IMSI" value="{{IMSI}}">
@@ -21,59 +21,59 @@
         <input type="text" hidden name="Account" value="{{Account}}">
         <input type="text" hidden name="LoginName" value="{{LoginName}}">
         <input type="text" hidden name="Date" value="{{Date}}">
-        
+
         <!-- <div class="content-block-title border_top showBlockControll">{{@global.LANGUAGE.CLIENT_DETAILS_MSG13}}<i class="f7-icons icon-other-arrow-drop-dowm"></i></div> -->
-        <div class="list-block list-block-first media-list list-block-readonly no-hairlines no-hairlines-between sliding active">           
-            <ul>                 
-                <li class="item-content">                  
+        <div class="list-block list-block-first media-list list-block-readonly no-hairlines no-hairlines-between sliding active">
+            <ul>
+                <li class="item-content">
                     <div class="item-media">
                         {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG01}}
                     </div>
                     <div class="item-inner">
                         <div class="item-title">
                             {{IMEI}}
-                        </div>                        
-                    </div>                   
+                        </div>
+                    </div>
                 </li>
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media">
                         {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG02}}
                     </div>
                     <div class="item-inner">
                         <div class="item-title">
                             {{IMSI}}
-                        </div>                        
-                    </div>                   
+                        </div>
+                    </div>
                 </li>
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media">
                         {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG07}}
                     </div>
                     <div class="item-inner">
                         <div class="item-title">
                             {{TaskID}}
-                        </div>                        
-                    </div>                   
+                        </div>
+                    </div>
                 </li>
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media">
                         {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG08}}
                     </div>
                     <div class="item-inner">
                         <div class="item-title">
                             {{Product}}
-                        </div>                        
-                    </div>                   
+                        </div>
+                    </div>
                 </li>
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media">
                         {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG09}}
                     </div>
                     <div class="item-inner">
                         <div class="item-title">
                             {{Service}}
-                        </div>                        
-                    </div>                   
+                        </div>
+                    </div>
                 </li>
                 <!--<li class="item-content">
                     <div class="item-media">
@@ -82,44 +82,44 @@
                     <div class="item-inner">
                         <div class="item-title">
                             {{Name}}
-                        </div>                        
-                    </div>                   
+                        </div>
+                    </div>
                 </li>-->
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media">
                         {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG10}}
                     </div>
                     <div class="item-inner">
                         <div class="item-title">
                             {{Account}}
-                        </div>                        
-                    </div>                   
+                        </div>
+                    </div>
                 </li>
                 {{#if LoginName}}
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media">
                         {{@global.LANGUAGE.CLIENT_DETAILS_MSG01}}
                     </div>
                     <div class="item-inner">
                         <div class="item-title">
                             {{LoginName}}
-                        </div>                        
-                    </div>                   
+                        </div>
+                    </div>
                 </li>
                 {{/if}}
                 {{#if Date}}
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media">
                         {{@global.LANGUAGE.ASSET_VIRIFICATION_MSG04}}
                     </div>
                     <div class="item-inner">
                         <div class="item-title">
                             {{Date}}
-                        </div>                        
-                    </div>                   
+                        </div>
+                    </div>
                 </li>
                 {{/if}}
-                
+
             </ul>
         </div>
 
@@ -127,53 +127,53 @@
         <div class="list-block media-list no-hairlines-between no-hairlines sliding active">
             <ul >
                 {{#if FirstName}}
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media"><i class="f7-icons icon-other-name"></i></div>
                     <div class="item-inner">
                         <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG02}}</div>
                         <div class="item-input">
                             <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG02}}" name="FirstName" value="{{FirstName}}" maxlength="200" class="">
                         </div>
-                    </div>                   
+                    </div>
                 </li>
                 {{/if}}
                 {{#if LastName}}
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media"></div>
                     <div class="item-inner">
                         <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG11}}</div>
                         <div class="item-input">
                             <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG11}}" name="LastName" value="{{LastName}}" maxlength="200" class="">
                         </div>
-                    </div>                   
+                    </div>
                 </li>
                 {{/if}}
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media"><i class="f7-icons icon-status-address"></i></div>
                     <div class="item-inner">
                         <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG03}}</div>
                         <div class="item-input">
                             <input type="text" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG03}}" name="AddressOfJob" value="{{AddressOfJob}}" maxlength="400" class="">
                         </div>
-                    </div>                   
-                </li>    
-                {{#if PhoneNumber}}            
-                <li class="item-content">                  
+                    </div>
+                </li>
+                {{#if PhoneNumber}}
+                <li class="item-content">
                     <div class="item-media"><i class="f7-icons icon-other-mobile-phone"></i></div>
                     <div class="item-inner">
                         <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG04}}</div>
                         <div class="item-input">
                             <input type="tel" placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG04}}" name="PhoneNumber" value="{{PhoneNumber}}" maxlength="200" class="only_numbers">
                         </div>
-                    </div>                   
-                </li>    
-                {{/if}}         
+                    </div>
+                </li>
+                {{/if}}
                 <li class="item-content">
                     <div class="item-media"></div>
                     <div class="item-inner">
                         <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG05}}</div>
                         <div class="item-input ">
-                            <select name="JobDetail" >                                
+                            <select name="JobDetail" >
                                 <option value="1" selected>{{@global.LANGUAGE.CLIENT_DETAILS_MSG06}}</option>
                                 <option value="2">{{@global.LANGUAGE.CLIENT_DETAILS_MSG07}}</option>
                                 <option value="3">{{@global.LANGUAGE.CLIENT_DETAILS_MSG08}}</option>
@@ -184,16 +184,16 @@
                         </div>
                     </div>
                 </li>
-                <li class="item-content">                  
+                <li class="item-content">
                     <div class="item-media"></div>
                     <div class="item-inner">
                         <div class="item-title label">{{@global.LANGUAGE.CLIENT_DETAILS_MSG14}}</div>
                         <div class="item-input">
                             <textarea placeholder="{{@global.LANGUAGE.CLIENT_DETAILS_MSG14}}" name="Notes" maxlength="400" class=""></textarea>
                         </div>
-                    </div>                   
-                </li>    
-        
+                    </div>
+                </li>
+
             </ul>
         </div>
 
@@ -299,6 +299,21 @@
                             <input type="text" placeholder="{{@global.LANGUAGE.ASSET_SETTINGS_MSG52}}" name="InstallPosition" value="{{InstallPosition}}" maxlength="300" class="">
                         </div>
                     </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"></div>
+                        <div class="item-inner display-flex">
+                            <div class="item-title">{{@global.LANGUAGE.ASSET_COMMANDS_MSG11}}</div>
+                            <div class="item-after">
+                                <label class="label-switch">
+                                    <input type="checkbox" name="ignitionStatusByVoltage">
+                                    <div class="checkbox"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                 </li>
             </ul>
         </div>
