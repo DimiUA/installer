@@ -1,0 +1,56 @@
+
+    <div class="page  with-subnavbar bg-color-page page_profile" data-page="connectivity.data">    
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="left">
+					<a href="#" class="back link  "> <i class="f7-icons icon-header-arrow-back"></i></a>
+				</div>
+				<div class="left navbar_title">{{@global.LANGUAGE.MENU_MSG05}}</div>     
+				<div class="right ">
+				   
+				</div> 
+				 
+
+			</div>
+		</div>
+		<div class="toolbar tabbar connectivity_type_tabbar ">
+						<div class="toolbar-inner">
+							<a href="#" class="tab-link " data-id="connectivity.hlr">
+								<span class="tabbar-label"><b>{{@global.LANGUAGE.CONNECTIVITY_MSG00}}</b></span>
+							</a>
+							<a href="#" class="tab-link " data-id="connectivity.current" >
+								<span class="tabbar-label"><b>{{@global.LANGUAGE.CONNECTIVITY_MSG01}}</b></span>
+							</a>
+							<a href="#" class="tab-link active" data-id="connectivity.data" >
+								<span class="tabbar-label"><b>{{@global.LANGUAGE.CONNECTIVITY_MSG02}}</b></span>
+							</a>
+						</div>
+					</div>
+    	<div class="page-content" >
+            
+            <div class="list-block no-hairlines no-margin">           
+                <table id="table-dashboard-sim" class="mdl-data-table " style="width:100%">
+							<thead>
+								<tr>
+									<th> Start Date</th>	
+									<th> End Date </th> 	
+									<th> Total </th>			
+									<th> Operator </th>						
+								</tr>
+							</thead>
+							<tbody> 						
+								{{#DashboardDataTable}}
+									<tr data-item-index="{{@index}}" >
+										<td>{{start}}</td>	
+										<td>{{end}}</td>	
+										<td>{{total}}</td>	
+										<td>{{operator}}</td>									
+									</tr>
+								{{/DashboardDataTable}} 
+																
+							</tbody>
+						</table>
+
+            </div>
+        </div>
+    </div>

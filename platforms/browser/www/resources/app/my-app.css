@@ -1382,3 +1382,10 @@ select{
     margin-left: 30px;
     position: initial;
 }
+
+.pl-10{
+	padding-left: 10px;
+}
+.pt-0{
+	padding-top: 0px !important;
+}

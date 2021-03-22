@@ -119,6 +119,7 @@ window.LanguagePackages= {
 		"MENU_MSG02": "Sign Out",
 		"MENU_MSG03": "Recharge Credit",
 		"MENU_MSG04": "",
+		"MENU_MSG05": "Connectivity",
 		"HOME_MSG00": "IMEI",
 		"HOME_MSG01": "IMSI",
 		"HOME_MSG02": "Name",
@@ -259,6 +260,7 @@ window.LanguagePackages= {
 		"ASSET_SETTINGS_MSG64": "Customer Info",
 		"ASSET_SETTINGS_MSG65": "Time Zone",
 		"ASSET_SETTINGS_MSG66": "Country",
+		"ASSET_SETTINGS_MSG67": "Connectivity",
 
 		"CLIENT_DETAILS_MSG00": "Client Details",
 		"CLIENT_DETAILS_MSG01": "Login Name",
@@ -324,6 +326,9 @@ window.LanguagePackages= {
 		"PHOTO_EDIT_MSG02": 'From Gallery',
 
 		"NOTIFICATION_MSG00": "Notifications",
+		"CONNECTIVITY_MSG00": "HLR Info",
+		"CONNECTIVITY_MSG01": "Current Session",
+		"CONNECTIVITY_MSG02": "Session Data",
 	},
 	"es":{
 

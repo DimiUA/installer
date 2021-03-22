@@ -18,6 +18,8 @@ window.COM_TIMEFORMAT2 = 'YYYY-MM-DDTHH:mm:ss';
 var historyPage = 1;
 var newHistoryArray = [];
 TargetAsset = {};
+let month_names_short = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
 function setUserinfo(user){localStorage.setItem("COM.QUIKTRAK.INSTALLER.USERINFO", JSON.stringify(user));}
 function getUserinfo(){var ret = {};var str = localStorage.getItem("COM.QUIKTRAK.INSTALLER.USERINFO");if(str) {ret = JSON.parse(str);} return ret;}
 function isJsonString(str){try{var ret=JSON.parse(str);}catch(e){return false;}return ret;}
@@ -480,6 +482,7 @@ $$('body').on('click', 'a.external', function(event) {
 });
 
 
+
 $$('body').on('click', '.search_tabbar .tab-link', function () {
 
     var href = $$(this).attr('href');
@@ -527,6 +530,30 @@ $$('body').on('click', '.scanBarCode', function() {
 function requestPermissionCameraError() {
     App.alert('Camera permission is not turned on');
 }
+
+
+$$(document).on('click', '.connectivity_type_tabbar a.tab-link', function(e){
+    e.preventDefault();
+    var activePage = mainView.activePage;
+    var page = $$(this).data('id');
+
+    //if ( typeof(activePage) == 'undefined' || (activePage && activePage.name != page)) {
+        switch (page){
+
+            case 'connectivity.hlr':
+                loadConnectivity();
+                break;
+            case 'connectivity.current':
+                loadConnectivityCurrent();
+                break;
+            case 'connectivity.data':
+                loadConnectivityData();
+                break;
+        }
+    //}
+
+    return false;
+});
 
 $$(document).on('click', '.user_settigns_tabbar a.tab-link', function(e){
     e.preventDefault();
@@ -673,7 +700,7 @@ $$('body').on('click', '.assetList .item-inner', function () {
                         </div>
                     </div>`;
 
-    var simStatForceRec =  `<div class="row" >                        
+   /* var simStatForceRec =  `<div class="row" >                        
                         <div class="action_button_wrapper col-50 buttonSimStatus">
                           <div class="action_button_block action_button_media">
                             <i class="f7-icons icon-other-info color-blue "></i>
@@ -688,6 +715,25 @@ $$('body').on('click', '.assetList .item-inner', function () {
                           </div>
                           <div class="action_button_block action_button_text">
                               ${LANGUAGE.ASSET_SETTINGS_MSG59}
+                          </div>
+                        </div>
+                    </div>`;*/
+					
+					 var simStatForceRec =  `<div class="row" >                        
+                        <div class="action_button_wrapper col-50 buttonSimStatus">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-other-info color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.ASSET_SIM_INFO_MSG00}
+                          </div>
+                        </div>
+						<div class="action_button_wrapper col-50 buttonConnectivity">
+                          <div class="action_button_block action_button_media">
+						  <i class="f7-icons icon-sim-info-date color-blue"></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.ASSET_SETTINGS_MSG67}
                           </div>
                         </div>
                     </div>`;
@@ -783,16 +829,27 @@ $$('body').on('click', '.assetList .item-inner', function () {
             </div>
           </div>`;
 
-    var support =  `
-            <div class="action_button_wrapper buttonSupport">
-              <div class="action_button_block action_button_media">
-                <i class="f7-icons icon-support color-blue "></i>
-              </div>
-              <div class="action_button_block action_button_text">
-                  ${LANGUAGE.HOME_MSG13}
-              </div>
-            </div>
-          `;
+ 
+    var support =  `<div class="row" >
+                        <div class="action_button_wrapper col-50 buttonForceReconnect">
+                          <div class="action_button_block action_button_media">
+                            <i class="f7-icons icon-reconnect color-blue "></i>
+                          </div>
+                          <div class="action_button_block action_button_text">
+                              ${LANGUAGE.ASSET_SETTINGS_MSG59}
+                          </div>
+                        </div>
+						
+						<div class="action_button_wrapper col-50 buttonSupport">
+						  <div class="action_button_block action_button_media">
+							<i class="f7-icons icon-support color-blue "></i>
+						  </div>
+						  <div class="action_button_block action_button_text">
+							  ${LANGUAGE.HOME_MSG13}
+						  </div>
+						</div>           
+                        </div>
+                    </div>`;
 
     var buttons = [
         {
@@ -813,14 +870,16 @@ $$('body').on('click', '.assetList .item-inner', function () {
                 }
             },
         },
+        
         {
             text: simStatForceRec,
             onClick: function (actionSheet, e) {
                 let targetEl = $$(e.target).closest('.action_button_wrapper');
                 if(targetEl.hasClass('buttonSimStatus')){
                     loadSimInfo();
-                }else if(targetEl.hasClass('buttonForceReconnect')){
-                    sendForceReconnect();
+                }else if(targetEl.hasClass('buttonConnectivity')){
+                    loadConnectivity();
+					
                     //loadSimInfo()
                 }
             },
@@ -893,15 +952,20 @@ $$('body').on('click', '.assetList .item-inner', function () {
                     });
                 }
             },
+        },{
+            text: support,
+            onClick: function (actionSheet, e) {
+                //
+				let targetEl = $$(e.target).closest('.action_button_wrapper');
+                if(targetEl.hasClass('buttonForceReconnect')){
+                    sendForceReconnect();
+                }else{
+                    goForSupport()
+                }
+            },
         },
 
 
-        {
-            text: support,
-            onClick: function () {
-                goForSupport()
-            },
-        }
     ];
 
     App.actions(buttons);
@@ -3313,6 +3377,317 @@ function loadCommandHistoryPage(params){
             IMSI: params && params.IMSI ? params.IMSI : TargetAsset.IMSI,
         }
     });
+}
+
+
+
+async function loadConnectivity(){
+	
+	
+	if (TargetAsset.IMSI) {
+				let self = this
+				
+				let hlrName = 'Imsi';
+				let hlrValue = TargetAsset.IMSI;
+				let hlrName1 = 'Packet Switched Up Time';
+				let hlrValue1 = '';
+				let hlrName2 = 'Visitor Location Register';
+				let hlrValue2 = '';
+				let hlrName3 = 'Circuit Switch Up Time';
+				let hlrValue3 = '';
+				let hlrName4 = 'MSISDN';
+				let hlrValue4 = '';
+				let hlrName5 = 'EPCMMERealm';
+				let hlrValue5 = '';
+				
+				try {
+					const responseHLR = await fetch(`https://m2mdata.co/jt/GetGetHlrInfo?imsi=${TargetAsset.IMSI}`)
+					let resHLR = await responseHLR.json()					
+					
+					let mapList = resHLR.Data.dataMapField
+					let hlrList = resHLR.Data.hlrInfoFieldsField
+
+					console.log('arr',hlrList)
+					let hlrDate1 = hlrList.find(el=>el.nameField==hlrName1).valueField
+					let hlrDate2 = hlrList.find(el=>el.nameField==hlrName3).valueField
+					
+					hlrValue = hlrList.find(el=>el.nameField==hlrName).valueField									
+					
+					hlrValue2 = hlrList.find(el=>el.nameField==hlrName2).valueField	
+					hlrValue1 = hlrDate1=='00000000000000'?'':hlrDate1.slice(0,4) + '-' + hlrDate1.slice(4,6) + '-' + hlrDate1.slice(6,8) + ' ' + hlrDate1.slice(8,10) + ':' + hlrDate1.slice(10,12) + ':' + hlrDate1.slice(12,14)									
+					
+					hlrValue3 = hlrDate2=='00000000000000'?'':hlrDate2.slice(0,4) + '-' + hlrDate2.slice(4,6) + '-' + hlrDate2.slice(6,8) + ' ' + hlrDate2.slice(8,10) + ':' + hlrDate2.slice(10,12) + ':' + hlrDate2.slice(12,14)								
+					hlrName4 = 'MSISDN'									
+				
+					hlrValue4 = mapList.find(el=>el.keyField=='MSISDN').valueField										
+					hlrName5 = 'EPCMMERealm'									
+					
+					hlrValue5 = mapList.find(el=>el.keyField=='EPCMMERealm')?.valueField										
+					
+					mainView.router.load({
+						url:'resources/templates/connectivity.hlr.html',
+						context:{
+							hlrName,
+								hlrValue,
+								hlrName1,
+								hlrValue1,
+								hlrName2,
+								hlrValue2,
+								hlrName3,
+								hlrValue3,
+								hlrName4,
+								hlrValue4,
+								hlrName5,
+								hlrValue5
+						}
+					});
+				}catch(e){					
+					console.log('er',e)
+					mainView.router.load({
+						url:'resources/templates/connectivity.hlr.html',
+						context:{
+							hlrName,
+								hlrValue,
+								hlrName1,
+								hlrValue1,
+								hlrName2,
+								hlrValue2,
+								hlrName3,
+								hlrValue3,
+								hlrName4,
+								hlrValue4,
+								hlrName5,
+								hlrValue5
+						}
+					});
+				}
+	}else{
+		App.addNotification({
+            hold: 3000,
+            message: LANGUAGE.PROMPT_MSG007
+        });
+	}
+    
+}
+
+
+async function loadConnectivityCurrent(){
+    
+	if (TargetAsset.IMSI) {
+		let sessionFieldName = 'Start date',
+				sessionFieldValue = '',
+				sessionFieldName1 ='Update date',
+				sessionFieldValue1 = '',
+				sessionFieldName2 = 'End date',
+				sessionFieldValue2 = '',
+				sessionFieldName3 = 'Total bytes',
+				sessionFieldValue3 = '',
+				sessionFieldName4 = 'Operator',
+				sessionFieldValue4 = '',
+				sessionFieldName5 = 'Cell info',
+				sessionFieldValue5 = '',
+				sessionFieldName6 = 'IMEI',
+				sessionFieldValue6 = '',
+				sessionFieldName7 = 'Close status',
+				sessionFieldValue7 = ''
+			
+			const responseActiveSession = await fetch(`https://m2mdata.co/jt/GetActiveSession?imsi=${TargetAsset.IMSI}`)
+				let resActiveSession = await responseActiveSession.json()
+				
+				if(resActiveSession.Data){
+				
+					let startDate = moment.utc(resActiveSession.Data.startDateField).toDate()
+					let utcStartDate = startDate.getDate() + ' ' + month_names_short[startDate.getMonth()] + ' ' + startDate.getFullYear() + ' ' + ('0' + startDate.getHours()).slice(-2) + ':' + ('0' + startDate.getMinutes()).slice(-2) + ':' + ('0' + startDate.getSeconds()).slice(-2)
+					
+					let endDate = moment.utc(resActiveSession.Data.lastInterimDateField).toDate()
+					let utcEndDate = endDate.getDate() + ' ' + month_names_short[endDate.getMonth()] + ' ' + endDate.getFullYear() + ' ' + ('0' + endDate.getHours()).slice(-2) + ':' + ('0' + endDate.getMinutes()).slice(-2) + ':' + ('0' + endDate.getSeconds()).slice(-2)
+										
+					if(resActiveSession.Data.startDateField)sessionFieldValue = utcStartDate		
+					if(resActiveSession.Data.lastInterimDateField)sessionFieldValue2 = utcEndDate
+					sessionFieldValue3 = resActiveSession.Data.totalBytesField
+					sessionFieldValue4 = resActiveSession.Data.networkCodeField	
+			
+					
+					
+			}else{
+				console.log('No current session');
+				//self.$app.dialog.alert('No current session');
+			
+			}
+			
+			mainView.router.load({
+						url:'resources/templates/connectivity.current.html',
+						context:{
+							sessionFieldName,
+							sessionFieldValue,
+							sessionFieldName1,
+							sessionFieldValue1,
+							sessionFieldName2,
+							sessionFieldValue2,
+							sessionFieldName3,
+							sessionFieldValue3,
+							sessionFieldName4,
+							sessionFieldValue4,
+							sessionFieldName5,
+							sessionFieldValue5,
+							sessionFieldName6,
+							sessionFieldValue6,
+							sessionFieldName7,
+							sessionFieldValue7,	
+						}
+					});
+	}else{
+		App.addNotification({
+            hold: 3000,
+            message: LANGUAGE.PROMPT_MSG007
+        });
+	}
+}
+
+
+function loadConnectivityData(){
+    
+	if (TargetAsset.IMSI) {
+		let DashboardDataTable = [] 
+		let self = this
+		var listQuery_1 = {
+									imsi: TargetAsset.IMSI
+								}
+								
+								var settings_1 = {
+								  "url": "https://test4.m2mdata.co/JT/Sim/GETSESSIONS",
+								  "method": "POST",
+								  "timeout": 0,
+								  "headers": {
+									"token": '00000000-0000-0000-0000-000000000000',
+									"Content-Type": "application/x-www-form-urlencoded"
+								  },
+								  "data": listQuery_1
+								};
+								
+					   
+								$.ajax(settings_1).done(  function (response) {
+								
+									
+										console.log('datases ',response)
+						if(response.Data.length){
+						
+									const jsonDataArr = []
+						
+						let dataArr = response.Data.split('\r\n')
+						console.log('json',dataArr);
+						
+									const totalDataUsage = 0
+									const totalSMSUsage = 0
+
+									const arrTable = []
+									dataArr.pop()
+									
+									dataArr.forEach((element, index) => {
+										let dataJson = element.split(',')
+										let startDate = moment.utc(dataJson[4]).toDate()
+										let endDate = moment.utc(dataJson[5]).toDate()
+										
+										
+										let jsonDataObj = {
+											start: startDate.getDate() + ' ' + month_names_short[startDate.getMonth()] + ' ' + startDate.getFullYear() + ' ' + ('0' + startDate.getHours()).slice(-2) + ':' + ('0' + startDate.getMinutes()).slice(-2) + ':' + ('0' + startDate.getSeconds()).slice(-2),
+											end: endDate.getDate() + ' ' + month_names_short[endDate.getMonth()] + ' ' + endDate.getFullYear() + ' ' + ('0' + endDate.getHours()).slice(-2) + ':' + ('0' + endDate.getMinutes()).slice(-2) + ':' + ('0' + endDate.getSeconds()).slice(-2),
+											total: dataJson[3],
+											operator: dataJson[1]+dataJson[2]
+										}
+										jsonDataArr.push(jsonDataObj)
+									})
+									
+									
+									
+									let sortedArr = jsonDataArr.sort(function(a,b){
+										var c = new Date(a.start)
+										var d = new Date(b.start)
+										return d-c
+									  })
+									//sortedArr.reverse()
+									
+									sortedArr.forEach((element, index) => {
+									  /*const tableDataUsageTotal = (+element.totalDataUsage / 1000000)
+									  const tableSMSUsageTotal = element.totalSmsUsage == 'undefined' ? 0 : (+element.totalSmsUsage)
+									  const tableFlowUsageTotal = element.totalFlowUsage == 'undefined' ? 0 : (+element.totalFlowUsage)*/
+									  arrTable.push({
+										start: element.start,
+										end: element.end,
+										total: element.total,
+										operator: element.operator
+									  })
+									})
+									
+									
+								DashboardDataTable = arrTable
+											
+											/*DashboardDataTableEl = $('body').find('#table-dashboard-sim').DataTable({                    
+												columnDefs: [
+													{ // remove orederable arrows from column with pin
+														targets: [ 0 ], 
+														orderable: true,  
+													},
+													{ // hide group codes, which will be used for filtering
+														targets: [ 1 ],
+														visible: true
+													},
+													{ // hide group codes, which will be used for filtering
+														targets: [ 2 ],
+														visible: true
+													},
+													{ // hide group codes, which will be used for filtering
+														targets: [ 3 ],
+														visible: true
+													},
+													{ // hide group codes, which will be used for filtering
+														targets: [ 4 ],
+														visible: true
+													},
+													{ // hide group codes, which will be used for filtering
+														targets: [ 5 ],
+														visible: true
+													},
+													{ // hide group codes, which will be used for filtering
+														targets: [ 6 ],
+														visible: true
+													},
+													{ // hide group codes, which will be used for filtering
+														targets: [ 7 ],
+														visible: true
+													}
+												],
+												"order": [[ 0, "desc" ]],
+												lengthMenu: [5, 10, 25],
+												pageLength: 5   
+											});
+										*/
+								
+								}else{
+									
+									
+									
+										console.log('No sessions')
+									
+								}
+								
+										
+											mainView.router.load({
+											url:'resources/templates/connectivity.data.html',
+											context:{
+												DashboardDataTable
+											}
+										});
+							})
+	}else{
+		App.addNotification({
+            hold: 3000,
+            message: LANGUAGE.PROMPT_MSG007
+        });
+	}
+	
+	
+    
 }
 
 function loadSimInfo(){
